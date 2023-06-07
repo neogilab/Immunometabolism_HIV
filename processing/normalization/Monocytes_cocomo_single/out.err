@@ -1,0 +1,27 @@
+You are running version 1.14.0 of NormalyzerDE
+[Step 1/5] Load data and verify input
+Input data checked. All fields are valid.
+Sample check: More than one sample group found
+No RT column found, skipping RT processing
+
+Non replicated samples in dataset: 1 2 3 4 5 6 7 8 9 10 11 12 performing limited single-replicate run
+
+[Step 1/5] Input verified, job directory prepared at:/hostdata/Monocytes_cocomo_single
+[Step 2/5] Performing normalizations
+No RT column specified (column named 'RT') or option not specified Skipping RT normalization.
+
+[Step 2/5] Done!
+[Step 3/5] Generating evaluation measures...
+[Step 3/5] Done!
+[Step 4/5] Writing matrices to file
+[Step 4/5] Matrices successfully written
+[Step 5/5] Generating plots...
+[Step 5/5] Plots successfully generated
+All done! Results are stored in: /hostdata/Monocytes_cocomo_single, processing time was 0.3 minutes
+Warning message:
+In validateSampleReplication(lowCountSampleFiltered, groups, requireReplicates = requireReplicates,  :
+  Following group conditions does not have replicates:
+1A 1B 2A 2B 3A 3B 4A 4B 5A 5B 6A 6B
+By default this is not allowed.
+You can force limited processing of non-replicated data by
+setting the "requireReplicates" option to FALSE

@@ -1,0 +1,173 @@
+---
+title: "Seurat PBMCs"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+```{r}
+library(dplyr)
+library(Seurat)
+library(patchwork)
+```
+
+```{r}
+name_ana <- "8k_pbmc_donor"
+```
+
+```{r}
+dge <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+```
+
+```{r}
+pbmc.markers <- read.csv(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_differences_cell_types.csv"))
+```
+
+```{r}
+pbmc.markers <- pbmc.markers[pbmc.markers$gene %in% dge$BIOCHEMICAL,]
+pbmc.markers <- pbmc.markers[pbmc.markers$p_val_adj < 0.05,]
+pbmc.markers <- pbmc.markers[!pbmc.markers$cluster %in% c("Other", "Platelets"),]
+pbmc.markers_filt <- pbmc.markers[abs(pbmc.markers$avg_log2FC) > 1,]
+```
+
+```{r}
+write.csv(pbmc.markers, "results/seurat_cell_origin_proteins_differing_HC-like_at-risk.csv")
+write.csv(pbmc.markers_filt, "results/seurat_cell_origin_proteins_differing_HC-like_at-risk_filt.csv")
+```
+
+
+```{r}
+x <- data.frame(table(pbmc.markers$cluster))
+write.csv(x, "results/seurat_cell_origin_proteins_differing_HC-like_at-risk_table_number_prot_per_cell_type.csv")
+```
+
+
+```{r}
+pbmc <- readRDS(paste("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/", name_ana, "_with_cell_type.rds"))
+```
+
+```{r}
+library(RColorBrewer)
+col <- brewer.pal(9, "Dark2")
+col
+```
+
+```{r}
+col <- c(col, "grey")
+```
+
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "tsne")
+```
+
+```{r}
+list_genes <- pbmc.markers_filt$gene[abs(pbmc.markers_filt$avg_log2FC) > 2.92]
+```
+
+
+```{r}
+library(viridis)
+col <- c("lightgrey", viridis(9))
+```
+
+```{r}
+list_x <- list()
+list_y <- list()
+a <- 1
+
+for (i in list_genes) {
+  print(i)
+  x <- FeaturePlot(pbmc, features = i, reduction = "tsne", cols = col)
+  list_x[[a]] <- x
+  ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/10_diff_prot/", name_ana, "_feature_plot_", i, ".pdf"), height = 3, width = 3.5)
+  y <- VlnPlot(object = pbmc, features = i, cols = col)
+  list_y[[a]] <- y
+  ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/10_diff_prot/", name_ana, "_violon_plot_", i, ".pdf"), height = 3, width = 6)
+  
+  a <- a + 1
+  #pdf(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/", name_ana, "feature_violon_plot_", i, ".pdf"), height = 3, width = 10)
+  #grid.arrange(x, y, ncol = 2, nrow = 1)
+  #dev.off()
+  
+}
+```
+
+```{r}
+gns <- read.csv("data/brain_genes_clean_table.csv", row.names = 1)
+```
+
+```{r}
+gns <- gns[gns$HumanName %in% dge$BIOCHEMICAL,]
+```
+
+```{r}
+write.csv(gns, "data/brain_genes_differing_HC-like_at-risk.csv")
+```
+
+```{r}
+cell <- select(pbmc.markers_filt, gene, avg_log2FC, p_val_adj, cluster)
+names(cell)[1] <- "HumanName"
+```
+
+```{r}
+gns <- gns[gns$HumanName %in% pbmc.markers$gene,]
+gns <- merge(gns, cell, by = "HumanName")
+```
+
+```{r}
+write.csv(gns, "data/brain_genes_differing_HC-like_at-risk_and_cell_specific.csv")
+```
+
+
+## save CSV as Txt
+```{r}
+tissues <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Gtex_tissue_signature.csv")
+write.table(tissues, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Gtex_tissue_signature.gmt",sep = "\t", row.names = FALSE, quote = FALSE, col.names = FALSE)
+```
+
+## GSEA Gtex --> NOTHING
+```{r}
+gsea <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/CUSTOM140071462827776.human.enrichr.reports.txt")
+```
+
+## GSEA Human Gene atlas
+```{r}
+gsea <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Human_Gene_Atlas_table_prot_at-risk_HC-like.txt")
+gsea <- gsea[gsea$Adjusted.P.value < 0.05,]
+write.csv(gsea, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Human_Gene_Atlas_table_prot_at-risk_HC-like_filt.txt")
+```
+
+
+## GSEA JENSEN
+```{r}
+gsea <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Jensen_TISSUES_table_prot_at-risk_HC-like.txt")
+gsea <- gsea[gsea$Adjusted.P.value < 0.05,]
+write.csv(gsea, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/Jensen_TISSUES_table_prot_at-risk_HC-like_filt.txt")
+```
+
+
+## GSEA PanglaoDB
+```{r}
+gsea <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/PanglaoDB_Augmented_2021_table_prot_at-risk_HC-like.txt")
+gsea <- gsea[gsea$Adjusted.P.value < 0.05,]
+write.csv(gsea, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/tissues_cells/PanglaoDB_Augmented_2021_table_prot_at-risk_HC-like_filt.txt")
+```
+
+
+
+
+
+

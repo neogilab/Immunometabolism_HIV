@@ -1,0 +1,57 @@
+Aerobic rephosphorylation of ATP from glucose,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Aerobic rephosphorylation of GTP,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Aerobic rephosphorylation of CTP,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Aerobic rephosphorylation of UTP,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+ATP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+CTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+GTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+UTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+dATP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+dCTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+dGTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+dTTP de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Histidine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Isoleucine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Leucine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Lysine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Methionine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phenylalanine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Threonine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Tryptophan uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Valine uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Glycerate 3-phosphate  de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Mitochondrial acetyl-CoA de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Mitochondrial AKG de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Erythrose 4-phosphate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Fructose 6-phosphate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Glyceraldehyde 3-phosphate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Glucose 6-phosphate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Mitochondrial oxaloacetate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phosphoenolpyruvate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Pyruvate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Ribose 5-phosphate de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Mitochondrial succinyl-CoA de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Cholesterol de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Protein synthesis from AAs,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Oxidative phosphorylation,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Oxidative decarboxylation,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Krebs cycle NADH,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Ubiquinol-to-proton,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Ubiquinol-to-ATP,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Beta oxidation of saturated FA,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Beta oxidation of long-chain FA,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Beta oxidation of odd-chain FA,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Beta oxidation of unsaturated fatty acid (n-9) ,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Beta oxidation of unsaturated fatty acid (n-6) ,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Uptake and beta oxidation of all NEFAs,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Choline uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Inositol uptake,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phosphatidylcholine de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phosphatidylethanolamine de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phosphatidylserine de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Phosphatidylinositol de novo synthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Thiamin phosphorylation to TPP,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Coenzyme A synthesis from pantothenate,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+FAD synthesis from riboflavin,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Heme biosynthesis,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+Growth on Ham's media (biomass production),1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1

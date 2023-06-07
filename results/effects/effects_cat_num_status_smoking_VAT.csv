@@ -1,0 +1,11 @@
+"","NULL.V1","NULL.V2","NULL.V3","NULL.V4"
+"1","Predictors","Log-Odds","CI","p"
+"2","(Intercept)","-0.74","-2.24 – 0.62","0.301"
+"3","sub data[, 2]","0.00","-0.01 – 0.01","0.644"
+"4","sub data[, 3]Ex smoker","-0.90","-2.76 – 0.96","0.337"
+"5","sub data[, 3]Never smoker","-0.09","-1.76 – 1.66","0.917"
+"6","sub data[, 2] × subdata[, 3]Ex smoker","0.01 *","0.00 – 0.03","0.046"
+"7","sub data[, 2] × subdata[, 3]Never smoker","0.00","-0.01 – 0.01","0.983"
+"8","Observations","153",NA,NA
+"9","R2 Tjur","0.002",NA,NA
+"10","* p<0.05   ** p<0.01   *** p<0.001",NA,NA,NA

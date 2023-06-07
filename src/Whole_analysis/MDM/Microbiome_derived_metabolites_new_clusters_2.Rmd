@@ -1,0 +1,302 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(gplots)
+library(ComplexHeatmap)
+library(circlize)
+library(limma)
+library("colorspace")
+library(ggplot2)
+library(dplyr)
+library(scales)
+```
+
+```{r}
+col <- c( "#005900", "#878782",	"#761212")
+```
+
+```{r}
+list_mic_met <- read.delim("data/MDM/MDM_clean_list_2_Postler.txt")
+list_mic_met$Line <- NULL
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical$X.1 <- NULL
+names(clinical)[2] <- "COCOMO_ID"
+```
+
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+data_met <- data.frame(t(data_met))
+metabolites <- rownames(data_met)
+data_met <- data.frame(t(data_met))
+
+rownames(data_met) <- gsub("X", "", rownames(data_met))
+colnames(data_met) <- metabolites
+data_met$COCOMO_ID <- rownames(data_met)
+```
+
+```{r}
+pca_data <- merge(clinical, data_met, by = "COCOMO_ID")
+pca_data <- pca_data[pca_data$cluster != "Ctrl",]
+```
+
+```{r}
+group_GSSM <- read.csv("processing/subgroups_GSSM.csv")
+group_GSSM$X <- NULL
+names(group_GSSM)[1] <- "User"
+pca_data <- merge(group_GSSM, pca_data, by = "User", all.y = TRUE)
+pca_data$X <- NULL
+data_met <- pca_data
+```
+
+
+```{r}
+dge <- read.csv("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC.csv", sep = ",")
+dge_mic_met <- dge[dge$BIOCHEMICAL %in% list_mic_met$BIOCHEMICAL,]
+```
+
+```{r}
+library(ggrepel)
+```
+
+```{r}
+tt <- dge_mic_met
+tt$X <- NULL
+name_ana <- unique(tt$Comp)
+tt$color <- NA
+
+for (i in 1:nrow(tt)){
+  if(tt[i, 2] > 0.75 & tt[i, 4] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_>1.5"
+  }
+  if(tt[i, 2] > 0.5 & tt[i, 2] < 0.75 & tt[i, 4] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_1>x>1.5"
+  }
+  if(tt[i, 2] > 0 & tt[i, 2] < 0.5 & tt[i, 4] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_0>x>1"
+  }
+  if(tt[i, 2] < 0 & tt[i, 4] < 0.05){
+    tt[i, ncol(tt)] <- "down_regulated"
+  }
+  if(tt[i, 4] > 0.05){
+    tt[i, ncol(tt)] <- "NS"
+    #tt[i, 1] <- NA
+  }
+}
+
+tt$BIOCHEMICAL[tt$adj.P.Val > 0.05] <- NA
+length(tt$BIOCHEMICAL[!is.na(tt$BIOCHEMICAL)])
+
+
+tt$color[is.na(tt$color)] <- "significant"
+#tt$Gene_name[tt$color == "significant"] <- NA
+cols <- c("up_regulated_>1.5" = "#cb4818",
+          "up_regulated_1>x>1.5" = "#d27f28", 
+          "up_regulated_0>x>1" = "#f1c232", 
+          "down_regulated" = "#86b7e8", 
+          "NS" = "grey", 
+          "significant" = "#586c6e")
+
+vol <- ggplot(tt, aes(x = logFC, y = -log10(adj.P.Val), colour = color, size = abs(logFC)))+ 
+  geom_point(alpha = 1, na.rm = T)+ 
+  theme(legend.title=element_text(size=2),legend.text=element_text(size=2),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=25),axis.title.x=element_text(size=25),
+        axis.text.y=element_text(size=25),axis.text.x=element_text(size=25)) +
+  labs(x="Log2 Fold Change",y="-log10 (adj.P.Val)")+
+  geom_text_repel(aes(label = BIOCHEMICAL),size=2,label.size = 0.1, color = "black", xlim = c(NA, Inf),
+    # Do not repel from top or bottom edges.
+    ylim = c(-Inf, Inf))+ theme_classic()+ 
+  geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+scale_color_manual(values = cols)
+
+print(vol)
+path_fig <- paste0("results/figures/volcano_plots/", name_ana, "_volcano_plot_MDM.pdf")
+ggsave(path_fig, width = 6, height = 3)
+```
+
+```{r}
+dge <- read.csv("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC_filt.csv", sep = " ")
+dge_mic_met <- dge[dge$BIOCHEMICAL %in% list_mic_met$BIOCHEMICAL,]
+```
+
+
+```{r}
+data_sign <- data_met[, colnames(data_met) %in% c("cluster", as.vector(dge_mic_met$BIOCHEMICAL))]
+data_sign$cluster <- factor(data_sign$cluster, levels = c("Ctrl", 1, 2))
+```
+
+## Heatmap
+```{r}
+table_DGE <- dge_mic_met
+data <- pca_data
+data$X <- NULL
+```
+
+```{r}
+trans <- as.factor(data$Transm_mode)
+cd4_cd8 <- data$CDA_CD8_cat
+bmi <- data$BMI_cat
+age <- data$AGE_cat
+mets <- as.factor(data$METS) 
+ethnic <- data$Ethnic
+gender <- data$GENDER
+group <- paste0(data$group, "_", data$cluster)
+cluster <- data$cluster
+data_2 <- data.frame(t(data[,-c(1:47)]))
+data_2$BIOCHEMICAL <- rownames(data_2)
+data_2 <- merge(table_DGE, data_2, by = "BIOCHEMICAL")
+data_2$Group <- NA
+names(data_2)[1] <- "Metabolite"
+data_2$Group[grepl("acetate", data_2$Metabolite)] <- "acetate derivates"
+data_2$Group[grepl("butyrate", data_2$Metabolite)] <- "butyrate derivates"
+data_2$Group[grepl("kynurenine", data_2$Metabolite)] <- "kynurenine derivates"
+data_2$Group[grepl("propionate", data_2$Metabolite)] <- "propionate derivates"
+data_2$Group[grepl("indole", data_2$Metabolite)] <- "indole derivates"
+names(data_2)[1] <- "BIOCHEMICAL"
+data_2 <- merge(list_mic_met, data_2, by = "BIOCHEMICAL")
+
+data_2$SUB.PATHWAY <- as.vector(data_2$SUB.PATHWAY)
+list_other <- names(table(data_2$SUB.PATHWAY) > 1)
+
+data_2$SUB.PATHWAY[!data_2$SUB.PATHWAY %in% c("Lipid Fatty Acid Metabolism (Acyl Carnitine, Short Chain)","Tryptophan Metabolism", "Benzoate Metabolism", "Polyamine Metabolism", "Primary Bile Acid Metabolism", "Secondary Bile Acid Metabolism")] <- "Others"
+```
+
+## heatmap metabolites
+```{r}
+data_3 <- data.frame(t(data_2[,-c(1:11, 170)]))
+data_3 <- data.frame(scale(data_3))
+max(data_3)
+min(data_3)
+```
+
+```{r}
+colnames(data_3) <- data_2$BIOCHEMICAL
+```
+
+```{r}
+#data_3[data_3 > 3] <- 3
+#data_3[data_3 < -3] <- -3
+```
+
+```{r}
+col_fun1 = colorRamp2(c(-3,-1.2, -1, 0,1, 1.2,3), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+col_fun_2 = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+```
+
+```{r}
+pdf("results/figures/microbiome_derived_metabolites_two_new_clusters_no_groups.pdf", width = 16, height = 7)
+ht = Heatmap(t(data_3), col = col_fun1, show_column_names = FALSE, row_split = data_2$under_group,
+             border = FALSE, column_gap = unit(2, "mm"), 
+             top_annotation = HeatmapAnnotation(Cluster = cluster, Age = age, Gender = gender, Bmi = bmi, MetS = mets, Transmission= trans,
+                                                col = list(
+                                                  Gender = c("Female" = "blue", "Male" = "#ffd700"),
+                                                  Cluster = c("1" = col[2], "2" = col[3]),
+                                                  MetS = c("0" = "white", "1" = "red"),
+                                                  Bmi = c("underweight" = "#d9ead3","normal" = "green", "overweight" = "orange", "obese" = "red", "extremely obese" = "#7A1F32")
+                                                              
+                                                  
+                                                              )),
+             right_annotation = rowAnnotation(C2vsC1 = data_2$logFC,
+                                              Pathway = data_2$SUPER.PATHWAY,
+                                              Sub_Pathway = data_2$SUB.PATHWAY,
+                                              Under_group = data_2$under_group,
+                                              col = list(C2vsC1 = col_fun_2), show_legend = TRUE))
+draw(ht)
+dev.off()
+```
+
+
+```{r}
+pdf("results/figures/microbiome_derived_metabolites_two_new_clusters.pdf", width = 16, height = 7)
+ht = Heatmap(t(data_3), col = col_fun1, show_column_names = FALSE, row_split = data_2$under_group, column_split = cluster,
+             border = FALSE, column_gap = unit(2, "mm"), 
+             top_annotation = HeatmapAnnotation(Cluster = cluster, Age = age, Gender = gender, Bmi = bmi, MetS = mets, Transmission= trans,
+                                                col = list(
+                                                  Gender = c("Female" = "blue", "Male" = "#ffd700"),
+                                                  Cluster = c("1" = col[2], "2" = col[3]),
+                                                  MetS = c("0" = "white", "1" = "red"),
+                                                  Bmi = c("underweight" = "#d9ead3","normal" = "green", "overweight" = "orange", "obese" = "red", "extremely obese" = "#7A1F32")
+                                                              
+                                                  
+                                                              )),
+             right_annotation = rowAnnotation(C2vsC1 = data_2$logFC,
+                                              Pathway = data_2$SUPER.PATHWAY,
+                                              Sub_Pathway = data_2$SUB.PATHWAY,
+                                              Under_group = data_2$under_group,
+                                              col = list(C2vsC1 = col_fun_2), show_legend = TRUE))
+draw(ht)
+dev.off()
+```
+
+```{r}
+pca_data <- pca_data[,c(1:47, which(colnames(pca_data) == "spermidine"), which(colnames(pca_data) == "spermine"))]
+```
+```{r}
+r <- c()
+r2 <- c()
+plm <- as.data.frame(matrix(0,nrow=5,ncol=4))
+for(i in 4:47){ #scdat is my data frame with each column a metabolite
+  plm[i-3,] <- coef(summary(lm(pca_data[,49] ~ pca_data[,i])))[2,]
+  h <- summary(lm(pca_data[,49] ~ pca_data[,i]))$r.squared
+  m <- summary(lm(pca_data[,49] ~ pca_data[,i]))$adj.r.squared
+  print(h)
+  r <- c(r, h)
+  r2 <- c(r2, m)
+}
+
+colnames(plm) <- c("Estimate","StdError","tStat","pvalue")
+rownames(plm) <- colnames(pca_data)[4:47]
+plm$padjust <- p.adjust(plm$pvalue,method="BH")
+plm$R2 <- r
+plm$R2_adj <- r2
+sigplm <- plm[plm$padjust<0.1,] #look only at those with adjusted p.value < 0.05
+sigplm
+
+write.csv(plm, "processing/Table_linear_regression_spermine.csv")
+```
+
+```{r}
+r <- c()
+r2 <- c()
+plm <- as.data.frame(matrix(0,nrow=5,ncol=4))
+for(i in 4:47){ #scdat is my data frame with each column a metabolite
+  plm[i-3,] <- coef(summary(lm(pca_data[,48] ~ pca_data[,i])))[2,]
+  h <- summary(lm(pca_data[,48] ~ pca_data[,i]))$r.squared
+  m <- summary(lm(pca_data[,48] ~ pca_data[,i]))$adj.r.squared
+  print(h)
+  r <- c(r, h)
+  r2 <- c(r2, m)
+}
+
+colnames(plm) <- c("Estimate","StdError","tStat","pvalue")
+rownames(plm) <- colnames(pca_data)[4:47]
+plm$padjust <- p.adjust(plm$pvalue,method="BH")
+plm$R2 <- r
+plm$R2_adj <- r2
+sigplm <- plm[plm$padjust<0.1,] #look only at those with adjusted p.value < 0.05
+sigplm
+
+write.csv(plm, "processing/Table_linear_regression_spermidine.csv")
+```
+
+```{r}
+
+
+```
+

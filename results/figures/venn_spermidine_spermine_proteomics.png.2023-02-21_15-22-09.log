@@ -1,0 +1,22 @@
+INFO [2023-02-21 15:22:09] $x
+INFO [2023-02-21 15:22:09] list(a, b, c, d)
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $category.names
+INFO [2023-02-21 15:22:09] c("Spermidine vs Ctl", "Spermine vs Ctl", "Spermine + Spermidine vs Ctrl", 
+INFO [2023-02-21 15:22:09]     "At-risk vs HC-like")
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $filename
+INFO [2023-02-21 15:22:09] [1] "results/figures/venn_spermidine_spermine_proteomics.png"
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $output
+INFO [2023-02-21 15:22:09] [1] TRUE
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $fill
+INFO [2023-02-21 15:22:09] myCol
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $cat.default.pos
+INFO [2023-02-21 15:22:09] [1] "text"
+INFO [2023-02-21 15:22:09] 
+INFO [2023-02-21 15:22:09] $imagetype
+INFO [2023-02-21 15:22:09] [1] "png"
+INFO [2023-02-21 15:22:09] 

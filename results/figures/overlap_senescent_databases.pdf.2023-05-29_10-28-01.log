@@ -1,0 +1,15 @@
+INFO [2023-05-29 10:28:01] $x
+INFO [2023-05-29 10:28:01] list(sen_1$GeneSymb, sen_2$Gene_name, sen_3$gene_name)
+INFO [2023-05-29 10:28:01] 
+INFO [2023-05-29 10:28:01] $category.names
+INFO [2023-05-29 10:28:01] c("CSGene", "SASP", "CellAge")
+INFO [2023-05-29 10:28:01] 
+INFO [2023-05-29 10:28:01] $filename
+INFO [2023-05-29 10:28:01] [1] "results/figures/overlap_senescent_databases.pdf"
+INFO [2023-05-29 10:28:01] 
+INFO [2023-05-29 10:28:01] $output
+INFO [2023-05-29 10:28:01] [1] TRUE
+INFO [2023-05-29 10:28:01] 
+INFO [2023-05-29 10:28:01] $cat.default.pos
+INFO [2023-05-29 10:28:01] [1] "text"
+INFO [2023-05-29 10:28:01] 

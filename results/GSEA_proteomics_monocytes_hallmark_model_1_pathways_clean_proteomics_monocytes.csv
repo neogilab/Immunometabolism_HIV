@@ -1,0 +1,10 @@
+"","Name","Stat..dist.dir.up.","p.adj..dist.dir.up.","Genes..up.","Stat..dist.dir.dn.","p.adj..dist.dir.dn.","Genes..down.","comp","sign","pvalue","Nb"
+"23","E2F_TARGETS",0.70291,1,13,0.29709,0.083916,32,"proteomics_norm_spermin_frac_CBoth-CControl","down",0.083916,32
+"29","OXIDATIVE_PHOSPHORYLATION",0.66254,1,31,0.33746,0.062937,93,"proteomics_norm_spermin_frac_CBoth-CControl","down",0.062937,93
+"241","MYC_TARGETS_V1",0.82695,1,21,0.17305,0.041958,109,"proteomics_norm_spermin_frac_CSpermine-CControl","down",0.041958,109
+"24","MYC_TARGETS_V1",0.68278,1,34,0.31722,0.041958,96,"proteomics_norm_spermin_frac_CBoth-CControl","down",0.041958,96
+"231","E2F_TARGETS",0.84306,1,7,0.15694,0.041958,38,"proteomics_norm_spermin_frac_CSpermine-CControl","down",0.041958,38
+"36","COAGULATION",0.38725,0.020979,36,0.61275,1,15,"proteomics_norm_spermin_frac_CBoth-CControl","up",0.020979,36
+"35","HEME_METABOLISM",0.42516,0.020979,25,0.57484,1,20,"proteomics_norm_spermin_frac_CBoth-CControl","up",0.020979,25
+"361","COAGULATION",0.41481,0.01049,30,0.58519,1,21,"proteomics_norm_spermin_frac_CSpermine-CControl","up",0.01049,30
+"25","EPITHELIAL_MESENCHYMAL_TRANSITION",0.41868,0.01049,26,0.58132,1,19,"proteomics_norm_spermin_frac_CSpermine-CControl","up",0.01049,26

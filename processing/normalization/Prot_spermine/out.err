@@ -1,0 +1,28 @@
+You are running version 1.14.0 of NormalyzerDE
+[Step 1/5] Load data and verify input
+27 fields with '0' were replaced by 'NA'
+Input data checked. All fields are valid.
+Sample check: More than one sample group found
+No RT column found, skipping RT processing
+
+Non replicated samples in dataset: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 performing limited single-replicate run
+
+[Step 1/5] Input verified, job directory prepared at:/hostdata/Prot_spermine
+[Step 2/5] Performing normalizations
+No RT column specified (column named 'RT') or option not specified Skipping RT normalization.
+
+[Step 2/5] Done!
+[Step 3/5] Generating evaluation measures...
+[Step 3/5] Done!
+[Step 4/5] Writing matrices to file
+[Step 4/5] Matrices successfully written
+[Step 5/5] Generating plots...
+[Step 5/5] Plots successfully generated
+All done! Results are stored in: /hostdata/Prot_spermine, processing time was 1.2 minutes
+Warning message:
+In validateSampleReplication(lowCountSampleFiltered, groups, requireReplicates = requireReplicates,  :
+  Following group conditions does not have replicates:
+Both_D1 Both_D2 Both_D3 Both_D4 Control_D1 Control_D2 Control_D3 Control_D4 Spermidine_D1 Spermidine_D2 Spermidine_D3 Spermidine_D4 Spermine_D1 Spermine_D2 Spermine_D3 Spermine_D4
+By default this is not allowed.
+You can force limited processing of non-replicated data by
+setting the "requireReplicates" option to FALSE

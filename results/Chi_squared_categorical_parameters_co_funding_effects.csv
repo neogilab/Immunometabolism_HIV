@@ -1,0 +1,7 @@
+"","Var1","Var2","pval","Test"
+"1","cluster","Ethnic",0.00267341804960543,"Chi-Square Test"
+"2","cluster","H2_56",0.0138297911789121,"Chi-Square Test"
+"3","cluster","status_smoking",0.0352757368470012,"Chi-Square Test"
+"4","Ethnic","H2_56",0.807096451774113,"Fisher's Exact Test"
+"5","Ethnic","status_smoking",0.00349825087456272,"Fisher's Exact Test"
+"6","H2_56","status_smoking",0.0254872563718141,"Fisher's Exact Test"

@@ -1,0 +1,93 @@
+Whole_analysis/Other_analysis/extra/Co_expression_network_correlations_consensus.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Other_analysis/extra/Prepare_files_MOGONET.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Other_analysis/extra/Co_expression_network_correlations_consensus.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/Other_analysis/extra/Co_expression_network_correlations.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Other_analysis/extra/Co_expression_network_correlations.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Other_analysis/extra/Prepare_files_MOGONET.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Other_analysis/Co_expression_network_correlations_consensus_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/Other_analysis/Co_expression_network_correlations_consensus_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_4.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_8.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_6_pathways_prot.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/.Rhistory:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_SNF_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF_lipids.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF_lipids.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF_lipids_2.nb.html:data_txn &lt;- read.csv(\processing/COCOMO_transcriptomics_vsd_data_deseq2.csv\, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/extra/1_COCOMO_txn_olink_metabolomics_SNF_lipids_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_7.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_8.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_6_pathways_prot.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_SNF_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_3.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_5.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_3.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_7.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_4.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX_5.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Pathways/prot/.Rhistory:data_txn <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1)
+Whole_analysis/Pathways/prot/.Rhistory:data_txn <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1)
+Whole_analysis/Pathways/prot/.Rhistory:data_txn <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1)
+Whole_analysis/Figures/6_Heatmap_senescence_transcriptomics.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/extra/Boxplot_top_10_SCT_proteomics_transcriptomics.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;)
+Whole_analysis/Figures/extra/5_COCOMO_Figures_general.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/extra/1_COCOMO_txn_olink_metabolomics_PCA.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Figures/extra/Boxplot_top_10_SCT_proteomics_transcriptomics.Rmd:data_txn <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv")
+Whole_analysis/Figures/extra/1_COCOMO_txn_olink_metabolomics_PCA.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/extra/5_COCOMO_Figures_general.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/Boxplot_top_10_SCT_proteomics_transcriptomics_3.Rmd:data_txn <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1)
+Whole_analysis/Figures/Boxplot_top_10_SCT_proteomics_transcriptomics_3.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1)
+Whole_analysis/Figures/5_COCOMO_Figures_general_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/5_COCOMO_Figures_general_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+Whole_analysis/Figures/6_Heatmap_senescence_transcriptomics.nb.html:<pre class="r"><code>data &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Single_omics/2b_COCOMO_txn_random_forest_consensus_2.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Single_omics/extra/2b_COCOMO_txn_random_forest_consensus.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Single_omics/extra/2b_COCOMO_txn_random_forest_consensus.nb.html:data &lt;- read.csv(\processing/COCOMO_transcriptomics_vsd_data_deseq2.csv\, row.names = 1, check.names = FALSE)
+Whole_analysis/Single_omics/extra/2b_COCOMO_txn_structural_causal_modeling.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Single_omics/extra/2b_COCOMO_txn_structural_causal_modeling.nb.html:data &lt;- read.csv(\processing/COCOMO_transcriptomics_vsd_data_deseq2.csv\, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Single_omics/extra/networks_transcriptomics.nb.html:data &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Single_omics/extra/networks_transcriptomics.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/Single_omics/2b_COCOMO_txn_random_forest_consensus_2.nb.html:data &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Single_omics/networks_transcriptomics_2.nb.html:data &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/Single_omics/networks_transcriptomics_2.Rmd:data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+Whole_analysis/preprocessing/extra_make_input_GSEA.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+Whole_analysis/preprocessing/extra_make_input_GSEA.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/MOFA/COCOMO_txn_MOFA_build_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/MOFA/COCOMO_txn_MOFA_build_aging_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+extra/MOFA/COCOMO_txn_MOFA_build_aging_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/SNF/extra/COCOMO_txn_SNF.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/processing/COCOMO_txn_preprocessing_2.nb.html:write.csv(t(vsd), &quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;)</code></pre>
+extra/processing/COCOMO_txn_preprocessing_2.Rmd:write.csv(t(vsd), "processing/COCOMO_transcriptomics_vsd_data_deseq2.csv")
+extra/Figures/COCOMO_txn_Figures_vsd_4.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Figures/extra/COCOMO_txn_Figures_vsd_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Figures/extra/COCOMO_txn_Figures_vsd_3.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Figures/extra/COCOMO_txn_Figures_vsd.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/METS/Clock/Txn_clock_controls.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/METS/Clock/Txn_clock_controls.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_Aging_Delta_COCOMO.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>
+extra/Aging/extra/Txn_profiles_genes_identification_2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_genes_identification_2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_genes_identification.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_genes_identification.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_Aging_Delta_COCOMO.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/extra/Txn_profiles_Aging_COCOMO.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_DA_AA.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_DA_AA_balanced.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_DA_AA.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RF_all_genes.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RA_AA.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RA_AA_merge_DA.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RA_AA_merge_DA.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RA_AA.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_DA_AA_balanced.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/RF/Biomarkers_aging_transcriptomics_RF_all_genes.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/DGE/Verification_sign_deseq2.Rmd:data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+extra/Aging/DGE/Verification_sign_deseq2.nb.html:<pre class="r"><code>data_txn &lt;- read.csv(&quot;processing/COCOMO_transcriptomics_vsd_data_deseq2.csv&quot;, row.names = 1, check.names = FALSE)</code></pre>

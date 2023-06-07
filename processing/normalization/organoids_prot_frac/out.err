@@ -1,0 +1,37 @@
+You are running version 1.14.0 of NormalyzerDE
+[Step 1/5] Load data and verify input
+2 fields with '0' were replaced by 'NA'
+Input data checked. All fields are valid.
+Sample check: More than one sample group found
+Sample replication check: All samples have replicates
+No RT column found, skipping RT processing
+
+[Step 1/5] Input verified, job directory prepared at:/hostdata/organoids_prot_frac
+[Step 2/5] Performing normalizations
+No RT column specified (column named 'RT') or option not specified Skipping RT normalization.
+
+[Step 2/5] Done!
+[Step 3/5] Generating evaluation measures...
+[Step 3/5] Done!
+[Step 4/5] Writing matrices to file
+[Step 4/5] Matrices successfully written
+[Step 5/5] Generating plots...
+[Step 5/5] Plots successfully generated
+All done! Results are stored in: /hostdata/organoids_prot_frac, processing time was 4.5 minutes
+Warning messages:
+1: Computation failed in `stat_binhex()`:
+ 
+2: Computation failed in `stat_binhex()`:
+ 
+3: Computation failed in `stat_binhex()`:
+ 
+4: Computation failed in `stat_binhex()`:
+ 
+5: Computation failed in `stat_binhex()`:
+ 
+6: Computation failed in `stat_binhex()`:
+ 
+7: Computation failed in `stat_binhex()`:
+ 
+8: Computation failed in `stat_binhex()`:
+ 

@@ -1,0 +1,348 @@
+---
+title: "Boxplots transcriptomics proteomics"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(mygene)
+library(org.Hs.eg.db)
+library(ggplot2)
+library(ggpubr)
+```
+
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+```
+
+### olink
+```{r}
+data <- read.csv("processing/olink_data_new_ids.csv", row.names = 1)
+data$Condition <- NULL
+data$COCOMO_ID <- rownames(data)
+pca_data <- merge(clinical, data, by = "COCOMO_ID")
+data_prot <- data.frame(cluster = pca_data$cluster, pca_data[,-c(1:47)])
+data_prot_2 <- data_prot
+```
+
+
+```{r}
+x <- read.csv("processing/bblearn_find_driver_genes_proteomics.csv")
+m <- as.vector(x$gene[x$BIC_diff > 0])
+y <- which(colnames(data_prot) %in% m)
+```
+
+
+```{r}
+data_prot$cluster <- as.vector(data_prot$cluster)
+data_prot$cluster[data_prot$cluster == 1] <- "HC-like"
+data_prot$cluster[data_prot$cluster == 2] <- "At-risk"
+```
+
+
+
+```{r}
+data_prot$cluster <- factor(data_prot$cluster, levels = c("Ctrl", "HC-like", "At-risk"))
+```
+
+```{r}
+data_prot <- data_prot[data_prot$cluster !=  "Ctrl",]
+```
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+my_comparisons <- list( c("HC-like", "At-risk"))
+```
+## boxplots BNN 
+```{r}
+list_x <- list()
+x = 1
+
+for (i in y) {
+  table_1 <- data_prot[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/BNN_prot_", colnames(data_prot)[i], "_top_marker.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+
+
+
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1)
+data_txn <- data.frame(t(data_txn))
+data_txn$gene_id <- mapIds(org.Hs.eg.db, as.vector(rownames(data_txn)), keytype="ENSEMBL", column="SYMBOL")
+data_txn <- data_txn[!is.na(data_txn$gene_id),]
+data_txn <- data_txn[!duplicated(data_txn$gene_id),]
+rownames(data_txn) <- data_txn$gene_id
+data_txn$gene_id <- NULL
+data_txn <- data.frame(t(data_txn))
+data_txn$COCOMO_ID <- gsub("X", "", rownames(data_txn))
+pca_data <- merge(clinical, data_txn, by = "COCOMO_ID")
+data_txn <- data.frame(cluster = pca_data$cluster, pca_data[,-c(1:47)])
+```
+```{r}
+markers <- read.csv("results/SCT/8k_pbmc_donor_top_10_markers.csv")
+markers <- as.vector(markers$X)
+markers[markers == "ASAH11"] <- "ASAH1"
+markers[markers == "NPC21"] <- "NPC2"
+markers[markers == "LGALS91"] <- "LGALS9"
+markers[!markers %in% colnames(data_prot)]
+
+data_txn <- data_txn[,colnames(data_txn) %in% c("cluster", markers)]
+
+data_prot <- data_prot[,colnames(data_prot) %in% c("cluster", markers)]
+```
+
+
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+library(ggpubr)
+```
+
+
+
+```{r}
+data_prot$cluster <- as.vector(data_prot$cluster)
+data_prot$cluster[data_prot$cluster == 1] <- "HC-like"
+data_prot$cluster[data_prot$cluster == 2] <- "At-risk"
+
+
+data_txn$cluster <- as.vector(data_txn$cluster)
+data_txn$cluster[data_txn$cluster == 1] <- "HC-like"
+data_txn$cluster[data_txn$cluster == 2] <- "At-risk"
+```
+
+```{r}
+my_comparisons <- list( c("Ctrl", "HC-like"), c("HC-like", "At-risk"), c("Ctrl", "At-risk") )
+```
+
+```{r}
+data_prot$cluster <- factor(data_prot$cluster, levels = c("Ctrl", "HC-like", "At-risk"))
+data_txn$cluster <- factor(data_txn$cluster, levels = c("Ctrl", "HC-like", "At-risk"))
+```
+
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(data_prot)) {
+  table_1 <- data_prot[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/senescence_prot_", colnames(data_prot)[i], "_top_marker_ctrls.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+```{r}
+library(gridExtra)
+pdf(paste0("results/figures/Boxplots_senescence_prot_ctrls.pdf"), height = 10, width = 9)
+grid.arrange(list_x[[1]], list_x[[2]],list_x[[3]], list_x[[4]], list_x[[5]], list_x[[6]], list_x[[7]] ,list_x[[8]], list_x[[9]], ncol = 3, nrow = 3)
+dev.off()
+```
+
+
+  
+  
+
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(data_txn)) {
+  table_1 <- data_txn[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/senescence_txn_", colnames(data_txn)[i], "_top_marker_ctrls.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+```{r}
+library(gridExtra)
+pdf(paste0("results/figures/Boxplots_senescence_txn_ctrls.pdf"), height = 10, width = 9)
+grid.arrange(list_x[[1]], list_x[[2]],list_x[[3]], list_x[[4]], list_x[[5]], list_x[[6]], list_x[[7]] ,list_x[[8]], list_x[[9]], ncol = 3, nrow = 3)
+dev.off()
+```
+```{r}
+data_txn <- data_txn[data_txn$cluster != "Ctrl",]
+data_prot <- data_prot[data_prot$cluster != "Ctrl",]
+```
+
+```{r}
+data_prot$cluster <- factor(data_prot$cluster, levels = c("HC-like", "At-risk"))
+data_txn$cluster <- factor(data_txn$cluster, levels = c("HC-like", "At-risk"))
+```
+
+
+```{r}
+my_comparisons <- list( c("HC-like", "At-risk"))
+```
+
+```{r}
+col <- col[-1]
+```
+
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(data_prot)) {
+  set.seed(3000)
+  d <- data.frame(
+    x = runif(10),
+    y = runif(10),
+    label = sprintf("label%s", 1:10)
+  )
+
+  a <- ggplot(d, aes(x, y, label = label)) + geom_point() + geom_text()
+  
+  table_1 <- data_prot[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = list(c(1,2)))
+  a
+  ggsave(paste0("results/figures/boxplots/senescence_prot_", colnames(data_prot)[i], "_top_marker.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+  
+}
+```
+
+```{r}
+library(gridExtra)
+pdf(paste0("results/figures/Boxplots_senescence_prot.pdf"), height = 7, width = 6)
+grid.arrange(list_x[[1]], list_x[[2]],list_x[[3]], list_x[[4]], list_x[[5]], list_x[[6]], list_x[[7]] ,list_x[[8]], list_x[[9]], ncol = 3, nrow = 3)
+dev.off()
+```
+
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(data_txn)) {
+  table_1 <- data_txn[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/senescence_txn_", colnames(data_txn)[i], "_top_marker.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+
+```{r}
+library(gridExtra)
+pdf(paste0("results/figures/Boxplots_senescence_txn.pdf"), height = 7, width = 6)
+grid.arrange(list_x[[1]], list_x[[2]],list_x[[3]], list_x[[4]], list_x[[5]], list_x[[6]], list_x[[7]] ,list_x[[8]], list_x[[9]], ncol = 3, nrow = 3)
+dev.off()
+```
+

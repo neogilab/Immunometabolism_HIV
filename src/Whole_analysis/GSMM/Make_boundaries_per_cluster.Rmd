@@ -1,0 +1,139 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Plan
+1. Upload Tests HC/Clusters
+2. Upload transport reactions
+3. Make file : Reaction / Lower bound / Uppper bound for each cluster
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(dplyr)
+library(xlsx)
+```
+
+
+data/GEM/reactions.tsv
+
+```{r}
+col <- c("#883311", "#116688", "#881166", "#668811", "#da7da0")
+```
+
+## import logFC tables
+```{r}
+dge <- read.xlsx("results/LIMMA/model_1_LIMMA_results_metabolites_with_HC_filt.xlsx", 1)
+dge$NA. <- NULL
+ids <- read.csv("data/GEM/metabolon_ids_metabolites.csv")
+dge <- merge(dge, ids, by = "BIOCHEMICAL")
+```
+
+```{r}
+met_GEM_ids <- read.delim("data/GEM/metabolites.tsv")
+met_GEM_ids <- met_GEM_ids[,c(2, 4)]
+```
+
+## import transporters
+```{r}
+transp <- read.csv('data/GEM/transporters_reations.csv')
+names(transp)[3] <- "metsNoComp"
+transp <- merge(transp, met_GEM_ids, by = "metsNoComp")
+
+dge_2 <- dge[dge$KEGG %in% transp$metKEGGID,]
+dge_2 <- dge_2[dge_2$KEGG != "",]
+dge_2$X <- NULL
+
+dge_2 <- dge_2[grepl("Ctrl", dge_2$Comp),]
+```
+
+
+```{r}
+dge_2$Comp <- as.vector(dge_2$Comp)
+dge_2$BIOCHEMICAL <- as.vector(dge_2$BIOCHEMICAL)
+dge_2$Comp <- ifelse(dge_2$logFC < 0, paste0(gsub(".*-","",dge_2$Comp), "-", gsub("-.*","",dge_2$Comp)), dge_2$Comp)
+dge_2$logFC <- abs(dge_2$logFC)
+```
+
+```{r}
+dge_3 <- dge_2[dge_2$logFC < 0,]
+dge_4 <- dge_2[dge_2$logFC > 0,]
+```
+
+```{r}
+dge_2$boud_Ctrl <- NA
+dge_2$boud_C1 <- NA
+dge_2$boud_C2 <- NA
+```
+
+```{r}
+dge_2$boud_Ctrl[dge_2$logFC > 0 & grepl("group1-", dge_2$Comp)] <- 1000/2^dge_2$logFC[dge_2$logFC > 0 & grepl("group1-", dge_2$Comp)]
+dge_2$boud_Ctrl[dge_2$logFC > 0 & grepl("group2-", dge_2$Comp)] <- 1000/2^dge_2$logFC[dge_2$logFC > 0 & grepl("group2-", dge_2$Comp)]
+
+
+dge_2$boud_C1[dge_2$logFC > 0 & grepl("-group1", dge_2$Comp)] <- 1000/2^dge_2$logFC[dge_2$logFC > 0 & grepl("-group1", dge_2$Comp)]
+dge_2$boud_C2[dge_2$logFC > 0 & grepl("-group2", dge_2$Comp)] <- 1000/2^dge_2$logFC[dge_2$logFC > 0 & grepl("-group2", dge_2$Comp)]
+
+
+dup <- dge_2$BIOCHEMICAL
+dup <- dup[duplicated(dup)]
+
+which(!is.na(dge_2$boud_Ctrl) & !dge_2$BIOCHEMICAL %in% dup & !grepl("group1-", dge_2$Comp))
+
+dge_2$boud_C1[which(!is.na(dge_2$boud_Ctrl) & !dge_2$BIOCHEMICAL %in% dup & !grepl("group1-", dge_2$Comp))] <- dge_2$boud_Ctrl[which(!is.na(dge_2$boud_Ctrl) & !dge_2$BIOCHEMICAL %in% dup & !grepl("group1-", dge_2$Comp))] 
+
+dge_2$boud_C2[which(!is.na(dge_2$boud_Ctrl) & !dge_2$BIOCHEMICAL %in% dup & !grepl("group2-", dge_2$Comp))] <- dge_2$boud_Ctrl[which(!is.na(dge_2$boud_Ctrl) & !dge_2$BIOCHEMICAL %in% dup & !grepl("group2-", dge_2$Comp))] 
+
+
+#dge_2$boud_Ctrl[dge_2$BIOCHEMICAL == "hypoxanthine"] <- 1000/2^0.79
+#dge_2$boud_Ctrl[dge_2$BIOCHEMICAL == "2'-deoxyuridine"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "2'-deoxyuridine"]
+#dge_2$boud_C1[dge_2$BIOCHEMICAL == "2'-deoxyuridine"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "2'-deoxyuridine"]
+
+#dge_2$boud_Ctrl[dge_2$BIOCHEMICAL == "hippurate"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "hippurate"]
+#dge_2$boud_C1[dge_2$BIOCHEMICAL == "hippurate"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "hippurate"]
+
+#dge_2$boud_Ctrl[dge_2$BIOCHEMICAL == "kynurenine"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "kynurenine"]
+#dge_2$boud_C2[dge_2$BIOCHEMICAL == "kynurenine"] <- 1000/2^dge_2$logFC[dge_2$BIOCHEMICAL == "kynurenine"]
+
+#x <- dge_2[dge_2$BIOCHEMICAL == dup[1],]
+#x <- x[1,]
+#y <- dge_2[dge_2$BIOCHEMICAL == dup[1],]
+#y <- y
+dge_2 <- dge_2[!duplicated(dge_2$BIOCHEMICAL),]
+```
+
+```{r}
+table_globale <- dge_2[,c(1, 6:9)]
+```
+
+```{r}
+names(transp)[4] <- "KEGG"
+table_globale_f <- merge(transp, table_globale, by = "KEGG")
+table_globale_f <- table_globale_f[!duplicated(table_globale_f),]
+names(table_globale_f)[3:4] <- c("GEM_ID", "formula")
+```
+
+```{r}
+grepl("s  ->", table_globale_f$formula) | grepl("s  <=", table_globale_f$formula)
+```
+```{r}
+table_globale_f$boud_Ctrl[is.na(table_globale_f$boud_Ctrl)] <- 0
+table_globale_f$boud_C1[is.na(table_globale_f$boud_C1)] <- 0
+table_globale_f$boud_C2[is.na(table_globale_f$boud_C2)] <- 0
+```
+
+```{r}
+table_globale_f$bound <- ifelse(grepl("s  ->", table_globale_f$formula) | grepl("s  <=", table_globale_f$formula), "up", "down")
+write.csv(table_globale_f, "results/MATLAB/GEM_boudaries_3_groups.csv")
+```
+

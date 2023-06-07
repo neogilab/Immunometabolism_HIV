@@ -1,0 +1,344 @@
+---
+title: "Network transcriptomcis"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+start_time <- Sys.time()
+```
+
+```{r}
+library(bnlearn)
+library(purrr)
+library(foreach)
+```
+
+## load functions Carapito et al.
+```{r}
+source("src/Carapito.R")
+```
+
+## load data
+```{r}
+originalData <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/table_condition_biormarkers.csv")
+originalData$X <- NULL
+originalData$Condition <- NULL
+```
+
+
+```{r}
+numGraphs = 150 ## choose number of graphs X  (100 graphs)
+permuNumber = 10000 ## choose number of permutations (10000)
+output_folder = "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/networks/BNN"
+outname = 'transcriptomics_biomarkers'
+```
+
+## generat X graphs
+cextend() provides a consistent extension of partially directed networks into directed
+acyclic graphs, which can then be used (for instance) for parameter learning.
+```{r}
+start_wCextend = random.graph(nodes = names(originalData), num = numGraphs) 
+```
+
+# Calculating the Consensus DAG with Hill Climbing Algorithm
+## Fitting Hill-climbing algorithm
+```{r}
+network_scoreList <- unlist(lapply(start_wCextend, function(x) bnlearn::score(x, originalData))) ## calculate BIC for each network
+start_wCextend_Subset <- start_wCextend[which(network_scoreList != -Inf)] ## select network with BIC != Inf
+```
+
+## Fitting cExtend with HC Networks
+```{r}
+netlist_wCextend = foreach(net = start_wCextend_Subset) %dopar%
+{
+  bnlearn::cextend(bnlearn::hc(originalData, start=net), strict=F)
+}
+```
+
+## Extracting the graph
+```{r}
+individual_ExtractedGraphs = foreach(net = netlist_wCextend, i=1:length(netlist_wCextend)) %dopar%
+{
+  df <- extractGraph(net, label_string=paste0("run_", i, "_", outname))
+  from_diff = (df$fromDescendantCount)-(df$fromAncestorCount)
+  to_diff = (df$toDescendantCount)-(df$toAncestorCount)
+  cbind(df, from_diff, to_diff)
+}
+```
+
+## Calculating the Nodes and Edges for each graph
+```{r}
+consensus.dag.structure = foreach(netlist = netlist_wCextend, extractedGraph =  individual_ExtractedGraphs) %dopar%
+{
+  structure = bnlearn::as.graphNEL(netlist)
+  cbind(length(unique(unique(extractedGraph$from), unique(extractedGraph$to))) , length(structure@edgeData@data))
+}
+```
+
+## Calculating the Average Degree for X graphs
+```{r}
+edgeNode_table <- as.data.frame(do.call(rbind, consensus.dag.structure))
+colnames(edgeNode_table) <-  c("Nodes","Edges")
+edgeNode_table$averageDegree <- (edgeNode_table$Edges *2)/edgeNode_table$Nodes
+```
+
+## Save the DAGS with Random Graphs
+```{r}
+saveRDS(netlist_wCextend, file.path(output_folder,"outputRDS", paste0("DAGStructures_from100RandomGraphs_", outname, ".rds")))
+saveRDS(individual_ExtractedGraphs, file.path(output_folder,"outputRDS", paste0("ar2count_100DAGStructures_", outname, ".rds")))
+saveRDS(edgeNode_table, file.path(output_folder,"outputRDS", paste0("EdgesNodes_100DAGStructures_", outname, ".rds")))
+```
+
+## extract consensus DAG from netlist
+```{r}
+arcs_wCextend = custom.strength(netlist_wCextend, nodes = names(originalData), cpdag = T)
+consensusDAG <- averaged.network(arcs_wCextend, threshold = 0.3) # This threshold be set differently for more stringent cut-offs
+saveRDS(consensusDAG, file.path(output_folder,"outputRDS", paste0("consensusDAG_withoutUndirectedArcs_", outname, ".rds")))
+```
+## Drop undirected edges
+```{r}
+undiretArcs <- as.data.frame(undirected.arcs(consensusDAG))
+if (nrow(undiretArcs)) {
+  saveRDS(undiretArcs, file.path(output_folder,"outputRDS", paste0("undiretArcs_consensusDAG_", outname, ".rds")))
+  for (i in 1:nrow(undiretArcs))
+  {
+    consensusDAG <- drop.edge(consensusDAG, from=as.character(undiretArcs$from[i]), to=as.character(undiretArcs$to[i]))
+  }
+}
+
+saveRDS(consensusDAG, file.path(output_folder,"outputRDS", paste0("consensusDAG_", outname, ".rds")))
+saveRDS(start_wCextend, file.path(output_folder,"outputRDS", paste0("startRandomGraphs_", outname, ".rds")))
+```
+
+## Calculate the Consensus DAG Score
+```{r}
+consensusBIC_df <- data.frame("ConsensusDAG_BICscore" = BIC(consensusDAG, originalData), "Arcs_ConsensusDAG" = length(consensusDAG$arcs[,2]))
+write.csv(consensusBIC_df, file.path(output_folder,"tables", paste0("ConsensusDAG_BICScore_originalData_", outname, ".txt")), row.names = FALSE, quote = FALSE)
+```
+
+## Generate 10k permutated datasets from original dataset and Calculate edge strength with BIC difference.
+```{r}
+arcStrengthList_permList_data = foreach(p = 1:permuNumber) %dopar%
+{
+  temp = t(apply(originalData, MARGIN = 1, function(x) x <- (sample(x, length(x), replace = F))))
+  temp = as.data.frame(temp, row.names = rownames(originalData))
+  colnames(temp) = colnames(originalData)
+
+  # Calculate the Arc difference between the permuted DAGS and the consensus DAGs
+  # Store the 10K Permuted Data
+  list(calBICdiff(consensusDAG, temp), temp)
+}
+
+# Save different objects for the Perm10K Dataset and the Diff BIC arc scores
+perm10KData_list <- map(arcStrengthList_permList_data, 2)
+arcStrengthList_permList <- map(arcStrengthList_permList_data, 1)
+rm(arcStrengthList_permList_data)
+gc()
+
+```
+## arcStrength_permList into dataframe
+```{r}
+arcStrengthDF = Reduce(function(x, y) {cbind(x, y[3])}, arcStrengthList_permList)
+arcStrengthDF = cbind(arcStrengthDF[1:2], edge=paste0(arcStrengthDF$from, '-', arcStrengthDF$to), arcStrengthDF[-(1:2)])
+
+saveRDS(arcStrengthDF, file.path(output_folder,"outputRDS", paste0("arcStrength_consenDAG_perm10k_", outname, ".rds")))
+
+rm(arcStrengthList_permList)
+```
+
+# Generating final DAG, calculate edge strength on original datasets.
+## extract arcStrengh on original data
+```{r}
+arcStrength_consenDAG <- calBICdiff(consensusDAG, originalData)
+arcStrength_consenDAG <- cbind(arcStrength_consenDAG[1:2], edge=paste0(arcStrength_consenDAG$from, '-', arcStrength_consenDAG$to), arcStrength_consenDAG[-(1:2)])
+```
+
+## check order of edges consistency; [1] TRUE
+```{r}
+if (identical(arcStrength_consenDAG$edge, arcStrengthDF$edge)) {
+  perm10kDAG <- consensusDAG
+  #For BNLEARN 4.3 use 0.05, for 4.1.1 use 0.01
+  alphaLevel=0.05
+  arcStrengthList_countwPerm <- arcStrength_consenDAG
+#  arcStrengthList_countwPerm$countPerm10k <- sapply(arcStrengthList_countwPerm$edge,
+#                                                    function(x) sum(arcStrengthDF[arcStrengthDF$edge==x,-(1:3)]<=arcStrengthList_countwPerm$strength[arcStrengthList_countwPerm$edge==x]))
+
+  countPerm10k = foreach(edge=arcStrengthList_countwPerm$edge) %dopar%
+  {
+    sum(arcStrengthDF[arcStrengthDF$edge==edge,-(1:3)]<=arcStrengthList_countwPerm$strength[arcStrengthList_countwPerm$edge==edge]) 
+  }
+  arcStrengthList_countwPerm$countPerm10k < - unlist(countPerm10k)
+  dropList_perm10k <- arcStrengthList_countwPerm[which(arcStrengthList_countwPerm$countPerm10k >= permuNumber*alphaLevel),]
+
+  if(nrow(dropList_perm10k) > 0) {
+    if (length(dropList_perm10k)) {
+      saveRDS(dropList_perm10k, file.path(output_folder,"outputRDS", paste0("dropList_perm10k_",alphaLevel, "_", outname, ".rds")))
+
+     # drop the edges with >= type I erro 0.01;
+     for (i in 1:nrow(dropList_perm10k))
+      {
+        perm10kDAG<- bnlearn::drop.arc(perm10kDAG, from=dropList_perm10k$from[i], to=dropList_perm10k$to[i])
+       }
+    }
+    print(perm10kDAG)
+    saveRDS(perm10kDAG, file.path(output_folder,"outputRDS", paste0("perm10kDAG_", outname, ".rds")))
+  } else {
+    print ("error: dropList_perm10k is empty")
+  }
+
+
+} else {
+  print ("error: arcStrength_consenDAG and arcStrengthDF have different edges.")
+}
+```
+
+## computing edge strength with final DAG on original data;
+```{r}
+arcStrengthList_perm10kDAG <- calBICdiff(perm10kDAG, originalData)
+arcStrengthList_perm10kDAG <- cbind(arcStrengthList_perm10kDAG[1:2], edge=paste0(arcStrengthList_perm10kDAG$from, '-', arcStrengthList_perm10kDAG$to), arcStrengthList_perm10kDAG[-(1:2)])
+
+finalDF <- extractGraph(perm10kDAG, label_string=paste0("perm10kDAG_", outname))
+
+saveRDS(arcStrength_consenDAG, file.path(output_folder,"outputRDS", paste0("arcStrength_consenDAG_originalData_", outname, ".rds")))
+saveRDS(arcStrengthList_perm10kDAG, file.path(output_folder,"outputRDS", paste0("arcStrength_perm10kDAG_originalData_", outname, ".rds")))
+```
+
+## Calculate the BIC scores of the perm10KData from the perm10KDAG
+```{r}
+perm10KBIC_scores <- foreach(n = 1:permuNumber) %do% {
+  score <- BIC(perm10kDAG, perm10KData_list[[n]])
+  length(perm10kDAG$arcs[,2])
+  list(round(score,3),length(perm10kDAG$arcs[,2]))
+}
+
+# Save the Perm10K Data BIC Scores from the Perm10K DAG
+perm10K_BICscores_perm10KData_table <- data.frame("BIC_Scores" = map(perm10KBIC_scores,1), "Arcs_Perm10kDAG" = map(perm10KBIC_scores,2))
+write.csv(perm10K_BICscores_perm10KData_table, file = file.path(output_folder,"tables", paste0("perm10K_BICscores_perm10KData.csv")), row.names = FALSE, quote = FALSE)
+
+# Calculate the Consensus DAG Score
+perm10KBIC_originalData_df <- data.frame("perm10KDAG_originalData_BICscore" = BIC(perm10kDAG, originalData), "Arcs_Perm10kDAG" = length(perm10kDAG$arcs[,2]))
+write.csv(perm10KBIC_originalData_df, file.path(output_folder,"tables", paste0("perm10K_BICscore_orihinalData.txt")), row.names = FALSE, quote = FALSE)
+```
+
+## calculate difference in BIC after removing each gene
+```{r}
+genes <- unique(c(perm10kDAG$arcs[,1], perm10kDAG$arcs[,2]))
+rank_genes <- data.frame(gene = genes, BIC = NA, BIC_diff = perm10KBIC_originalData_df$perm10KDAG_originalData_BICscore)
+
+for(i in 1:length(genes)){
+  gene_1 <- genes[i]
+  genes_other <- genes[genes != gene_1]
+  for (j in 1:length(genes_other)) {
+    gene_2 <-  genes_other[j]
+    perm10kDAG_deletion <- drop.arc(perm10kDAG, gene_1,  gene_2, debug = FALSE)
+    bic <- BIC(perm10kDAG_deletion, originalData)
+    rank_genes$BIC[rank_genes$gene == gene_1] <- bic
+    #print(length(perm10kDAG$arcs)-length(perm10kDAG_deletion$arcs))
+  }
+}
+
+
+rank_genes$BIC_diff <- rank_genes$BIC_diff - rank_genes$BIC
+
+top_genes <- rank_genes$gene[rank_genes$BIC_diff > 0]
+print(top_genes)
+
+write.csv(rank_genes, "processing/bblearn_find_driver_genes.csv")
+```
+
+## compare change of BIC after removing edges from this 5 BIC to 5 random
+```{r}
+perm10kDAG_deletion <- perm10kDAG
+
+perm = 1000
+genes <- unique(c(perm10kDAG$arcs[,1], perm10kDAG$arcs[,2]))
+
+for(i in 1:length(top_genes)){
+  gene_1 <- as.character(top_genes[i])
+  genes_other <- genes[genes != gene_1]
+  for (j in 1:length(genes_other)) {
+    gene_2 <-  genes_other[j]
+    perm10kDAG_deletion <- drop.arc(perm10kDAG_deletion, gene_1,  gene_2, debug = FALSE)
+  }
+}
+
+bic_deletion <- BIC(perm10kDAG_deletion, originalData)
+print(length(perm10kDAG$arcs)-length(perm10kDAG_deletion$arcs))
+
+perm10kDAG_random <- perm10kDAG
+
+random_bic <- list()
+
+for (p in 1:perm) {
+  genes_ran <- sample(genes, 5, replace = FALSE, prob = NULL)
+  perm10kDAG_random <- perm10kDAG
+  for(i in 1:length(genes_ran)){
+    gene_1 <- as.character(genes_ran[i])
+    genes_other <- genes[genes != gene_1]
+    for (j in 1:length(genes_other)) {
+      gene_2 <-  genes_other[j]
+      perm10kDAG_random <- drop.arc(perm10kDAG_random, gene_1,  gene_2, debug = FALSE)
+    }
+  }
+  #print(length(perm10kDAG$arcs)-length(perm10kDAG_random$arcs))
+  bic <- BIC(perm10kDAG_random, originalData)
+  random_bic[[p]] <- bic
+}
+
+random_bic <- random_bic[random_bic < bic_deletion]
+length(random_bic)
+```
+
+
+## Plotting DAG
+```{r}
+## plot of consensus DAG
+pdf(file.path(output_folder,"plots", paste0("consensusDAG_", outname, "_2.pdf")), width = 20, height = 15)
+consensus_graph <- graphviz.plot(consensusDAG, highlight = list(nodes = as.character(top_genes)))
+dev.off()
+
+# arcs
+pdf(file.path(output_folder,"plots", paste0("consensusDAG_", outname, ".pdf")), width = 20, height = 15)
+plot(consensus_graph, attrs = list(node = list( fontsize=15, width=1.5, height=1.5, shape="ellipse",  fixedsize=FALSE)))
+dev.off()
+
+## plot of Perm10K DAG
+pdf(file.path(output_folder,"plots", paste0("perm10kDAG_", outname, "_2.pdf")), width = 20, height = 15)
+perm10K_graph <-graphviz.plot(perm10kDAG, highlight = list(nodes = as.character(top_genes)))
+dev.off()
+
+pdf(file.path(output_folder,"plots", paste0("perm10kDAG_", outname, ".pdf")), width = 20, height = 15)
+plot(perm10K_graph, attrs = list(node = list( fontsize=15, width=1.5, height=1.5, shape="ellipse",  fixedsize=FALSE)))
+
+saveRDS(perm10KData_list, file.path("/home/flomik/Desktop/Code-PHD/Data/transcriptomics_HIV_3_layers/", paste0("permList_", outname, ".rds")))
+```
+
+```{r}
+end_time <- Sys.time()
+print(end_time - start_time)
+```
+
+```{r}
+write.csv(perm10kDAG$arcs, "processing/table_edges_BNN.csv", quote = FALSE)
+#write.csv(perm10kDAG$nodes, "processing/table_nodes_BNN.csv")
+```
+
+```{r}
+write.dot(perm10kDAG, file = "processing/HIV_BNN_transcriptomics_cytoscape_input.dot")
+```
+
+```{r}
+cat(readLines("processing/HIV_BNN_transcriptomics_cytoscape_input.dot"), sep = "\n")
+```
+

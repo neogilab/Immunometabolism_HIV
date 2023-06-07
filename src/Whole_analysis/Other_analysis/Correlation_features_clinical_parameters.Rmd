@@ -1,0 +1,228 @@
+---
+title: "Correlations clinical parameters and features"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+source("src/ML.R")
+library(stringi)
+library(randomForest)
+library(caret)
+library(mygene)
+library(org.Hs.eg.db)
+library(Hmisc)
+```
+
+```{r}
+flat_cor_mat <- function(cor_r, cor_p){
+  #This function provides a simple formatting of a correlation matrix
+  #into a table with 4 columns containing :
+    # Column 1 : row names (variable 1 for the correlation test)
+    # Column 2 : column names (variable 2 for the correlation test)
+    # Column 3 : the correlation coefficients
+    # Column 4 : the p-values of the correlations
+  library(tidyr)
+  library(tibble)
+  cor_r <- rownames_to_column(as.data.frame(cor_r), var = "row")
+  cor_r <- gather(cor_r, column, cor, -1)
+  cor_p <- rownames_to_column(as.data.frame(cor_p), var = "row")
+  cor_p <- gather(cor_p, column, p, -1)
+  cor_p_matrix <- left_join(cor_r, cor_p, by = c("row", "column"))
+  cor_p_matrix
+}
+```
+
+
+## load data
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2_filt.csv")
+data_olink <- read.csv("processing/COCOMO_proteomics_olink_filt.csv")
+data_met  <- read.csv("processing/COCOMO_metabolomics_metabolon_filt.csv", check.names = FALSE)
+names(data_met)[1] <- "X"
+```
+
+## merge each matrix with clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_2.csv")
+clinical$X <- NULL
+#clinical <- clinical[,c(1, 4, 6, 8, 11, 12, 13, 36, 37, 38, 40)]
+clinical_HIV <- clinical[clinical$HIV_Status != "Ctrl",]
+clinical_HIV <- clinical_HIV[clinical_HIV$COCOMO_ID %in% data_olink$X,]
+```
+
+```{r}
+names(clinical_HIV)
+```
+```{r}
+clinical_HIV <- clinical_HIV[,c(2, 8, 9, 10, 11, 14, 15, 17, 18:23, 37, 38, 40, 41, 44, 45)]
+clinical_HIV$Transm_mode[clinical_HIV$Transm_mode != 1] <- 0
+clinical_HIV$Ethnic[clinical_HIV$Ethnic != 1] <- 0
+clinical_HIV$GENDER.x <- as.vector(clinical_HIV$GENDER.x)
+clinical_HIV$GENDER.x <- ifelse(clinical_HIV$GENDER.x == "Female", 1, 0)
+clinical_HIV$CD4_CD8 <- clinical_HIV$CD4/clinical_HIV$CD8
+```
+```{r}
+names(clinical_HIV)[1] <- "X"
+
+table_txn <- merge(clinical_HIV, data_txn, by = "X")
+table_prot <- merge(clinical_HIV, data_olink, by = "X")
+table_met <- merge(clinical_HIV, data_met, by = "X")
+```
+
+```{r}
+table_data <- list(table_txn, table_prot, table_met)
+```
+results/networks/distribution_corr_coeff_Co_expression_3_layerssvg
+
+(16 or 17)-methylstearate (a19:0 or i19:0) (interacts with) 10-heptadecenoate (17:1n7)
+
+```{r}
+for (i in 1:3) {
+  data <- table_data[[i]]
+  cor_3 <- rcorr(as.matrix(data[,-1]), type = "spearman")
+  cor_3$r[upper.tri(cor_3$r)] <- NA
+  my_cor_matrix <- flat_cor_mat(cor_3$r, cor_3$P)
+  my_cor_matrix$padj <- p.adjust(my_cor_matrix$p, method = "fdr")
+  my_cor_matrix$cor <- ifelse(my_cor_matrix$padj > 0.05, NA, my_cor_matrix$cor)
+  my_cor_matrix <- my_cor_matrix[complete.cases(my_cor_matrix), ]
+  names(my_cor_matrix) <- c("feat1", "feat2", "R", "p", "Padj")
+  my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(clinical_HIV) | my_cor_matrix$feat2 %in% colnames(clinical_HIV),]
+  my_cor_matrix$name_int <- paste0(my_cor_matrix$feat1, " (interacts with) ", my_cor_matrix$feat2)
+  write.table(my_cor_matrix, paste0("results/networks/clinical_parameters_table_", i, ".txt"), quote = FALSE, row.names = FALSE, sep = "\t")
+}
+```
+
+## extract data
+```{r}
+library(ggplot2)
+```
+
+```{r}
+corr_1 <- read.delim("results/networks/clinical_parameters_table_1.txt")
+corr_2 <- read.delim("results/networks/clinical_parameters_table_2.txt")
+corr_3 <- read.delim("results/networks/clinical_parameters_table_3.txt")
+
+corr <- rbind(corr_1, corr_2, corr_3)
+write.csv(corr, "results/correlation_features_clinical_parameters.csv")
+```
+
+```{r}
+table_nodes <- read.csv("results/networks/Table_nodes_CPMCo_expression_3_layers.csv")
+```
+
+```{r}
+data <- read.delim("results/networks/clinical_parameters_table_1.txt")
+names(data)
+data <- data[,c(1, 2, 3, 5)]
+data <- merge(data, table_nodes, by = "feat1")
+x <- data.frame(table(data$feat2, data$Community))
+x$type <- "txn"
+x1 <- x
+p<-ggplot(x, aes(x = Var2, y = Freq, fill = Var1)) +
+  geom_bar(stat="identity")+ggtitle("Transcriptomics")
+p
+ggsave("results/figures/association_clinical_transcriptomcis.pdf")
+```
+
+```{r}
+data <- read.delim("results/networks/clinical_parameters_table_2.txt")
+names(data)
+data <- data[,c(1, 2, 3, 5)]
+data <- merge(data, table_nodes, by = "feat1")
+table(data$feat2, data$Community)
+
+x <- data.frame(table(data$feat2, data$Community))
+x$type <- "prot"
+x2 <- x
+
+p<-ggplot(x, aes(x = Var2, y = Freq, fill = Var1)) +
+  geom_bar(stat="identity")+ggtitle("Proteomics")
+p
+ggsave("results/figures/association_clinical_Proteomics.pdf")
+
+```
+
+```{r}
+data <- read.delim("results/networks/clinical_parameters_table_3.txt")
+names(data)
+data <- data[,c(1, 2, 3, 5)]
+data <- merge(data, table_nodes, by = "feat1")
+table(data$feat2, data$Community)
+
+x <- data.frame(table(data$feat2, data$Community))
+x$type <- "met"
+x3 <- x
+
+p<-ggplot(x, aes(x = Var2, y = Freq, fill = Var1)) +
+  geom_bar(stat="identity")+ggtitle("Metabolomics")
+p
+ggsave("results/figures/association_clinical_Metabolomics.pdf")
+
+
+```
+## sankey plot
+```{r}
+table_sanket <- rbind(x1, x2, x3)
+table_sanket <- table_sanket[table_sanket$Freq > 50,]
+table_sanket <- table_sanket[,c(4, 2, 1, 3)]
+table_sanket <- table_sanket[order(table_sanket$Var2, table_sanket$type, table_sanket$Var1),]
+```
+
+```{r}
+names(table_sanket)
+```
+```{r}
+library(ggalluvial)
+```
+
+```{r}
+table_sanket$Var2 <- as.vector(table_sanket$Var2)
+table_sanket$Var2 <- factor(table_sanket$Var2, levels = c(10:1))
+table_sanket$type <- factor(table_sanket$type, levels = rev(c("met", "prot","txn")))
+```
+
+```{r}
+table_sanket <- table_sanket[!table_sanket$Var1 %in% c("VL", "CD4", "CD8"),]
+```
+
+```{r}
+A_col <- "#ffa12c"
+B_col <- "#ff872c"
+C_col <- "#fe612c"
+D_col <- "#fd3a2d"
+E_col <- "#f11d28"
+F_col <- "black"
+G_col <- "orange"
+
+ggplot(as.data.frame(table_sanket),
+       aes(y = Freq,
+           axis1 = type, axis2 = Var2, axis3 = Var1)) +
+  geom_alluvium(aes(fill = Var2),
+                width = 0, reverse = FALSE) +
+  guides(fill = FALSE) +
+  geom_stratum(width = 1/8, reverse = FALSE) +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)),
+            reverse = FALSE) +
+  scale_x_continuous(breaks = 1:3, labels = c("Type", "Community", "Clinical"))+
+  scale_fill_manual(values  = c(A_col, B_col, C_col, D_col, E_col, F_col, G_col)) +
+  scale_color_manual(values = c(A_col, B_col, C_col, D_col, E_col, F_col, G_col))
+
+ggsave("results/figures/association_clinical_parameters_communities_type_data.pdf", height = 6, width = 5)
+```
+
+```{r}
+names(table_sanket)
+```

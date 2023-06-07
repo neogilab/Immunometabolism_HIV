@@ -1,0 +1,321 @@
+---
+title: "clinical database ujjwal"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+```
+
+
+## Load parameters
+```{r}
+parameters <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/manuscript/clinical_categories.xlsx", 1)
+parameters$cat <- NA
+parameters$Dictionary <- gsub(".*\\(", "",parameters$Name)
+parameters$Dictionary <- gsub("\\)", "", parameters$Dictionary)
+parameters$Name <- gsub("\\(.*", "",parameters$Name)
+parameters <- parameters[!is.na(parameters$Parameter),]
+
+parameters$cat[parameters$Dictionary == "yes/no"] <- "cat"
+parameters$cat[parameters$Dictionary == "yes / no"] <- "cat"
+parameters$Dictionary[parameters$Dictionary == "yes / no"] <- "0:no, 1:yes"
+parameters$Dictionary[parameters$Dictionary == "yes/no"] <- "0:no, 1:yes"
+
+parameters$cat[grepl("cat", parameters$Parameter)] <- "cat"
+parameters$cat[grepl("\\,", parameters$Dictionary)] <- "cat"
+parameters$cat[parameters$Dictionary %in% c("male/female", "more/less", "no / yes with nicotine / yes without nicotine", "Previous ddi/AZT/d4t ART exposure", "high / low")] <- "cat"
+
+parameters$cat[is.na(parameters$cat)] <- "num"
+
+parameters <- parameters[order(parameters$cat),]
+parameters$Parameter[parameters$Parameter == parameters$Parameter[1]]
+```
+
+```{r}
+x <- which(parameters$cat == "cat" & parameters$Dictionary != "0:no, 1:yes")
+```
+
+```{r}
+parameters$new_dic <- NA
+```
+
+```{r}
+#' Enter manually new categories of data
+#'
+#' @param matrix matrix containing data and first column conditions
+#' @param title title of analysis
+#' @return random forest object
+#' @export
+flora_scribe <- function(matrix){
+  table <- 
+  for (i in x) {
+    print(matrix$Name[i])
+    print(matrix$Dictionary[i])
+    matrix$new_dic[i] <- readline(prompt="Enter the new dictionary: ")
+    if(matrix$new_dic[[i]] == "x"){
+      write.csv(matrix, "processing/matrix_stop.csv")
+      quit(status=1)
+    }
+    print(paste("You have entered ", matrix$new_dic[i], " as new definition, Happy ?", sep = ""))
+  }
+  return(matrix)
+}
+```
+
+```{r}
+#para_new <- flora_scribe(parameters)
+#write.csv(para_new, "manuscript/categories_clinical_table.csv")
+#para_new$new_dic[para_new$Dictionary == "0:no, 1:yes"] <- "0:no, 1:yes"
+#write.csv(para_new, "manuscript/categories_clinical_table_2.csv")
+```
+
+```{r}
+parameters <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/manuscript/categories_clinical_table_3.csv", stringsAsFactors = FALSE)
+parameters$Parameter[parameters$Parameter == "duration_years"] <- "Duration.of.therapy"
+```
+## load clinical data whole patients
+```{r}
+clinical_whole <- read.xlsx("data/whole_patients/CO_HIV_new.xlsx", 1)
+names(clinical_whole)[1] <- "id"
+characteristics <- read.xlsx("data/whole_patients/Characteristics.xlsx", 1)
+
+clinical_whole <- merge(characteristics, clinical_whole, by = "id")
+```
+
+```{r}
+colnames(clinical_whole)[178] <- "BMI"
+```
+
+```{r}
+clinical <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/clinical_data_microbiome_project.csv")
+clinical <- clinical[,colnames(clinical) %in% c("X", "METS", "Combined_therapy", "X3rd_Drug")]
+names(clinical)[1] <- "id"
+```
+
+```{r}
+clinical_whole <- merge(clinical, clinical_whole, by = "id", all.y = TRUE)
+```
+
+```{r}
+duration <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/duration_HC.csv")
+names(duration)[1] <- "id"
+duration <- duration[,c(1,7)]
+```
+
+```{r}
+clinical_whole <- merge(duration, clinical_whole, by = "id", all.y = TRUE)
+```
+
+## add comorbidities and lipids
+```{r}
+extra <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/whole_patients/flora_all.csv")
+extra$X <- NULL
+extra$ddiAZTd4t <- ifelse(extra$ddiAZTd4t == TRUE, 1, 0)
+extra$ddiAZTd4t <- as.factor(extra$ddiAZTd4t)
+```
+
+```{r}
+names(extra) <- c("id", "Tgl", "Ldl", "Hdl", "alat", "eGFR", "ddiAZTd4t", "SAT", "VAT")
+```
+
+```{r}
+extra$eGFR <- NULL
+```
+
+```{r}
+clinical <- merge(clinical_whole, extra, by = "id")
+names(clinical)[6] <- "AGE"
+names(clinical)[7] <- "GENDER"
+```
+
+```{r}
+clinical$AGE_cat[clinical$AGE < 55] <- "<55"
+clinical$AGE_cat[clinical$AGE >= 55 & clinical$AGE < 65] <- "55<x<65"
+clinical$AGE_cat[clinical$AGE >= 65] <- ">65"
+clinical$AGE_cat <- factor(clinical$AGE_cat, levels = c("<55", "55<x<65", ">65"))
+```
+
+```{r}
+table(clinical$Ethnic)
+clinical$Ethnic[clinical$Ethnic != 1] <- 0
+clinical$Ethnic <- factor(clinical$Ethnic)
+
+table(clinical$Origin)
+clinical$Origin[clinical$Origin != 1] <- 0
+clinical$Origin <- factor(clinical$Origin)
+
+table(clinical$Transm_mode)
+clinical$Transm_mode[!clinical$Transm_mode %in% c(1,6) & !is.na(clinical$Transm_mode)] <- 0
+table(clinical$Transm_mode)
+clinical$Transm_mode <- factor(clinical$Transm_mode)
+```
+
+```{r}
+table(clinical$Transm_origin)
+clinical$Transm_origin[clinical$Transm_origin != 1] <- 2
+clinical$Transm_origin <- as.factor(as.vector(clinical$Transm_origin)) 
+```
+
+```{r}
+table(clinical$H2_49)
+clinical$H2_49 <- as.numeric(as.vector(clinical$H2_49))
+clinical$H2_49[clinical$H2_49 < 3] <- 1
+clinical$H2_49[clinical$H2_49 > 3] <- 2
+```
+
+```{r}
+table(clinical$H2_47)
+clinical$H2_47 <- as.numeric(as.vector(clinical$H2_47))
+clinical$H2_47[clinical$H2_47 < 2] <- 1
+clinical$H2_47[clinical$H2_47 > 2] <- 3
+```
+
+```{r}
+table(clinical$ob2)
+clinical$ob2 <- as.numeric(as.vector(clinical$ob2))
+clinical$ob2[clinical$ob2 < 3] <- 1
+clinical$ob2[clinical$ob2 > 3] <- 2
+clinical$ob2 <- as.factor(clinical$ob2)
+```
+
+```{r}
+clinical$BMI_cat <- NA
+clinical$BMI_cat[clinical$BMI < 18.5] <- "underweight"
+clinical$BMI_cat[clinical$BMI >= 18.5 & clinical$BMI < 25] <- "normal"
+clinical$BMI_cat[clinical$BMI >= 25 & clinical$BMI < 30] <- "overweight"
+clinical$BMI_cat[clinical$BMI >= 30 & clinical$BMI < 35] <- "obese"
+clinical$BMI_cat[clinical$BMI >= 35] <- "extremely obese"
+
+clinical$BMI_cat <- factor(clinical$BMI_cat, levels = c("underweight", "normal", "overweight", "obese", "extremely obese"))
+```
+
+```{r}
+clinical$CDA_CD8 <- NA
+clinical$CDA_CD8[!is.na(clinical$CD8)] <- clinical$CD4[!is.na(clinical$CD8)] / clinical$CD8[!is.na(clinical$CD8)]
+```
+
+```{r}
+clinical$CDA_CD8_cat[!is.na(clinical$CDA_CD8)] <- ifelse(clinical$CDA_CD8[!is.na(clinical$CDA_CD8)] > 1, ">1", "<1")
+clinical$CDA_CD8_cat <- as.factor(clinical$CDA_CD8_cat)
+table(clinical$CDA_CD8_cat)
+```
+```{r}
+clinical$H2_54[clinical$H2_54 == 2] <- 1
+clinical$H2_54[clinical$H2_54 == 7] <- 6
+clinical$H2_54[clinical$H2_54 == 3] <- 4
+clinical$H2_54 <- as.factor(clinical$H2_54)
+```
+
+```{r}
+clinical$H2_55[clinical$H2_55 == 0] <- 1
+clinical$H2_55[clinical$H2_55 == 4] <- 2
+clinical$H2_55[clinical$H2_55 == 3] <- 2
+clinical$H2_55[clinical$H2_55 == 6] <- 5
+clinical$H2_55[clinical$H2_55 == 7] <- 5
+clinical$H2_55 <- as.factor(clinical$H2_55)
+```
+
+```{r}
+clinical$H2_56[clinical$H2_56 == 0] <- 1
+clinical$H2_56[clinical$H2_56 == 4] <- 2
+clinical$H2_56[clinical$H2_56 == 3] <- 2
+clinical$H2_56[clinical$H2_56 == 6] <- 5
+clinical$H2_56[clinical$H2_56 == 7] <- 5
+clinical$H2_56 <- as.factor(clinical$H2_56)
+```
+
+```{r}
+clinical$H2_56 <- as.vector(clinical$H2_56)
+clinical$H2_56[clinical$H2_56 == 0] <- 1
+clinical$H2_56[clinical$H2_56 == 4] <- 2
+clinical$H2_56[clinical$H2_56 == 3] <- 2
+clinical$H2_56[clinical$H2_56 == 6] <- 5
+clinical$H2_56[clinical$H2_56 == 7] <- 5
+clinical$H2_56 <- as.factor(clinical$H2_56)
+```
+
+```{r}
+clinical$log10VL_ART <- log10(clinical$VL_ART)
+```
+
+```{r}
+clinical$VL_cat <- ifelse(clinical$VL < 50, "<50", ">50")
+```
+
+```{r}
+clinical$VAT_cat <- NA
+clinical$VAT_cat <- ifelse(clinical$VAT > 35 & clinical$GENDER == 0, "high", clinical$VAT_cat)
+clinical$VAT_cat <- ifelse(clinical$VAT < 35 & clinical$GENDER == 0, "low", clinical$VAT_cat)
+clinical$VAT_cat <- ifelse(clinical$VAT > 40 & clinical$GENDER == 1, "high", clinical$VAT_cat)
+clinical$VAT_cat <- ifelse(clinical$VAT < 40 & clinical$GENDER == 1, "low", clinical$VAT_cat)
+clinical$VAT_cat <- as.factor(clinical$VAT_cat)
+table(clinical$VAT_cat)
+```
+```{r}
+clinical$Combined_therapy <- gsub(".*ABC.*", "ABC", clinical$Combined_therapy)
+clinical$Combined_therapy <- gsub(".*AZT.*", "AZT", clinical$Combined_therapy)
+clinical$Combined_therapy <- gsub(".*TAF.*", "TAF-TDF", clinical$Combined_therapy)
+clinical$Combined_therapy <- gsub(".*TDF.*", "TAF-TDF", clinical$Combined_therapy)
+clinical$Combined_therapy[is.na(clinical$Combined_therapy) | clinical$Combined_therapy == "AZT"] <- "other/unknown"
+clinical$Combined_therapy <- factor(clinical$Combined_therapy, levels = c("ABC", "TAF-TDF", "other/unknown"))
+table(clinical$Combined_therapy)
+names(clinical)[which(names(clinical) == "Combined_therapy")] <- "first_drug"
+```
+
+```{r}
+colnames(clinical)[2] <- "Duration"
+clinical$Duration_cat <- NA
+clinical$Duration_cat[clinical$Duration < 5] <- "<5"
+clinical$Duration_cat[clinical$Duration >= 5 & clinical$Duration < 10] <- "5<x<10"
+clinical$Duration_cat[clinical$Duration >= 10 & clinical$Duration < 15] <- "10<x<15"
+clinical$Duration_cat[clinical$Duration >= 15] <- ">15"
+
+clinical$Duration_cat <- as.factor(clinical$Duration_cat)
+table(clinical$Duration_cat)
+```
+```{r}
+clinical$creatini <- NA
+```
+
+```{r}
+rownames(clinical) <- clinical$id
+clinical <- data.frame(t(clinical))
+clinical$Parameter <- rownames(clinical)
+```
+
+```{r}
+colnames(clinical) <- gsub("X", "", colnames(clinical))
+```
+
+```{r}
+parameters$Parameter[parameters$Parameter == "Duration.of.therapy"] <- "Duration"
+```
+
+```{r}
+rownames(clinical)
+```
+
+```{r}
+parameters$Parameter[!parameters$Parameter %in% rownames(clinical)]
+```
+
+```{r}
+clinical_whole <- merge(parameters, clinical, by = "Parameter", all.x = TRUE)
+```
+
+```{r}
+write.xlsx(clinical_whole, "manuscript/clean_database_all_patients_COCOMO_final.xlsx", row.names = FALSE)
+```
+
+

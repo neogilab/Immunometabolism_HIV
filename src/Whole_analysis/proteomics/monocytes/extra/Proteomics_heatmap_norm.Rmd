@@ -1,0 +1,143 @@
+---
+title: "Proteomics heatmap"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+col <- c( "#005900", "#878782",	"#761212")
+```
+
+```{r}
+dge <- read.delim("results/LIMMA/LIMMA_monocytes_norm_proteomics_frac_filt.csv", sep =  " ")
+dge <- dge[dge$logFC > 19, c(1,2, 4, 6)]
+data <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/norm_data_with_conditions_norm_data_log2_frac.csv")
+data <- data[order(data$sample),]
+condition <- factor(data$condition)
+sample <- factor(data$replicate)
+rownames(data) <- paste0(data$replicate, data$sample)
+```
+
+```{r}
+data <- data.frame(t(data[,-c(1:5)]))
+data$BIOCHEMICAL <- rownames(data)
+
+data <- merge(dge, data, by = "BIOCHEMICAL")
+```
+
+
+```{r}
+data[,-c(1:4)] <- data.frame(t(scale(t(data[,-c(1:4)] ))))
+```
+```{r}
+max(data[,-c(1:4)])
+min(data[,-c(1:4)])
+```
+
+```{r}
+library(circlize)
+library(ComplexHeatmap)
+col_fun1 = colorRamp2(c(-3,-1, -0.5, 0, 0.5, 1, 3), c("#1e90ff","#2676d0" ,"#275ea2","black","#a39a21","#d0c521","#fff21e"))
+
+col_fun_2 = colorRamp2(c(-50, 0, 50), c("blue", "white", "red"))
+```
+
+```{r}
+sample
+```
+```{r}
+colnames(data)
+```
+
+```{r}
+pdf("results/figures/Heatmap_proteomics_monocytes_frac_top_norm_2.pdf", width = 7, height = 5)
+ht = Heatmap(data[,-c(1:4)], 
+             column_order = sort(colnames(data[,-c(1:4)])),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             #column_split = condition, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = data$logFC,
+                                              col = list(LogFC = col_fun_2), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(rep = as.factor(sample),
+                                                cluster = condition,
+                                              col = list(cluster = c("Ctrl" = col[1], "A" = col[2], "B" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```
+```{r}
+col_fun1 = colorRamp2(c(-3,-1, -0.5, 0, 0.5, 1, 3), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+```
+
+
+```{r}
+pdf("results/figures/Heatmap_proteomics_monocytes_frac_top_norm_3.pdf", width = 7, height = 5)
+ht = Heatmap(data[,-c(1:4)], 
+             column_order = sort(colnames(data[,-c(1:4)])),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             #column_split = condition, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = data$logFC,
+                                              col = list(LogFC = col_fun_2), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(rep = as.factor(sample),
+                                                cluster = condition,
+                                              col = list(cluster = c("Ctrl" = col[1], "A" = col[2], "B" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```
+```{r}
+col_fun1 = colorRamp2(c(-3,-1, -0.5, 0, 0.5, 1, 3), c("#7F7F00","#B2B200" ,"#E5E500","black","#003333","#007f7f","#00ffff"))
+```
+
+
+```{r}
+pdf("results/figures/Heatmap_proteomics_monocytes_frac_top_norm_4.pdf", width = 7, height = 5)
+ht = Heatmap(data[,-c(1:4)], 
+             column_order = sort(colnames(data[,-c(1:4)])),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             #column_split = condition, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = data$logFC,
+                                              col = list(LogFC = col_fun_2), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(rep = as.factor(sample),
+                                                cluster = condition,
+                                              col = list(cluster = c("Ctrl" = col[1], "A" = col[2], "B" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```

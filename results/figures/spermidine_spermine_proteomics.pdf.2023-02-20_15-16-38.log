@@ -1,0 +1,19 @@
+INFO [2023-02-20 15:16:38] $x
+INFO [2023-02-20 15:16:38] list(a, b, c)
+INFO [2023-02-20 15:16:38] 
+INFO [2023-02-20 15:16:38] $category.names
+INFO [2023-02-20 15:16:38] c("Spermidine vs Ctl", "Spermine vs Ctl", "Spermine + Spermidine vs Ctrl")
+INFO [2023-02-20 15:16:38] 
+INFO [2023-02-20 15:16:38] $filename
+INFO [2023-02-20 15:16:38] [1] "results/figures/spermidine_spermine_proteomics.pdf"
+INFO [2023-02-20 15:16:38] 
+INFO [2023-02-20 15:16:38] $output
+INFO [2023-02-20 15:16:38] [1] TRUE
+INFO [2023-02-20 15:16:38] 
+INFO [2023-02-20 15:16:38] $fill
+INFO [2023-02-20 15:16:38] myCol
+INFO [2023-02-20 15:16:38] 
+INFO [2023-02-20 15:16:38] $cat.default.pos
+INFO [2023-02-20 15:16:38] [1] "inner"
+INFO [2023-02-20 15:16:38] 
+ERROR [2023-02-20 15:16:38] Invalid cat.default.pos setting

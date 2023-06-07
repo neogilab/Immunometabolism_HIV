@@ -1,0 +1,182 @@
+---
+title: "Parsing Sara file"
+output: html_notebook
+---
+
+```{r}
+library(xlsx)
+```
+
+## CD4 cells
+```{r}
+d1 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 1)
+x <- d1[,-c(1:4)] < 1
+x1 <- colnames(x)[colSums(x) == 9]
+
+d2 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 2)
+d2 <- d2[complete.cases(d2),]
+x <- d2[,-c(1:4)] < 1
+x2 <- colnames(x)[colSums(x) == 9]
+
+d3 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 3)
+x <- d3[,-c(1:4)] < 1
+x3 <- colnames(x)[colSums(x) == 9]
+
+d4 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 4)
+x <- d4[,-c(1:4)] < 1
+x4 <- colnames(x)[colSums(x) == 9]
+
+d5 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 5)
+x <- d5[,-c(1:4)] < 1
+x5 <- colnames(x)[colSums(x) == 9]
+
+d6 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 6)
+x <- d6[,-c(1:4)] < 1
+x6 <- colnames(x)[colSums(x) == 9]
+
+x <- unique(c(x1, x2, x3, x4, x5, x6))
+
+all <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 7)
+all <- all[all$Condition != "HC",]
+
+cd4 <- all[,!colnames(all) %in% x]
+cd4$Stimuli <- NULL
+cd4$c..HC.D1_B1_B01.fcs....HC.like.D1_B7_B07.fcs....Risk.D1_E1_E01.fcs... <- NULL 
+cd4$name <- paste0(cd4$Donor, "_", cd4$Condition)
+```
+
+
+## CD8 cells
+```{r}
+d1 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 1)
+x <- d1[,-c(1:4)] < 1
+x1 <- colnames(x)[colSums(x) == 9]
+
+d2 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 2)
+d2 <- d2[complete.cases(d2),]
+x <- d2[,-c(1:4)] < 1
+x2 <- colnames(x)[colSums(x) == 9]
+
+d3 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 3)
+x <- d3[,-c(1:4)] < 1
+x3 <- colnames(x)[colSums(x) == 9]
+
+d4 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 4)
+x <- d4[,-c(1:4)] < 1
+x4 <- colnames(x)[colSums(x) == 9]
+
+d5 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 5)
+x <- d5[,-c(1:4)] < 1
+x5 <- colnames(x)[colSums(x) == 9]
+
+d6 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 6)
+x <- d6[,-c(1:4)] < 1
+x6 <- colnames(x)[colSums(x) == 9]
+
+x <- unique(c(x1, x2, x3, x4, x5, x6))
+x <- gsub("CD4", "CD8", x)
+
+all <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 7)
+all <- all[all$Condition != "HC",]
+
+cd8 <- all[,!colnames(all) %in% x]
+cd8$name <- paste0(cd8$Donor, "_", cd8$Condition)
+```
+
+```{r}
+data_merged <- merge(cd8, cd4, by = "name")
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+data_2 <- data_merged[,-c(1, 2, 4, 5)]
+data_2$Donor.y <- NULL
+data_2$Condition.y <- NULL
+data_2 <- aggregate(. ~ Condition.x, data=data_2, FUN=median)
+```
+
+```{r}
+cell_types <- colnames(data_2)
+cell_types <- gsub("CD8Naive.*", "CD8Naive", cell_types)
+cell_types <- gsub("CD4Naive.*", "CD4Naive", cell_types)
+
+cell_types <- gsub("CD8Memory.*", "CD8Memory", cell_types)
+cell_types <- gsub("CD4Memory.*", "CD4Memory", cell_types)
+
+
+data_c1 <- data_2[,cell_types == "CD4Memory"]
+data_c1 <- data.frame(t(data_c1))
+colnames(data_c1) <- c("Atrisk_CD4Memory", "HClike_CD4Memory")
+data_c1$name <- gsub("CD4Memory", "", rownames(data_c1))
+data_c1$name[data_c1$name == "T.bet"] <- "T.Bet"
+data_c1$name[data_c1$name == "CTLA.4"] <- "CTLA4"
+
+data_c2 <- data_2[,cell_types == "CD4Naive"]
+data_c2 <- data.frame(t(data_c2))
+colnames(data_c2) <- c("Atrisk_CD4Naive", "HClike_CD4Naive")
+data_c2$name <- gsub("CD4Naive", "", rownames(data_c2))
+
+data_c3 <- data_2[,cell_types == "CD8Memory"]
+data_c3 <- data.frame(t(data_c3))
+colnames(data_c3) <- c("Atrisk_CD8Memory", "HClike_CD8Memory")
+data_c3$name <- gsub("CD8Memory", "", rownames(data_c3))
+data_c3$name[data_c3$name == "T.bet"] <- "T.Bet"
+data_c3$name[data_c3$name == "CTLA.4"] <- "CTLA4"
+
+data_c4 <- data_2[,cell_types == "CD8Naive"]
+data_c4 <- data.frame(t(data_c4))
+colnames(data_c4) <- c("Atrisk_CD8Naive", "HClike_CD8Naive")
+data_c4$name <- gsub("CD8Naive", "", rownames(data_c4))
+
+data <- merge(data_c3, data_c1, by = "name", all.x = TRUE, all.y = TRUE)
+data <- merge(data, data_c2, by = "name", all.x = TRUE, all.y = TRUE)
+data <- merge(data, data_c4, by = "name", all.x = TRUE, all.y = TRUE)
+
+rownames(data) <- data$name
+data$name <- NULL
+```
+
+```{r}
+x <- seq(0, 2.5, 0.01)
+
+library(circlize)
+library(ComplexHeatmap)
+colfunc <- colorRampPalette(c("#fefaef", "#e74b1d"))
+col_fun1 = colorRamp2(x, colfunc(251))
+```
+
+```{r}
+type <- c("CD8Memory","CD8Memory","CD4Memory","CD4Memory","CD4Naive","CD4Naive","CD8Naive","CD8Naive")
+```
+
+```{r}
+data[data > 2.5] <- 2.5
+```
+
+```{r}
+pdf("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/Sara_Anna_figure_heatmap.pdf")
+Heatmap(data, column_order = colnames(data), row_order = rownames(data), column_split = type, col = col_fun1, heatmap_legend_param = list(
+        title = "Simulation Index"))
+dev.off()
+```
+## tests (at risk-HC-like)
+```{r}
+data_merged
+```
+```{r}
+data_merged$Donor.y <- NULL
+data_merged$Condition.y <- NULL
+table_results <- data.frame(Name = NA, pval = NA)
+
+for (j in 6:55) {
+  res <- wilcox.test(data_merged[,j] ~ Condition.x, data = data_merged, paired = TRUE)
+  table_results[j-5,1] <- colnames(data_merged)[j]
+  table_results[j-5,2] <- res$p.value
+}
+
+write.csv(table_results, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/Sara_Anna_statistic_tests.csv")
+```
+

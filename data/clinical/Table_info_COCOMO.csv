@@ -1,0 +1,483 @@
+Name,Description,Format,Definition
+ob1,Blood sample taken,Dic,"0: No
+1: Yes"
+ob2,Grandparents origin,Cat,"1: Danish
+2: Other Scandinavian
+3: Other European
+4: Turkish
+5: Pakistani, Indian, Sri Lankan
+6: Arab/Iran
+7: Other (African, Asian, Greenland)"
+ob3,Duration since last meal,Cat,"Unit: hours
+1: 0-1
+2: 1-2
+3: 2-3
+4: 3-4
+5: 4-5
+6: 5-6
+7: 6-7
+8: 7-8
+9: > 8"
+ob4,Height of participant,Num,Unit: cm
+ob5,Weight of participant,Num,Unit: kg
+bmi,*Body mass index,Num,Unit: kg/m2
+bmikat,*WHO BMI category,Cat,"1: underweight
+2: normal
+3: overweight
+4: obese"
+ob6,Waist circumference,Num,Unit: cm
+central_obesity,*IDF definition,Cat,"0: No
+1:Yes"
+ob7,Hip circumference,Num,Unit: cm
+WHR,*Waist hip ratio,Num,Unit: ratio
+ob8,"Systolic blood pressure, left arm",Num,Unit: mm mercury
+ob9,"Diastolic blood pressure, left arm",Num,Unit: mm mercury
+ob10,"Systolic blood pressure, right arm",Num,Unit: mm mercury
+ob11,"Diastolic blood pressure, right arm",Num,Unit: mm mercury
+hypertension,*JNC7 definition,Dic,"0: No
+1: Yes"
+diabetes,"*Min one of the following:  tx with antidiabetic drug for T2DM
+or non-fasting venous plasma glucose ≥ 11.1 mmol/L
+or  HbA1c ≥ 6.5%
+",Dic,"0: No
+1: Yes"
+ob12,"Bloodpressure, right leg",Num,Unit: mm mercury
+ob13,"Bloodpressure, left leg",Num,Unit: mm mercury
+ob14,Ankle brachial index,Cat,"1: > 0.9
+2: < 0.9"
+ob15,Liver stiffness measurement,Num,Unit: kpa
+ob16,Interquartile range,Num,One decimal
+ob17,Fibroscan not possible,Cat,1: Yes
+ob18,Saturation,Num,Unit: %
+ob19,Pulse,Num,Unit: beats per minute
+ob20,Forced vital capacity,Num,Unit: L
+ob21,Forced expiratory volume in 1 sec,Num,Unit: L
+ob22,FEV1/FVC,Num,Unit: %
+ob23,FVC after bronchodilation,Num,Unit: L
+ob24,FEV1 after bronchodilation,Num,Unit: L
+ob25 ,FEV1/FVC after bronchodilation,Num,Unit: %
+ob26,Expiratory nitrogen oxid,Num,Unit: parts per billion 
+ob27,Instruction for spirometry,Cat,"1: Easy
+2: Difficult
+3: Impossible"
+H2_01,Chest pain – hurry/stair walk,Dic,"0: No
+1: Yes"
+H2_02,Shortness of breath – hurry/uphill ,Dic,"0: No
+1: Yes"
+H2_03,Shortness of breath – peers straight road,Dic,"0: No
+1: Yes"
+H2_04,Stop for breath after walking – own pace,Dic,"0: No
+1: Yes"
+H2_05,Shortness of breath - awake at night,Dic,"0: No
+1: Yes"
+H2_06,Shortness of breath – shower/dressing,Dic,"0: No
+1: Yes"
+H2_07,Short of breath – morning,Dic,"0: No
+1: Yes"
+H2_08,Short of breath – rest,Dic,"0: No
+1: Yes"
+H2_09a,Reflux,Dic,"0: No
+1: Yes"
+H2_09b,Reflux when coughing,Dic,"0: No
+1: Yes"
+H2_09c,Reflux when dyspnoea,Dic,"0: No
+1: Yes"
+H2_10,Cough – cont. for past 8 weeks,Dic,"0: No
+1: Yes"
+H2_11a,Sputum – cont. for 3 month/yr,Dic,"0: No
+1: Yes"
+H2_11b,"If yes, sputum white/clear",Dic,"0: No
+1: Yes"
+H2_11c,"Sputum yellow, green, purulent",Dic,"0: No
+1: Yes"
+H2_12a,Self-reported COPD (told by MD/nurse),Dic,"0: No
+1: Yes"
+H2_12b,"If yes, age at diagnosis",Num,Unit: years
+H2_13a,Long exposure to dust,Dic,"0: No
+1: Yes"
+H2_13b,"If yes, number of years",Num,Unit: years
+H2_14a,"Wheezing, intermittently",Dic,"0: No
+1: Yes"
+H2_14b,"If yes, when having a cold",Dic,"0: No
+1: Yes"
+H2_14c,"If yes, exertional",Dic,"0: No
+1: Yes"
+H2_14d,"If yes, unknown reason",Dic,"0: No
+1: Yes"
+,Food/medication/grass/flower/animal hair induced:,,
+H2_15a,Asthma,Dic,"0: No
+1: Yes"
+H2_15b,Hay fever,Dic,"0: No
+1: Yes"
+H2_15c,Eczema,Dic,"0: No
+1: Yes"
+H2_16,Asthma/hay fever/eczema as child,Dic,"0: No
+1: Yes"
+H2_17a,Self-reported asthma,Dic,"0: No
+1: Yes"
+H2_17b,"If yes, number of years",Num,Years
+"H2_17c_(1-12)
+","Worst months:
+1: Jan; 2: Feb; 3: Mar; 4: Apr; 5: May; 6: Jun; 7: Jul; 8: Aug; 9: Sep; 10: Oct; 11: Nov; 12: Dec.",Cat,1: Yes
+H2_18,Acute bronchitis/pneumonia past 10 years leading to MD visit or sick leave,Cat,"0: No
+1: 1-5 
+2: 6-10
+3: > 10 "
+H2_19(a-l),"Allergy:
+a: alder; b: hazel; c: birch; d: grass; e: mugwort; f:mold; g: dust mites; h: dog; i: cat; j: rabbit; k: horse; l: other",Cat,1: Yes
+,Pain one/both legs when,,
+H2_20a,Initiation of walking,Dic,"0: No
+1: Yes"
+H2_20b,After walking a distance,Dic,"0: No
+1: Yes"
+H2_20c,"If yes (H2_20b), break needed",Dic,"0: No
+1: Yes"
+H2_20d,"If yes, pain relief when break",Dic,"0: No
+1: Yes"
+H2_21a,"Acute bronchitis, past 4 weeks",Dic,"0: No
+1: Yes"
+H2_21b,"Cystitis, past 4 weeks",Dic,"0: No
+1: Yes"
+H2_21c,"Acute fever, past 4 weeks",Dic,"0: No
+1: Yes"
+H2_22a,Self-reported diabetes (told by MD/nurse),Dic,"0: No
+1: Yes"
+H2_22b,"If yes, age at diagnosis",Num,Years
+H2_23a,Current/previous chronic diseases (can be looked up in scanned questionnaires),Dic,"0: No
+1: Yes"
+H2_23b,"If yes, age at diagnosis",Num,Years
+H2_24a,Born prematurely,Dic,"0: No
+1: Yes"
+H2_24b,"If yes, number of weeks",Num,Weeks
+H2_24c,Birth weight,Num,Grams
+H2_25a,Current/previous blood donor,Dic,"0: No
+1: Yes"
+H2_25b,"If yes, number of years",Num,Years
+H2_26,Age of first menstrual cycle,Num,Years
+H2_27a,Menstrual cycles stopped due to menopause,Dic,"0: No
+1: Yes"
+H2_27b,"If yes, at what age",Num,Years
+H2_28,Number of abortions,Num,Number
+H2_29,Number of live births,Num,Number
+H2_30,Age at first live birth,Num,Years
+H2_31a,Breastfeeding,Dic,"0: No
+1: Yes"
+H2_31b,"If yes, total duration for all children",Num,Months
+status_smoking,*Current smoking status,Cat,"0: Never
+1: Current
+2: Ex-smoker
+9: Unknown"
+curr_smoking,"*If current smoker, gram tobacco per day",Num,Unit: grams
+cum_smoking,*Pack years in current and previous smokers,Num,Unit: packyears
+H2_32a,Current smoker,Dic,"0: No
+1: Yes"
+H2_32b,"If no, previous smoker",Dic,"0: No
+1: Yes"
+H2_33,Cumulative duration of smoking,Num,Years
+H2_34,Age at smoking initiation,Num,Years
+H2_35,"If previous smoking, age at smoke cessation",Num,Years
+H2_36(a-e),"If current/previous smoker, average daily consumption of:
+a: cigarettes (no filter); b: cigarettes (with filter); c: cheroots; d: cigars; e: pipe (packages of 40-50 g per week)",Num,Number per day
+H2_37,Time from awakening to smoking,Cat,"Minutes
+1: < 5
+2: 6-30
+3: 31-60
+4: > 60"
+H2_38,Inhalation,Dic,"0: No
+1: Yes"
+H2_39a,"Nicotine substitution (e.g. gum, patch)",Dic,"0: No
+1: Yes"
+H2_39b,"If yes, cumulative duration of use",Num,Years
+H2_40a,E-cigarettes,Cat,"0: No
+1: yes with nicotine
+2: yes without nicotine"
+H2_40b,"If yes, duration",Num,Years
+H2_40c,Hours per day,Num,Hours
+H2_41,Passive smoking exposure,Num,Hours per day
+H2_42,Childhood (before age 18) exposure of passive smoking,Num,Years
+H2_43,Adulthood (after age 18) exposure of passive smoking,Num,Years
+H2_44a,Current/previous marihuana use,Dic,"0: No
+1: Yes"
+H2_44b,"If yes, duration",Num,Years
+H2_45,Beverage intake per week,,
+H2_45a(1-12),"1: whole milk; 2: low fat milk; 3: skim milk; 4: coffee; 5: tea; 6: coke; 7:coke light/zero; 8: soda; 9: soda light; 10: juice; 11: lemonade; 12: water.
+Units:
+1-3: glass; 4-5: cups; 6-9: x 0.5 l; 10-11: glass; 12: x 0.5 l",Num,
+H2_45b,"If coffee, time from awakening to first cup",Num,Hours
+H2_45c,"If coke/soda, time from awakening to first soda",Num,Hours
+alcohol,*Weekly alcohol consumption,Num,Unit:gram
+,Alcoholic drinks,,
+H2_46_1a,All alcoholic drinks,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_2a,Beer,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_2b,Weekly consumption (beer),Num,Number of 33cl
+H2_46_3a,White wine,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_3b,Weekly consumption (white wine),Num,Glass of 12.5 cl
+H2_46_4a,Red wine,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_464b,Weekly consumption (red wine),Num,Glass of 12.5 cl
+H2_46_5a,Liqeur (Danish: hedvin),Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_5b,Weekly consumption (liqeur),Num,Glass of 8 cl
+H2_46_6a,Liquor,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_6b,Weekly consumption (liquor),Num,4 cl
+H2_46_7a,Other  alcoholic drinks,Cat,"0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+H2_46_7b,Weekly consumption (other),Num,Number of drinks
+H2_47,Frequency of consumption of > 5 drinks in one occasion during the past year,Cat,"0:Never
+1: Less <1 per month
+2: 1-3 per month
+3: 1 per week
+4: > 1 per week"
+H2_48,"If no alcohol use, always been abstinent",Dic,"0: No
+1: Yes"
+H2_49,Main courses ,Num,Number per day
+H2_50,"Bread, pieces per day
+1 piece = 0.5 rhye bread / 1 toast / 1 crispbread / 0.5 bun",Num,Number per day
+H2_51,Type of butter on bread,Cat,"0: None
+1: Butter
+2: Spreadable (Kærgården)
+3: Vegetable margarine (Plantemargarine)
+4: Other"
+H2_52(a-d),"Cold cut 
+a: Deli meats (Kødpålæg)
+b: Pate (Leverpostej)
+c: Fish
+d: Cheese",Num,"Times per week in average
+"
+H2_53(a-f),"Meat intake
+a: Beef
+b: Pork
+c: Poultry
+d: Fish
+e: Fastfood
+f: Lamb",Num,"Times per week in average
+"
+H2_54,Choice of fat for preparing warm dishes,Cat,"0: None
+1: Butter
+2: Spreadable (Kærgården)
+3: Shortening (Stegemargarine)
+4: Vegetable margarine (Plantemargarine) 
+5: Olive oil
+6: Other oil
+7: Other"
+H2_55,Vegetable intake ,Cat,"0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 5-6 /week
+5: 1 /day
+6: 2-3 /day
+7: > 3/day"
+H2_56,Fruit intake (whole fruit/portion of fruit),Cat,"0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 5-6 /week
+5: 1 /day
+6: 2-3 /day
+7: > 3/day"
+H2_57,Candy intake,Cat,"0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 1 /day
+5: > 1/day"
+H2_58a,Chocolate intake,Cat,"0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 1 /day
+5: > 1/day"
+H2_58b,"If yes,",,"1: Dark chocolate (> 70% cocoa)
+2: Other"
+H2_59,Ecological food and drinks,Num,% 
+H2_60,"School duration (e.g. primary school, secondary school, highschool)",Num,Years
+H2_61,"Education, highest level achieved",Cat,"0: None
+1: Short (≤ 3 yrs)
+2: Vocational
+3: Medium length (≥ 3 years, e.g. nurse, teacher)
+4: University degree"
+H2_62,Occupation with longest duration after education,Cat,"1: Self-employed
+2: Skilled (faglært)
+3: Unskilled (ufaglært)
+4: Salaried (funktionær)
+5: Homeworking
+6: Student
+7: Unemployed/retired "
+H2_63,Living with,Cat,"1: Spouse/partner
+2: Alone
+3: Others"
+H2_64,Number of children,Num,Number
+H2_65,Number of biological children,Num,Number
+H2_66,Number of people in household incl. yourself,Num,Number
+H2_67,Marital status,Cat,"1: Married/cohabitant
+2: Unmarried
+3: Separated/divorced
+4: Widow/widower"
+H2_68,Total household income before taxes past 1 year,Cat,"Unit: DKK
+1: < 100,000
+2: 100,000-200,000
+3: 200,000-400,000
+4: 400,000-600,000
+5: 600,000-800,000
+6: > 800,000 "
+H2_69,Number of people in household contributing to household income incl. yourself,Num,
+H2_70(a-d),"Daily use of:
+a: Television; b: Computer/tablet; c: Computer games; d: Mobile phone",Num,Minutes
+H2_71(a-d),"Number of years with daily use of: 
+a: Television; b: Computer/tablet; c: Computergames; d: Mobilephone",Num,Years
+H2_72,Days per month with nightly work,Num,Days
+H2_73a,Physical activity at work,Cat,"1: Mostly seated
+2: Seated or standing sometime walking
+3: Walking sometimes uphill
+4: Heavy work"
+H2_73b,"If H2_73a “3” or “4”, then heavy lifting?",Dic,"0: No 
+1:Yes"
+H2_73c,Hours outdoor,Num,Hours
+H2_74a,Physical activity in spare time,Cat ,"1: Inactive 
+2: Slightly active
+3: Moderately active
+4: Very active"
+H2_74b,"If H2_74a “3” or “4”, then heavy lifting?",Dic,"0: No 
+1:Yes"
+H2_74c,Hours outdoor,Num,Hours
+H2_75a,Motion habits changed markedly past 1 year,Dic,"0: No
+1: Yes"
+H2_75b,If yes:,Dic,"1: more
+2: less"
+m2_01,Aspirin,Dic,"0: No
+1: Yes"
+m2_01a,Cumulative use ,Num,Unit: Years
+m2_02a,Antihypertensives,Dic,"0: No
+1: Yes"
+m2_02a1,Cumulative use,Num,Unit: Years
+m2_02b,Other antihypertensive,Dic,"0: No
+1: Yes"
+m2_02b1,Cumulative use,Num,Unit: Years
+m2_02c,Other antihypertensive,Dic,"0: No
+1: Yes"
+m2_02c1,Cumulative use,Num,Unit: Years
+m2_03a,Drugs to treat heart conditions,Dic,"0: No
+1: Yes"
+m2_03a1,Cumulative use,Num,Unit: Years
+m2_03b,Other drug to treat heart conditions,Dic,"0: No
+1: Yes"
+m2_03b1,Cumulative use,Num,Unit: Years
+m2_03c,Other drug to treat heart conditions,Dic,"0: No
+1: Yes"
+m2_03c1,Cumulative use,Num,Unit: Years
+m2_(04-24),"04: Diuretics
+05: Anti dyslipedemics
+06: Arthritis medication
+07: Hypnotica
+08: Anxiolytics/antidepressant
+09: Tx for gastric acidity
+10: Tx for asthma/bronchitis/COPD
+11: Insulin
+12: Other antidiabetic medication
+13: Birth control pills
+14: Menopausal medication
+15: Medication for eye conditons
+16: Medication for weight loss
+17: Anti-coagulative therapy
+18: Treatment for hyperthyroidism
+19: Treatment for hypothyroidism
+20: Paracetamol
+21: Other pain relief medication
+22: Other medication
+23: D-vitamin
+24: Other vitamin",Dic,"0: No
+1: Yes"
+m2_(04a-24a),Cumulative use,Num,Unit: Years
+m2_25a,Natural remedies,Dic,"0: No
+1: Yes"
+m2_25a1,Cumulative use ,Num,Unit: Years
+m2_25b,Other natural remedies,Dic,"0: No
+1: Yes"
+m2_25b1,Cumulative use ,Num,Unit: Years
+m2_25c,Other natural remedies,Dic,"0: No
+1: Yes"
+m2_25c1,Cumulative use ,Num,Unit: Years
+m2_26(a-e),HIV combination treatment,Dic,"0: No
+1: Yes"
+m2_26(a1-e1),Cumulative use,Num,Unit: Years
+m2_27(a-d),Other HIV related treatment,Dic,"0: No
+1: Yes"
+m2_27(a1-d1),Cumulative use,Num ,Unit: Years
+CDCAIDS,Previous AIDS defining condition,Dic,"0: no
+1: yes"
+AIDS_date,Date of AIDS defining condition (if any),Date,dd-mm-yyyy
+Cand_oes,Candida esophagitis,Dic,"0: no
+1: yes"
+Cand_other,Other candida infection ,Dic,"0: no
+1: yes"
+Cervix_c,Cervix cancer,Dic,"0: no
+1: yes"
+Cocci,"Coccidioidomycosis, disseminated or extrapulmonary",Dic,"0: no
+1: yes"
+Crypt,Cryptococcal infection,Dic,"0: no
+1: yes"
+Cryptospo,"Cryptosporidiosis, chronic intestinal (>1 month's duration)",Dic,"0: no
+1: yes"
+CMV_ret,"Cytomegalovirus disease (other than liver, spleen, or nodes), onset at age >1 month",Dic,"0: no
+1: yes"
+CMV_other,Cytomegalovirus retinitis (with loss of vision,Dic,"0: no
+1: yes"
+HSV,"Herpes simplex: chronic ulcers (>1 month's duration) or bronchitis, pneumonitis, or esophagitis",Dic,"0: no
+1: yes"
+Encephal,"Encephalopathy, HIV related",Dic,"0: no
+1: yes"
+Histopl,"Histoplasmosis, disseminated or extrapulmonary",Dic,"0: no
+1: yes"
+Isospo,"Isosporiasis, chronic intestinal",Dic,"0: no
+1: yes"
+Kapo,Kaposi sarcoma,Dic,"0: no
+1: yes"
+LID,Lymphoid interstitial pneumonia or pulmonary lymphoid hyperplasia complex,Dic,"0: no
+1: yes"
+Lymp_burk,"Lymphoma, Burkitt ",Dic,"0: no
+1: yes"
+Lymphom_immun,"Lymphoma, immunoblastic",Dic,"0: no
+1: yes"
+Lymphom_prim,"Lymphoma, primary, of brain",Dic,"0: no
+1: yes"
+MAC,"Mycobacterium avium complex or Mycobacterium kansasii, disseminated or extrapulmonary",Dic,"0: no
+1: yes"
+MTB,Mycobacterium tuberculosis of any site,Dic,"0: no
+1: yes"
+Myco_other,"Mycobacterium, other species or unidentified species",Dic,"0: no
+1: yes"
+PCP,Pneumocystis jirovecii pneumonia,Dic,"0: no
+1: yes"
+PCP_rec,,Dic,"0: no
+1: yes"
+Toxo,Toxoplasmosis of brain ,Dic,"0: no
+1: yes"
+Waste,Wasting syndrome attributed to HIV,Dic,"0: no
+1: yes"
+Salm,"Salmonella septicemia, recurrent",Dic,"0: no
+1: yes"
+Pneu_recur,"Pneumonia, recurrent",Dic,"0: no
+1: yes"
+Leuencp,Progressive multifocal leukoencephalopathy,Dic,"0: no
+1: yes"
+Syph,Syphilis infection,Dic,"0: no
+1: yes"

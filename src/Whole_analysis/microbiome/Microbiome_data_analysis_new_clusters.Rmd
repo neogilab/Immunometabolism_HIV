@@ -1,0 +1,591 @@
+---
+title: "Microbiome processing"
+output: html_notebook
+---
+
+
+Input : OTU table (genus, family, phylum)
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+library(phyloseq)
+library("ggplot2")
+library("scales")
+library("grid")
+library(xlsx)
+library("colorspace")
+library(vegan)
+library(reshape2)
+library(funrar)
+library(gridExtra)
+```
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+# 1) prepare phyloseq input
+## load data
+## remove HC
+```{r}
+data_genus <- read.csv("data/microbiome/microbiome_COCOMO_genus.csv")
+data_family <- read.csv("data/microbiome/microbiome_COCOMO_family.csv")
+data_phylum <- read.csv("data/microbiome/microbiome_COCOMO_phylum.csv")
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical$X.1 <- NULL
+names(clinical)[2] <- "X"
+clinical <- clinical[clinical$cluster != "Ctrl",]
+```
+
+### process data
+```{r}
+data_phylum_2 <- data_phylum
+data_phylum_2 <- data_phylum_2[,c(1,2, grep("D_1", colnames(data_phylum_2)))]
+colnames(data_phylum_2)[-c(1,2)] <- gsub(".*D_1__", "",colnames(data_phylum_2)[-c(1,2)])
+colnames(data_phylum_2)[grep("uncultured", colnames(data_phylum_2))] <- "Other"
+colnames(data_phylum_2)[grep("unidentified", colnames(data_phylum_2))] <- "Other"
+colnames(data_phylum_2)[grep("metagenome", colnames(data_phylum_2))] <- "Other"
+data_phylum_2 <- data_phylum_2[,colnames(data_phylum_2) != "Other"]
+names(data_phylum_2)[1] <- "X"
+data_phylum_2$Category <- NULL
+data_phylum_2[,-1] <- make_relative(as.matrix(data_phylum_2[,-1]))
+write.csv(data_phylum_2, "processing/data_phylum_clean.csv")
+```
+
+```{r}
+data_family_2 <- data_family
+data_family_2 <- data_family_2[,c(1,2, grep("D_4", colnames(data_family_2)))]
+colnames(data_family_2)[-c(1,2)] <- gsub(".*D_4__", "",colnames(data_family_2)[-c(1,2)])
+colnames(data_family_2)[grep("uncultured", colnames(data_family_2))] <- "Other"
+colnames(data_family_2)[grep("unidentified", colnames(data_family_2))] <- "Other"
+colnames(data_family_2)[grep("metagenome", colnames(data_family_2))] <- "Other"
+data_family_2 <- data_family_2[,colnames(data_family_2) != "Other"]
+data_family_2$X <- NULL
+names(data_family_2)[1] <- "X"
+data_family_2$Category <- NULL
+data_family_2[,-1] <- make_relative(as.matrix(data_family_2[,-1]))
+write.csv(data_family_2, "processing/data_family_clean.csv")
+```
+
+```{r}
+data_genus_2 <- data_genus
+data_genus_2$X <- NULL
+names(data_genus_2)[1] <- "X"
+data_genus_2$Category <- NULL
+data_genus_3 <- data_genus_2
+data_genus_2 <- data_genus_2[,c(1, grep("D_5", colnames(data_genus_2)))]
+colnames(data_genus_2)[-c(1)] <- gsub(".*D_5__", "",colnames(data_genus_2)[-c(1)])
+colnames(data_genus_2)[grep("uncultured", colnames(data_genus_2))] <- "Other"
+colnames(data_genus_2)[grep("unidentified", colnames(data_genus_2))] <- "Other"
+colnames(data_genus_2)[grep("metagenome", colnames(data_genus_2))] <- "Other"
+data_genus_2 <- data_genus_2[,colnames(data_genus_2) != "Other"]
+write.csv(data_genus_2, "processing/data_genus_clean.csv")
+data_genus_2[,-1] <- make_relative(as.matrix(data_genus_2[,-1]))
+write.csv(data_genus_2, "processing/data_genus_clean_relative_abundance.csv")
+```
+
+```{r}
+color_phylym <- c("#8b0000","#eb8c00","#f9d62e","#c9df8a","#36802d","#77ab59","#71c7ec","#189ad3","#1ebbd7","#eec1ad","#ff7f50","#e0301e","#e5e5e5", "grey", "blue", "green", "pink")
+```
+
+```{r}
+samples_table <- clinical
+samples_table$cluster <- as.vector(samples_table$cluster)
+samples_table$cluster <- paste0("C", samples_table$cluster)
+```
+
+```{r}
+table(samples_table$cluster)
+```
+
+## make taxonomy table
+```{r}
+tax_table <- colnames(data_genus)[-c(1,2)]
+names_tax <- c("Super_group", "Division", "Class", "Order", "Family", "Genus")
+
+tax_table_2 <- data.frame(matrix(rep(0,6), 1, 6))
+
+colnames(tax_table_2) <- names_tax
+
+for (i in 1:length(tax_table)) {
+    x <- strsplit(as.character(tax_table[i]), "__")
+    x[[1]][7] <- ifelse(grepl("D_5", x[[1]][6]), x[[1]][7] , ".")
+    n <- c()
+    
+    for (j in 2:length(x[[1]])) {
+        y <- x[[1]][j]
+        y <- gsub("\\.D.*", "",y)
+        m <- j-1
+        n[[m]] <- y
+    }
+    tax_table_2 <- rbind(tax_table_2, n)
+}
+tax_table_2 <- tax_table_2[-1,]
+
+for (i in 1:nrow(tax_table_2)) {
+    for (j in 1:ncol(tax_table_2)) {
+        if(grepl("uncultured",tax_table_2[i,j])){
+            print(tax_table_2[i,j])
+            tax_table_2[i,j] <- "uncultured"
+        }
+      if(grepl("metagenome",tax_table_2[i,j])){
+            print(tax_table_2[i,j])
+            tax_table_2[i,j] <- "uncultured"
+      }
+      if(grepl("unidentified",tax_table_2[i,j])){
+            print(tax_table_2[i,j])
+            tax_table_2[i,j] <- "uncultured"
+        }
+    }
+}
+```
+
+```{r}
+data_genus$X <- NULL
+otu_mat <- as.matrix(data_genus[,-c(1,2)])
+rownames(otu_mat) <- data_genus$ID
+colnames(otu_mat) <- paste0("Otu",1:ncol(otu_mat))
+write.csv(otu_mat, "processing/data_count_microbiome.csv")
+
+tax_mat <- tax_table_2
+rownames(tax_mat) <- paste0("Otu",1:nrow(tax_mat))
+tax_mat <- as.matrix(tax_mat)
+```
+
+```{r}
+samples_table <- samples_table[,c(2, 3, 4, 5, 6)]
+rownames(samples_table) <- samples_table$X
+samples_table$X <- NULL
+```
+
+```{r}
+OTU = otu_table(t(otu_mat), taxa_are_rows = TRUE)
+TAX = tax_table(tax_mat)
+samples = sample_data(samples_table)
+```
+
+```{r}
+carbom <- phyloseq(OTU, TAX, samples)
+carbom
+```
+
+```{r}
+saveRDS(carbom, "processing/model_phyloseq_filted.rds")
+```
+
+## calculate alpha diversity
+```{r}
+table_alpha <- data.frame(matrix(77, 77,1))
+list_measure <- c("Observed", "Chao1", "ACE", "Shannon", "Simpson", "InvSimpson", "Fisher")
+for (x in 1:length(list_measure)) {
+    a <- estimate_richness(carbom, split = TRUE, measures = list_measure[x])
+    table_alpha <- cbind(table_alpha, a)
+}
+
+table_alpha$matrix.77..77..1.
+rownames(table_alpha) <- gsub("X", "",rownames(table_alpha))
+write.csv(table_alpha, "processing/table_alpha_diversity_filtered_model.csv")
+```
+
+```{r}
+table_alpha$X <- rownames(table_alpha)
+samples_table$X <- rownames(samples_table)
+table_alpha <- merge(table_alpha, samples_table, by = "X", all.x = TRUE)
+table_alpha$matrix.77..77..1. <- NULL
+```
+
+```{r}
+table(table_alpha$cluster)
+```
+
+
+```{r}
+table_alpha$cluster <- as.factor(table_alpha$cluster)
+```
+
+```{r}
+table_alpha$cluster <- factor(table_alpha$cluster, levels = c("C1", "C2"))
+write.csv(table_alpha, "processing/table_alpha_diversity_filtered_model_clusters.csv")
+```
+
+```{r}
+for (i in 2:10) {
+  table_1 <- table_alpha[,c(i, 11)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster, color = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="bottom",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=2, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ scale_color_manual(values=col)
+a
+ggsave(paste0("results/figures/boxplots/alpha_diversity_measures_", names(table_1)[1], "_clusters_filtered_model.pdf"), height = 4, width = 3)
+  print(i)
+}
+```
+
+```{r}
+sample_data(carbom)
+```
+
+```{r}
+data <- table_alpha
+```
+
+```{r}
+results <- data.frame(Measure = NA, pvalue_G1_G2 = NA)
+```
+
+```{r}
+names(data)
+```
+
+
+```{r}
+for (i in 2:10){
+  print(names(data)[i])
+  c1 <- data[data$cluster == "C1",i]
+  c2 <- data[data$cluster == "C2",i]
+  results[i-1, 1] <- names(data)[i]
+  results[i-1, 2] <- wilcox.test(c1, c2)$p.value
+}
+
+results$FDR_G1G2 <- p.adjust(results$pvalue_G1_G2, method = "fdr")
+write.csv(results, "processing/alpha_diversity_clusters_pvalues.csv")
+```
+
+## calculate Beta diversity
+```{r}
+ord = ordinate(carbom, method="NMDS", distance = "bray")
+
+a <- plot_ordination(carbom, ord, color = "cluster", shape="Test") + 
+  geom_point(size=6) + scale_color_manual(values=c(col))+
+  stat_ellipse()+ theme_bw() + 
+    theme(axis.title.x = element_text(size=16, color="black"),
+          axis.title.y = element_text(size=16, color="black"),
+          axis.text = element_text(color="black",size=16),
+          axis.text.x =element_text(color="black",size=16),
+          strip.text.x = element_text(size = 9,color="black"),
+          plot.title = element_text(hjust = 0.5, size = 20, vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)))
+
+a
+ggsave("results/figures/beta_diversity_plot_2_clusters.pdf")
+```
+
+```{r}
+mds1 <- data.frame(X = rownames(ord$points), NMDS1 = ord$points[,1])
+mds1 <- merge(samples_table, mds1, by = "X")
+mds1$cluster <- factor(mds1$cluster, levels = c("C1", "C2"))
+write.csv(mds1, "processing/NMDS1_microbiome.csv")
+
+b <- ggplot(mds1, aes(x=NMDS1, y=cluster, fill=cluster, color = cluster)) +
+    geom_jitter(color = "black") + 
+  geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA) + theme_bw() + 
+    theme(axis.title.x = element_text(size=16, color="black"),
+          axis.title.y = element_text(size=16, color="black"),
+          axis.text = element_text(color="black",size=16),
+          axis.text.x =element_text(color="black",size=16),
+          strip.text.x = element_text(size = 9,color="black"),
+          plot.title = element_text(hjust = 0.5, size = 20, vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)), legend.position = "none")+ xlab("NMDS1") + ylab("Cluster")+ scale_fill_manual(values=col)+ scale_color_manual(values=col)
+b
+ggsave("results/figures/beta_diversity_measures_clusters_2_NMDS1.pdf", height = 5, width = 4)
+```
+
+```{r}
+mds2 <- data.frame(X = rownames(ord$points), NMDS2 = ord$points[,2])
+mds2 <- merge(samples_table, mds2, by = "X")
+mds2$cluster <- factor(mds2$cluster, levels = c("C1", "C2"))
+write.csv(mds2, "processing/NMDS1_microbiome.csv")
+
+c <- ggplot(mds2, aes(y=NMDS2, x=cluster, fill=cluster, color = cluster)) +
+    geom_jitter(color = "black") + 
+  geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA) + theme_bw() + 
+    theme(axis.title.x = element_text(size=16, color="black"),
+          axis.title.y = element_text(size=16, color="black"),
+          axis.text = element_text(color="black",size=16),
+          axis.text.x =element_text(color="black",size=16),
+          strip.text.x = element_text(size = 9,color="black"),
+          plot.title = element_text(hjust = 0.5, size = 20, vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)), legend.position = "none")+ ylab("NMDS2") + xlab("Cluster")+ scale_fill_manual(values=col)+ scale_color_manual(values=col)
+ggsave("results/figures/beta_diversity_measures_clusters_2_NMDS2.pdf", height = 5, width = 4)
+c
+```
+
+
+```{r}
+d <- ggplot() + 
+    theme(axis.title.x = element_text(size=16, color="black"),
+          axis.title.y = element_text(size=16, color="black"),
+          axis.text = element_text(color="black",size=16),
+          axis.text.x =element_text(color="black",size=16),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)), legend.position = "none")
+```
+
+```{r}
+list_figures <- list(b, a,c, d)
+```
+
+```{r}
+j <- matrix(nrow = 10, ncol = 10)
+j[1:2,1:8] <- 1
+j[3:10,1:8] <- 2
+j[3:10,9:10] <- 3
+j[is.na(j)] <- 4
+```
+
+```{r}
+pdf("results/figures/beta_diversity_2_clusters.pdf", height = 10, width = 10)
+grid.arrange(grobs = list_figures, layout_matrix = j)
+dev.off()
+```
+
+```{r}
+cluster <- samples_table
+```
+
+## load data
+```{r}
+phylum <- read.csv("processing/data_phylum_clean.csv")
+phylum_data <- merge(cluster, phylum, by = "X")
+phylum_data$X.1 <- NULL
+phylum_data_2 <- phylum_data
+phylum_data$X <- NULL
+```
+
+```{r}
+dist <- vegdist(phylum_data[,-1])
+anova(betadisper(dist, phylum_data$cluster))
+```
+
+```{r}
+permutest(betadisper(dist, phylum_data$cluster), pairwise = TRUE)
+```
+
+```{r}
+permanova <- adonis(phylum_data[,-1] ~ phylum_data$cluster, method = "euclidean", permutations = 999)
+```
+
+```{r}
+pairwise.adonis <- function(x,factors, sim.method, p.adjust.m){
+  coeff <- list()
+  co = as.matrix(combn(unique(factors),2))
+  pairs = c()
+  F.Model =c()
+  R2 = c()
+  p.value = c()
+  for(elem in 1:ncol(co)){
+    data <- x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),]
+    group <- factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] 
+    ## test homogeneity
+    dist <- vegdist(data)
+    print(anova(betadisper(dist, group)))
+
+    ad = adonis(x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),] ~ factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] ,
+                permutations = 9999, method =sim.method);
+    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
+    F.Model =c(F.Model,ad$aov.tab[1,4]);
+    R2 = c(R2,ad$aov.tab[1,5]);
+    p.value = c(p.value,ad$aov.tab[1,6])
+    coeff[[elem]] = coefficients(ad)["factors[factors %in% c(as.character(co[1, elem]), as.character(co[2, elem]))]1",]
+ }
+ write.csv(coeff[[1]], "processing/coefficient_permanova_group_2_vs_group_1.csv")
+ p.adjusted = p.adjust(p.value,method=p.adjust.m)
+ pairw.res = data.frame(pairs,F.Model,R2,p.value,p.adjusted)
+ return(pairw.res)
+}
+
+PW.Adonis=pairwise.adonis(phylum_data[,-1],phylum_data$cluster,sim.method="bray",p.adjust.m = "bonferroni")
+
+write.table(PW.Adonis,"results/Adonis-Results_phylum.csv",sep=",")
+```
+```{r}
+col <- c("#E69F00", "#56B4E9")
+```
+
+```{r}
+coef <- read.csv("processing/coefficient_permanova_group_2_vs_group_1.csv")
+
+pdf("results/figures/barplot_coefficients_permanova_group1_vs_group2_phylum.pdf", height = 3, width = 6)
+top.coef <- coef[rev(order(abs(coef$x))),]
+top.coef$sign <- ifelse(top.coef$x < 0, "neg", "pos")
+top.coef <- top.coef[order(top.coef$x),]
+top.coef$X <- factor(top.coef$X, levels = top.coef$X)
+par(mar = c(3, 14, 2, 1))
+ggplot(data=top.coef, aes(x=x, y=X, fill = sign)) +
+geom_bar(stat="identity")+
+theme_classic()+ scale_fill_manual(values=col)+ylab("Phylums")+xlab("Coefficients")
+dev.off()
+```
+
+## load data
+```{r}
+family <- read.csv("processing/data_family_clean.csv")
+family_data <- merge(cluster, family, by = "X")
+family_data$X.1 <- NULL
+family_data_2 <- family_data
+family_data$X <- NULL
+```
+
+```{r}
+dist <- vegdist(family_data[,-1])
+anova(betadisper(dist, family_data$cluster))
+```
+
+```{r}
+permutest(betadisper(dist, family_data$cluster), pairwise = TRUE)
+```
+
+```{r}
+permanova <- adonis(family_data[,-1] ~ family_data$cluster, method = "euclidean", permutations = 999)
+```
+```{r}
+coefficients(permanova)[2,]
+```
+
+```{r}
+pairwise.adonis <- function(x,factors, sim.method, p.adjust.m){
+  coeff <- list()
+  co = as.matrix(combn(unique(factors),2))
+  pairs = c()
+  F.Model =c()
+  R2 = c()
+  p.value = c()
+  for(elem in 1:ncol(co)){
+    print(factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))])
+    data <- x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),]
+    group <- factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] 
+    ## test homogeneity
+    dist <- vegdist(data)
+    print(anova(betadisper(dist, group)))
+
+    ad = adonis(x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),] ~ factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] ,
+                permutations = 9999, method =sim.method);
+    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
+    F.Model =c(F.Model,ad$aov.tab[1,4]);
+    R2 = c(R2,ad$aov.tab[1,5]);
+    p.value = c(p.value,ad$aov.tab[1,6])
+    print(coefficients(ad)[2,])
+    coeff[[elem]] = coefficients(ad)[2,]
+ }
+write.csv(coeff[[1]], "processing/coefficient_permanova_group_2_vs_group_1.csv")
+p.adjusted = p.adjust(p.value,method=p.adjust.m)
+pairw.res = data.frame(pairs,F.Model,R2,p.value,p.adjusted)
+return(pairw.res)
+}
+
+PW.Adonis=pairwise.adonis(family_data[,-1],family_data$cluster,sim.method="bray",p.adjust.m = "bonferroni")
+
+write.table(PW.Adonis,"results/Adonis-Results_family.csv",sep=",")
+```
+
+
+```{r}
+genus <- read.csv("processing/data_genus_clean.csv")
+genus_data <- merge(cluster, genus, by = "X")
+genus_data$X <- NULL
+genus_data$X.1 <- NULL
+```
+
+```{r}
+pairwise.adonis <- function(x,factors, sim.method, p.adjust.m){
+  coeff <- list()
+  co = as.matrix(combn(unique(factors),2))
+  pairs = c()
+  F.Model =c()
+  R2 = c()
+  p.value = c()
+  for(elem in 1:ncol(co)){
+    data <- x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),]
+    group <- factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] 
+    ## test homogeneity
+    dist <- vegdist(data)
+    print(anova(betadisper(dist, group)))
+
+    ad = adonis(x[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem])),] ~ factors[factors %in% c(as.character(co[1,elem]),as.character(co[2,elem]))] ,
+                permutations = 9999, method =sim.method);
+    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
+    F.Model =c(F.Model,ad$aov.tab[1,4]);
+    R2 = c(R2,ad$aov.tab[1,5]);
+    p.value = c(p.value,ad$aov.tab[1,6])
+    coeff[[elem]] = coefficients(ad)["factors[factors %in% c(as.character(co[1, elem]), as.character(co[2, elem]))]1",]
+ }
+write.csv(coeff[[1]], "processing/coefficient_permanova_group_2_vs_group_1_genus.csv")
+p.adjusted = p.adjust(p.value,method=p.adjust.m)
+pairw.res = data.frame(pairs,F.Model,R2,p.value,p.adjusted)
+return(pairw.res)
+}
+
+PW.Adonis=pairwise.adonis(genus_data[,-1],genus_data$cluster,sim.method="bray",p.adjust.m = "bonferroni")
+
+write.table(PW.Adonis,"results/Adonis-Results_genus.csv",sep=",")
+```
+
+
+## microbiome = mann withney at family, phylum and genus
+```{r}
+# Close and re-open R
+GPr <- readRDS("processing/model_phyloseq_filted.rds")
+
+diagdds = phyloseq_to_deseq2(GPr, ~ 0 + cluster)
+# calculate geometric means prior to estimate size factors
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+
+geoMeans = apply(counts(diagdds), 1, gm_mean)
+
+diagdds = estimateSizeFactors(diagdds, geoMeans = geoMeans)
+diagdds = DESeq(diagdds, fitType="local")
+```
+
+```{r}
+resultsNames(diagdds)
+alpha = 0.05
+```
+
+```{r}
+res <- results(diagdds, contrast=c("cluster", "C1", "C2"), cooksCutoff=FALSE, independentFiltering=FALSE)
+res = res[order(res$padj, na.last=NA), ]
+alpha = 0.05
+sigtab = res[(res$padj < 1), ]
+sigtab = cbind(as(sigtab, "data.frame"), as(tax_table(GPr)[rownames(sigtab), ], "matrix"))
+head(sigtab)
+
+write.csv(sigtab, "results/microbiome_results_grp1_grp2_corrected.csv")
+write.table(rownames(sigtab), "results/microbiome_results_grp1_grp2_GSEA_corrected.txt", quote = FALSE)
+```

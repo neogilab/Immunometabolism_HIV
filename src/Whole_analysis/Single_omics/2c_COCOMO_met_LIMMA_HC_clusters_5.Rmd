@@ -1,0 +1,581 @@
+---
+title: "LIMMA metabolomics"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(dplyr)
+library(limma)
+library(xlsx)
+```
+
+
+```{r}
+clinical <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/data_base_200_patients_COCOMO_filtered.csv")
+clinical_2 <- clinical[,c(1, 9)]
+```
+
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical$X.1 <- NULL
+names(clinical)[2] <- "id"
+clinical <- clinical[,c(2, 3)]
+```
+
+```{r}
+clinical <- merge(clinical_2, clinical, by = "id", all.x = TRUE)
+```
+
+```{r}
+cli <- colnames(clinical)
+cli <- cli[!cli %in% c("X", "COCOMO_ID", "cluster", "User")]
+cli <- cli[!grepl("cat", cli)]
+```
+## load data
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+
+data_met <- data.frame(t(data_met))
+#
+metabolites <- rownames(data_met)
+data_met <- data.frame(t(data_met))
+
+rownames(data_met) <- gsub("X", "", rownames(data_met))
+colnames(data_met) <- metabolites
+data_met$id <- rownames(data_met)
+```
+
+
+
+
+
+
+```{r}
+list_met <- c("glutamine", "asparagine", "cysteine", "tryptophan", "carnitine")
+```
+
+```{r}
+pca_data <- merge(clinical, data_met, by = "id", all.y = TRUE)
+```
+
+```{r}
+pca_data$cluster[is.na(pca_data$METS)] <- "Ctrl"
+table(pca_data$cluster)
+```
+
+
+```{r}
+pca_data_2 <- pca_data
+pca_data_2$cluster[pca_data_2$cluster == 1] <- "HC-like"
+pca_data_2$cluster[pca_data_2$cluster == 2] <- "At-risk"
+pca_data_2 <- pca_data_2[!is.na(pca_data_2$cluster),]
+pca_data_2$cluster <- factor(pca_data_2$cluster, levels = c("Ctrl", "HC-like", "At-risk"))
+data_prot <- pca_data_2
+```
+
+```{r}
+list_boxplots <- c("serotonin", "beta-citrylglutamate", "spermine", "spermidine", "taurine", "maltose", "quinolinate", "kynurenate", "sphingosine", "sphinganine", "AMP", colnames(data_prot)[grepl("hydroxybutyrate", colnames(data_prot))], "acetoacetate", "2-aminobutyrate")
+```
+
+```{r}
+list_boxplots[!list_boxplots %in% colnames(data_prot)]
+```
+
+```{r}
+data_prot <- data_prot[,colnames(data_prot) %in% c("cluster", list_boxplots)]
+```
+
+```{r}
+my_comparisons <- list(c("HC-like", "At-risk"))
+```
+
+```{r}
+colnames(data_prot)[colnames(data_prot) == "2-hydroxybutyrate/2-hydroxyisobutyrate"] <- "2-hydroxybutyrate"
+```
+```{r}
+data_prot <- data_prot[data_prot$cluster != "Ctrl",]
+```
+
+## boxplots
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(data_prot)) {
+  table_1 <- data_prot[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/met_", colnames(data_prot)[i], "_boxplot.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+
+```{r}
+pca_data <- pca_data[!is.na(pca_data$cluster),]
+```
+
+```{r}
+group <- as.factor(pca_data$cluster)
+#bmi <- pca_data$BMI
+#gender <- as.factor(pca_data$GENDER)
+#age <- pca_data$AGE
+
+design <- model.matrix( ~ 0 + group)
+```
+
+```{r}
+fit <- lmFit(t(pca_data[,-c(1:3)]), design)
+```
+
+```{r}
+list_comp <- c(paste0("group",2:1), "groupCtrl")
+list_pair <- data.frame(t(combn(list_comp,2)))
+list_pair$comp <- paste0(list_pair$X1, "-", list_pair$X2)
+comp <- list_pair$comp
+names(comp) <- gsub("roup", "", comp)
+```
+
+```{r}
+cont.matrix <- makeContrasts(G2_G1 = comp[1],
+                             G2_CT = comp[2],
+                             G1_CT = comp[3],
+                             levels=design)
+
+fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit.cont)
+```
+
+```{r}
+top_table <- data.frame(BIOCHEMICAL = NA, logFC= NA, P.Value= NA, adj.P.Val= NA, Comp= NA)
+
+for (i in 1:length(comp)) {
+  top_table_1 <- topTable(fit.cont, coef=i, adjust="BH", n = Inf, sort.by = "P")
+  top_table_1$Comp <- comp[i]
+  top_table_1$BIOCHEMICAL <- rownames(top_table_1)
+  top_table_1 <- top_table_1[,c(8, 1, 4, 5, 7)]
+  write.table(top_table_1$BIOCHEMICAL[top_table_1$adj.P.Val < 0.1], paste0("processing/MSEA/model_1_met_", comp[i],".txt"), quote = FALSE, row.names = F)
+  top_table <- rbind(top_table, top_table_1)
+}
+
+top_table <- top_table[complete.cases(top_table),]
+path_table <- paste0("results/LIMMA/model_1_LIMMA_results_metabolites_with_HC.csv")
+
+print(path_table)
+write.csv(top_table, file =path_table)
+
+DF_top_table <-top_table[top_table$adj.P.Val < 0.1, ]
+
+path_results <- paste0("results/LIMMA/model_1_LIMMA_results_metabolites_with_HC_filt.csv")
+
+write.table(DF_top_table, file = path_results)
+
+path_results <- paste0("results/LIMMA/model_1_LIMMA_results_metabolites_with_HC_filt.xlsx")
+
+write.xlsx(DF_top_table, file = path_results)
+
+table(DF_top_table$Comp)
+```
+
+```{r}
+pca_data <- pca_data[pca_data$cluster != "Ctrl",]
+```
+
+```{r}
+group <- as.factor(pca_data$cluster)
+#bmi <- pca_data$BMI
+#gender <- as.factor(pca_data$GENDER)
+#age <- pca_data$AGE
+
+design <- model.matrix( ~ 0 + group)
+```
+
+```{r}
+fit <- lmFit(t(pca_data[,-c(1:3)]), design)
+```
+
+```{r}
+list_comp <- c(paste0("group",2:1))
+list_pair <- data.frame(t(combn(list_comp,2)))
+list_pair$comp <- paste0(list_pair$X1, "-", list_pair$X2)
+comp <- list_pair$comp
+names(comp) <- gsub("roup", "", comp)
+```
+
+```{r}
+cont.matrix <- makeContrasts(G2_G1 = comp[1],
+                             levels=design)
+
+fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit.cont)
+```
+
+```{r}
+top_table <- data.frame(BIOCHEMICAL = NA, logFC= NA, P.Value= NA, adj.P.Val= NA, Comp= NA)
+
+for (i in 1:length(comp)) {
+  top_table_1 <- topTable(fit.cont, coef=i, adjust="BH", n = Inf, sort.by = "P")
+  top_table_1$Comp <- comp[i]
+  top_table_1$BIOCHEMICAL <- rownames(top_table_1)
+  top_table_1 <- top_table_1[,c(8, 1, 4, 5, 7)]
+  write.table(top_table_1$BIOCHEMICAL[top_table_1$adj.P.Val < 0.1], paste0("processing/MSEA/model_2_met_", comp[i],".txt"), quote = FALSE, row.names = F)
+  top_table <- rbind(top_table, top_table_1)
+}
+
+top_table <- top_table[complete.cases(top_table),]
+path_table <- paste0("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC.csv")
+
+print(path_table)
+write.csv(top_table, file =path_table)
+
+DF_top_table <-top_table[top_table$adj.P.Val < 0.1, ]
+
+path_results <- paste0("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC_filt.csv")
+
+write.table(DF_top_table, file = path_results)
+
+path_results <- paste0("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC_filt.xlsx")
+
+write.xlsx(DF_top_table, file = path_results)
+
+table(DF_top_table$Comp)
+```
+```{r}
+path <- read.csv("processing/COCOMO_metabolomics_pathways.csv")
+top_table <- merge(path, top_table, by = "BIOCHEMICAL")
+```
+
+```{r}
+top_table <- top_table[order(top_table$SUPER.PATHWAY),]
+top_table$BIOCHEMICAL <- factor(top_table$BIOCHEMICAL, levels = top_table$BIOCHEMICAL)
+
+path_results <- paste0("results/LIMMA/model_3_LIMMA_results_metabolites_with_paths.xlsx")
+
+write.xlsx(top_table, file = path_results)
+```
+
+
+```{r}
+dge <- top_table[top_table$adj.P.Val < 0.1,]
+
+path_results <- paste0("results/LIMMA/model_3_LIMMA_results_metabolites_with_paths_filt.xlsx")
+
+write.xlsx(dge, file = path_results)
+```
+
+```{r}
+x <- dge$SUB.PATHWAY[grep("hort", dge$SUB.PATHWAY)]
+```
+
+```{r}
+#dge <- dge[dge$SUPER.PATHWAY %in% c("Amino Acid","Carbohydrate") | dge$SUB.PATHWAY %in% c("TCA Cycle", "Glycolysis, Gluconeogenesis, and Pyruvate Metabolism", as.vector(x)),]
+dge$SUPER.PATHWAY <- as.vector(dge$SUPER.PATHWAY)
+#dge$SUPER.PATHWAY[dge$SUB.PATHWAY %in% x] <- "Short Chain Fatty acids"
+#dge$SUPER.PATHWAY[dge$SUPER.PATHWAY == "Energy"] <- "TCA Cycle"
+dge <- dge[,c(1, 3, 4, 5)]
+dge <- dge[order(match(dge[,1],colnames(pca_data))),]
+
+list_met <- dge$BIOCHEMICAL
+```
+
+```{r}
+data_prot_6 <- pca_data[,colnames(pca_data) %in% c("cluster", as.vector(list_met))]
+condition <- pca_data$cluster
+condition <- as.vector(condition)
+
+condition[condition == 1] <- "HC-like"
+condition[condition == 2] <- "At-risk"
+
+condition <- factor(condition, levels = c("Ctrl", "HC-like", "At-risk"))
+
+data_prot_6 <- data_prot_6[,-1]
+data_prot_6 <- data.frame(t(data_prot_6))
+```
+
+
+## heatmap
+```{r}
+data_prot_6 <- data.frame(t(scale(t(data_prot_6))))
+```
+
+```{r}
+min(data_prot_6)
+```
+
+
+```{r}
+library(circlize)
+col_fun1 = colorRamp2(c(-6,-3, -1, 0, 1, 3, 6), c("#1e90ff","#2676d0" ,"#275ea2","black","#a39a21","#d0c521","#fff21e"))
+col_fun_2 = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+library(ComplexHeatmap)
+```
+
+```{r}
+table(condition)
+```
+```{r}
+unique(dge$SUPER.PATHWAY)
+```
+
+```{r}
+m <- names(table(dge$SUPER.PATHWAY))[table(dge$SUPER.PATHWAY) > 10]
+dge$SUPER.PATHWAY[!dge$SUPER.PATHWAY %in% m] <- "Others"
+```
+
+```{r}
+col_2 <- c("#8b0000","#eb8c00","#f9d62e","#c9df8a","#36802d","#77ab59","#71c7ec","#189ad3","#1ebbd7","#eec1ad","#ff7f50","#e0301e","#e5e5e5", "grey", "blue", "green", "pink")
+```
+
+```{r}
+col <- c( "#005900", "#878782",	"#761212")
+```
+
+```{r}
+pdf("results/figures/Heatmap_metabolomics_whole_significant.pdf", width = 7, height = 8)
+ht = Heatmap(data_prot_6, 
+             #column_order = sort(colnames(t(data_prot_6[,-c(1:5)]))),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             #column_split = condition, 
+             #rect_gp = gpar(col = "white", lwd = 0),
+             row_split = dge$SUPER.PATHWAY, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             #column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = dge$logFC, Path = as.vector(dge$SUPER.PATHWAY),
+                                              col = list(LogFC = col_fun_2,
+                                                         Path = c("Amino Acid" = col_2[1],
+                                                         "Lipid" = col_2[5],
+                                                         "Peptide" = col_2[7],
+                                                         "Others" = "grey"
+                                                         )
+                                                         ), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(cluster = condition,
+                                              col = list(cluster = c("Ctrl" = col[1], "HC-like" = col[2], "At-risk" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```
+## figure metabolomics
+
+dge <- dge
+dge <- dge[order(match(dge[,1],colnames(pca_data))),]
+
+list_met <- dge$BIOCHEMICAL
+
+```{r}
+data_2 <- top_table[,c(1, 3, 4, 5, 7)]
+#data_2 <- data_2[data_2$BIOCHEMICAL %in% rownames(data_prot_6),]
+```
+
+```{r}
+library(viridis)
+library(ggplot2)
+```
+
+```{r}
+transport <- read.csv("processing/table_transport_amino_acids.csv")
+```
+
+```{r}
+data_2 <- data_2[order(data_2$SUPER.PATHWAY, data_2$SUB.PATHWAY),]
+data_2$BIOCHEMICAL <- factor(data_2$BIOCHEMICAL, levels = data_2$BIOCHEMICAL)
+data_2$SUB.PATHWAY <- factor(data_2$SUB.PATHWAY, levels = unique(data_2$SUB.PATHWAY))
+data_2$imp <- ifelse(data_2$BIOCHEMICAL %in% rownames(data_prot_6), "yes", "no")
+data_2$sign <- ifelse(data_2$adj.P.Val > 0.05, 0.2, 1)
+data_2$label <- data_2$BIOCHEMICAL
+data_2$label  <- ifelse(data_2$adj.P.Val < 0.00001, as.vector(data_2$label), NA)
+data_2$label[data_2$BIOCHEMICAL %in% transport$met_metabolomics  & data_2$adj.P.Val < 0.1] <- as.vector(data_2$BIOCHEMICAL[data_2$BIOCHEMICAL %in% transport$met_metabolomics  & data_2$adj.P.Val < 0.1])
+data_2$label[data_2$SUPER.PATHWAY == "Carbohydrate" & data_2$adj.P.Val < 0.05] <- as.vector(data_2$BIOCHEMICAL[data_2$SUPER.PATHWAY == "Carbohydrate" & data_2$adj.P.Val < 0.05])
+data_2$label[data_2$BIOCHEMICAL %in% c("taurine", "quinolinate")] <- as.vector(data_2$BIOCHEMICAL[data_2$BIOCHEMICAL %in% c("taurine", "quinolinate")])
+```
+
+```{r}
+vol <- ggplot(data_2, aes(x = SUB.PATHWAY, y = -log10(adj.P.Val), fill = SUPER.PATHWAY, size = abs(logFC)))+ theme_classic()+ 
+  geom_point(na.rm = T, 
+  shape = 21, colour = "black", aes(alpha=sign))+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15), axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x="Super pathways",y="-log10 (adj.P.Val)")+ geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+
+    scale_fill_viridis(discrete=TRUE)
+vol
+ggsave("results/figures/Dot_plot_significant_metabolomics_legend.pdf", width = 10, height = 6)
+```
+```{r}
+vol <- ggplot(data_2, aes(x = SUB.PATHWAY, y = -log10(adj.P.Val), fill = SUPER.PATHWAY, size = abs(logFC)))+ theme_classic()+ 
+  geom_point(na.rm = T, 
+  shape = 21, colour = "black", aes(alpha=sign))+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15), axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x="Super pathways",y="-log10 (adj.P.Val)")+ geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+
+    scale_fill_viridis(discrete=TRUE)
+vol
+ggsave("results/figures/Dot_plot_significant_metabolomics_empty.pdf", width = 10, height = 3)
+```
+  geom_dotplot(binaxis='y', stackdir='center', binwidth = 1)
+  
+```{r}
+met <- c("glutamate", "alpha-ketoglutarate")
+```
+  
+  
+```{r}
+data_2$label_2 <- as.vector(data_2$BIOCHEMICAL)
+data_2$label_2 <- ifelse(data_2$label_2 %in% met, data_2$label_2, NA)
+print(data_2$label_2[!is.na(data_2$label_2)])
+```
+  
+  
+```{r}
+vol <- ggplot(data_2, aes(x = SUB.PATHWAY, y = -log10(adj.P.Val), fill = SUPER.PATHWAY, size = abs(logFC), label = label_2))+ theme_classic()+ 
+  geom_point(na.rm = T, 
+  shape = 21, colour = "black", aes(alpha=sign))+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15), axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x="Super pathways",y="-log10 (adj.P.Val)")+ geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+
+    scale_fill_viridis(discrete=TRUE)+ geom_text(size = 3)
+vol
+ggsave("results/figures/Dot_plot_significant_metabolomics_label_2.pdf", width = 10, height = 3)
+```
+
+```{r}
+vol <- ggplot(data_2, aes(x = SUB.PATHWAY, y = -log10(adj.P.Val), fill = SUPER.PATHWAY, size = abs(logFC), label = label))+ theme_classic()+ 
+  geom_point(na.rm = T, 
+  shape = 21, colour = "black", aes(alpha=sign))+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15), axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x="Super pathways",y="-log10 (adj.P.Val)")+ geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+
+    scale_fill_viridis(discrete=TRUE)+ geom_text(size = 3)
+vol
+ggsave("results/figures/Dot_plot_significant_metabolomics_label.pdf", width = 10, height = 3)
+```
+
+
+```{r}
+pca_data <- pca_data[!is.na(pca_data$CDA_CD8),]
+pca_data <- pca_data[!is.na(pca_data$VAT),]
+pca_data <- pca_data[!is.na(pca_data$H2_56),]
+
+group <- as.factor(pca_data$cluster)
+vat <- pca_data$VAT
+meat <- pca_data$H2_53a
+fruit <- as.factor(pca_data$H2_56)
+met <- as.factor(pca_data$METS)
+cd4_cd8 <- pca_data$CDA_CD8
+ethn <- pca_data$Ethnic
+ethn[is.na(ethn)] <- 0
+ethn <- as.factor(ethn)
+#age <- pca_data$AGE
+
+design <- model.matrix( ~ 0 + group + vat + fruit + ethn)
+```
+
+```{r}
+fit <- lmFit(t(pca_data[,-c(1:47)]), design)
+```
+
+```{r}
+list_comp <- c(paste0("group",2:1))
+list_pair <- data.frame(t(combn(list_comp,2)))
+list_pair$comp <- paste0(list_pair$X1, "-", list_pair$X2)
+comp <- list_pair$comp
+names(comp) <- gsub("roup", "", comp)
+```
+
+```{r}
+cont.matrix <- makeContrasts(G2_G1 = comp[1],
+                             levels=design)
+
+fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit.cont)
+```
+
+```{r}
+top_table <- data.frame(BIOCHEMICAL = NA, logFC= NA, P.Value= NA, adj.P.Val= NA, Comp= NA)
+
+for (i in 1:length(comp)) {
+  top_table_1 <- topTable(fit.cont, coef=i, adjust="BH", n = Inf, sort.by = "P")
+  top_table_1$Comp <- comp[i]
+  top_table_1$BIOCHEMICAL <- rownames(top_table_1)
+  top_table_1 <- top_table_1[,c(8, 1, 4, 5, 7)]
+  write.table(top_table_1$BIOCHEMICAL[top_table_1$adj.P.Val < 0.1], paste0("processing/MSEA/model_3_met_", comp[i],".txt"), quote = FALSE, row.names = F)
+  top_table <- rbind(top_table, top_table_1)
+}
+
+top_table <- top_table[complete.cases(top_table),]
+path_table <- paste0("results/LIMMA/model_3_LIMMA_results_metabolites_with_HC.csv")
+
+print(path_table)
+write.csv(top_table, file =path_table)
+
+DF_top_table <-top_table[top_table$adj.P.Val < 0.1, ]
+
+path_results <- paste0("results/LIMMA/model_3_LIMMA_results_metabolites_with_HC_filt.csv")
+
+write.table(DF_top_table, file = path_results)
+
+path_results <- paste0("results/LIMMA/model_3_LIMMA_results_metabolites_with_HC_filt.xlsx")
+
+write.xlsx(DF_top_table, file = path_results)
+
+table(DF_top_table$Comp)
+```
+
+```{r}
+names(top_table)
+```
+

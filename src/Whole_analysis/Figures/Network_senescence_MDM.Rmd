@@ -1,0 +1,255 @@
+---
+title: "Network senescence and MDM"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(dplyr)
+library(Hmisc)
+library(ComplexHeatmap)
+library(reshape2)
+```
+
+```{r}
+flat_cor_mat <- function(cor_r, cor_p){
+  #This function provides a simple formatting of a correlation matrix
+  #into a table with 4 columns containing :
+    # Column 1 : row names (variable 1 for the correlation test)
+    # Column 2 : column names (variable 2 for the correlation test)
+    # Column 3 : the correlation coefficients
+    # Column 4 : the p-values of the correlations
+  library(tidyr)
+  library(tibble)
+  cor_r <- rownames_to_column(as.data.frame(cor_r), var = "row")
+  cor_r <- gather(cor_r, column, cor, -1)
+  cor_p <- rownames_to_column(as.data.frame(cor_p), var = "row")
+  cor_p <- gather(cor_p, column, p, -1)
+  cor_p_matrix <- left_join(cor_r, cor_p, by = c("row", "column"))
+  cor_p_matrix
+}
+```
+
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt", stringsAsFactors = FALSE)
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv", stringsAsFactors = FALSE)
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";", stringsAsFactors = FALSE)
+```
+
+```{r}
+sen <- c(sen_3$gene_symbol, sen_1$gene_symbol, sen_2$Gene_name)
+sen <- unique(sen)
+```
+
+
+### clinical paraolinkers
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical <- clinical[, colnames(clinical) %in% c("COCOMO_ID", "cluster")]
+```
+
+### olink
+```{r}
+data <- read.csv("processing/olink_data_new_ids.csv", row.names = 1)
+data$Condition <- NULL
+data <- data[,colnames(data) %in% sen]
+data_prot <- data
+
+ncol(data_prot)
+```
+
+```{r}
+data$COCOMO_ID <- rownames(data)
+pca_data <- merge(clinical, data, by = "COCOMO_ID")
+```
+
+### MDM
+```{r}
+list_mic_met <- read.delim("data/MDM/MDM_clean_list_2_Postler.txt")
+list_mic_met$Line <- NULL
+```
+
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+data_met <- data_met[, colnames(data_met) %in% list_mic_met$BIOCHEMICAL]
+data_met <- data.frame(t(data_met))
+metabolites <- rownames(data_met)
+data_met <- data.frame(t(data_met))
+
+rownames(data_met) <- gsub("X", "", rownames(data_met))
+colnames(data_met) <- metabolites
+data_met$COCOMO_ID <- rownames(data_met)
+
+ncol(data_met)
+```
+
+```{r}
+pca_data <- merge(pca_data, data_met, by = "COCOMO_ID")
+```
+
+```{r}
+data <- pca_data[pca_data$cluster == 1,]
+table_mean_C1 <- aggregate(. ~ cluster, data = data[,-1], mean)
+cor_3 <- rcorr(as.matrix(data[,-c(1,2)]), type = "spearman")
+#cor_3$r[upper.tri(cor_3$r)] <- NA
+my_cor_matrix <- flat_cor_mat(cor_3$r, cor_3$P)
+my_cor_matrix$padj <- p.adjust(my_cor_matrix$p, method = "fdr")
+my_cor_matrix$cor <- ifelse(my_cor_matrix$padj > 0.05, NA, my_cor_matrix$cor)
+my_cor_matrix <- my_cor_matrix[complete.cases(my_cor_matrix), ]
+names(my_cor_matrix) <- c("feat1", "feat2", "R", "p", "Padj")
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_met) | my_cor_matrix$feat2 %in% colnames(data_met),]
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_prot) | my_cor_matrix$feat2 %in% colnames(data_prot),]
+#my_cor_matrix$name_int <- paste0(my_cor_matrix$feat1, " (interacts with) ", my_cor_matrix$feat2)
+#my_cor_matrix$type <- ifelse(my_cor_matrix$feat1 %in% colnames(data_met) & my_cor_matrix$feat2 %in% colnames(data_met), "met-met", NA)
+#my_cor_matrix$type <- ifelse(my_cor_matrix$feat1 %in% colnames(data_prot) & my_cor_matrix$feat2 %in% colnames(data_prot), "prot-prot", my_cor_matrix$type)
+#my_cor_matrix$type[is.na(my_cor_matrix$type)] <- "met-prot"
+length(unique(my_cor_matrix$feat1))
+length(unique(my_cor_matrix$feat2))
+#table(my_cor_matrix$type)
+```
+
+```{r}
+table_cor <- cor_3$r
+table_cor <- table_cor[rownames(table_cor) %in% my_cor_matrix$feat2, colnames(table_cor) %in% my_cor_matrix$feat1]
+pdf("results/figures/Heatmap_correlations_C1.pdf", width = 18, height = 17)
+Heatmap(table_cor)
+dev.off()
+```
+```{r}
+library(circlize)
+col_fun_2 = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+```
+
+```{r}
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_met),]
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat2 %in% colnames(data_prot),]
+correlations_C1 <- my_cor_matrix[,c(1, 2, 3)]
+correlations_C1 <- dcast(feat1 ~ feat2, value.var = "R", data = correlations_C1)
+rownames(correlations_C1) <- correlations_C1$feat1
+correlations_C1$feat1 <- NULL
+correlations_C1 <- data.frame(correlations_C1)
+correlations_C1 <- correlations_C1[rowSums(is.na(correlations_C1)) < 73,]
+correlations_C1 <- correlations_C1[, colSums(is.na(correlations_C1)) < 40]
+correlations_C1[is.na(correlations_C1)] <- 0
+
+pdf("results/figures/Heatmap_correlations_C1_V2.pdf", width = 18, height = 10)
+Heatmap(correlations_C1, col = col_fun_2)
+dev.off()
+```
+```{r}
+data <- pca_data[pca_data$cluster == 2,]
+table_mean_C2 <- aggregate(. ~ cluster, data = data[,-1], mean)
+cor_3 <- rcorr(as.matrix(data[,-c(1,2)]), type = "spearman")
+#cor_3$r[upper.tri(cor_3$r)] <- NA
+my_cor_matrix <- flat_cor_mat(cor_3$r, cor_3$P)
+my_cor_matrix$padj <- p.adjust(my_cor_matrix$p, method = "fdr")
+my_cor_matrix$cor <- ifelse(my_cor_matrix$padj > 0.05, NA, my_cor_matrix$cor)
+my_cor_matrix <- my_cor_matrix[complete.cases(my_cor_matrix), ]
+names(my_cor_matrix) <- c("feat1", "feat2", "R", "p", "Padj")
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_met) | my_cor_matrix$feat2 %in% colnames(data_met),]
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_prot) | my_cor_matrix$feat2 %in% colnames(data_prot),]
+#my_cor_matrix$name_int <- paste0(my_cor_matrix$feat1, " (interacts with) ", my_cor_matrix$feat2)
+
+#my_cor_matrix$type <- ifelse(my_cor_matrix$feat1 %in% colnames(data_met) & my_cor_matrix$feat2 %in% colnames(data_met), "met-met", NA)
+#my_cor_matrix$type <- ifelse(my_cor_matrix$feat1 %in% colnames(data_prot) & my_cor_matrix$feat2 %in% colnames(data_prot), "prot-prot", my_cor_matrix$type)
+#my_cor_matrix$type[is.na(my_cor_matrix$type)] <- "met-prot"
+#my_cor_matrix$sign <- ifelse(my_cor_matrix$R > 0 & my_cor_matrix$type == "met-prot", "pos", NA)
+#my_cor_matrix$sign <- ifelse(my_cor_matrix$R < 0 & my_cor_matrix$type == "met-prot", "neg", my_cor_matrix$sign)
+#my_cor_matrix$color <- paste0(my_cor_matrix$type, "_", my_cor_matrix$sign)
+length(unique(my_cor_matrix$feat1))
+
+length(unique(my_cor_matrix$feat2))
+
+#table(my_cor_matrix$type)
+```
+```{r}
+table_cor <- cor_3$r
+table_cor <- table_cor[rownames(table_cor) %in% my_cor_matrix$feat2, colnames(table_cor) %in% my_cor_matrix$feat1]
+pdf("results/figures/Heatmap_correlations_C2.pdf", width = 18, height = 17)
+Heatmap(table_cor)
+dev.off()
+```
+
+
+```{r}
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat1 %in% colnames(data_met),]
+my_cor_matrix <- my_cor_matrix[my_cor_matrix$feat2 %in% colnames(data_prot),]
+correlations_C2 <- my_cor_matrix[,c(1, 2, 3)]
+correlations_C2 <- dcast(feat1 ~ feat2, value.var = "R", data = correlations_C2)
+rownames(correlations_C2) <- correlations_C2$feat1
+correlations_C2$feat1 <- NULL
+correlations_C2 <- data.frame(correlations_C2)
+correlations_C2 <- correlations_C2[rowSums(is.na(correlations_C2)) < 101,]
+correlations_C2 <- correlations_C2[, colSums(is.na(correlations_C2)) < 47]
+correlations_C2[is.na(correlations_C2)] <- 0
+
+pdf("results/figures/Heatmap_correlations_C2_V2.pdf", width = 18, height = 10)
+Heatmap(correlations_C2, col = col_fun_2)
+dev.off()
+```
+
+```{r}
+correlations_C2 <- my_cor_matrix[,c(1, 2, 3)]
+correlations_C2 <- dcast(feat1 ~ feat2, value.var = "R", data = correlations_C2)
+rownames(correlations_C2) <- correlations_C2$feat1
+correlations_C2$feat1 <- NULL
+correlations_C2 <- correlations_C2[rowSums(is.na(correlations_C2)) != ncol(correlations_C2),]
+correlations_C2 <- correlations_C2[, colSums(is.na(correlations_C2)) < 60]
+
+correlations_C2[is.na(correlations_C2)] <- 0
+pdf("results/figures/Heatmap_correlations_C2.pdf", width = 15, height = 8)
+Heatmap(correlations_C2[,-1], show_column_names = FALSE, 
+             show_row_names = FALSE)
+dev.off()
+```
+
+```{r}
+length(which(correlations_C1$name_int %in% correlations_C2$name_int & correlations_C1$type == "met-prot"))
+
+write.table(correlations_C1, paste0("results/networks/table_edges_correlation_MDM_senescence_C1.txt"), quote = FALSE, row.names = FALSE, sep = "\t")
+write.table(correlations_C2, paste0("results/networks/table_edges_correlation_MDM_senescence_C2.txt"), quote = FALSE, row.names = FALSE, sep = "\t")
+```
+
+```{r}
+table_nodes <- data.frame(Features = c(colnames(data_met), colnames(data_prot)), Name_C1 = NA, Name_C2 = NA,type = NA)
+
+table_nodes$type <- ifelse(table_nodes$Features %in% colnames(data_met), "met", "prot")
+table_nodes$Name_C1[table_nodes$Features %in% c(correlations_C1$feat1[correlations_C1$type == "met-prot"],
+                                                correlations_C1$feat2[correlations_C1$type == "met-prot"])] <- as.vector(table_nodes$Features[table_nodes$Features %in% c(correlations_C1$feat1[correlations_C1$type == "met-prot"],
+                                             correlations_C1$feat2[correlations_C1$type == "met-prot"]
+                                             )])
+
+table_nodes$Name_C2[table_nodes$Features %in% c(correlations_C2$feat1[correlations_C2$type == "met-prot"],
+                                                correlations_C2$feat2[correlations_C2$type == "met-prot"])] <- as.vector(table_nodes$Features[table_nodes$Features %in% c(correlations_C2$feat1[correlations_C2$type == "met-prot"],
+                                             correlations_C2$feat2[correlations_C2$type == "met-prot"]
+                                             )])
+
+table_nodes$Name_C1 <- as.vector(table_nodes$Name_C1)
+table_nodes$Name_C2 <- as.vector(table_nodes$Name_C2)
+table_nodes$Name_C1[is.na(table_nodes$Name_C1)] <- ""
+table_nodes$Name_C2[is.na(table_nodes$Name_C2)] <- ""
+
+table_mean_C1 <- data.frame(t(table_mean_C1[,-1]))
+table_mean_C1$Features <- rownames(table_mean_C1)
+names(table_mean_C1)[1] <- "Mean_C1"
+
+table_mean_C2 <- data.frame(t(table_mean_C2[,-1]))
+table_mean_C2$Features <- rownames(table_mean_C2)
+names(table_mean_C2)[1] <- "Mean_C2"
+
+table_nodes <- merge(table_nodes, table_mean_C1, by = "Features", all.x = TRUE)
+table_nodes <- merge(table_nodes, table_mean_C2, by = "Features", all.x = TRUE)
+write.table(table_nodes, paste0("results/networks/table_nodes_correlation_MDM_senescence_C2.txt"), quote = FALSE, row.names = FALSE, sep = "\t")
+```
+

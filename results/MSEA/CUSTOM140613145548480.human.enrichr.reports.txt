@@ -1,0 +1,7 @@
+Gene_set	Term	Overlap	P-value	Adjusted P-value	Odds Ratio	Genes
+CUSTOM140613145548480	amino acid	5/220	0.6826310546125273	0.6826310546125273	0.9371558147068351	beta-citrylglutamate;taurine;serotonin;spermine;spermidine
+CUSTOM140613145548480	carbohydrate	2/25	0.12731124031301813	0.25462248062603626	4.0769966523194645	3-phosphoglycerate;maltose
+CUSTOM140613145548480	cofactors and vitamins	2/32	0.18969755304730362	0.28454632957095544	3.172607879924953	nicotinamide;heme
+CUSTOM140613145548480	glycogen metabolism	1/1	0.02508551881415879	0.15051311288495275	40.76744186046512	maltose
+CUSTOM140613145548480	lipid	11/285	0.06428203077074085	0.19284609231222255	2.075306479859895	sphingosine;1-stearoyl-2-arachidonoyl-GPS (18:0/20:4);sphingadienine;1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*;sphinganine;sphingosine 1-phosphate;glycerophosphoethanolamine;phosphoethanolamine (PE);sphinganine-1-phosphate;phosphocholine;hexadecasphingosine (d16:1)*
+CUSTOM140613145548480	nucleotide	1/37	0.6171499092562388	0.6826310546125273	1.563720930232558	AMP

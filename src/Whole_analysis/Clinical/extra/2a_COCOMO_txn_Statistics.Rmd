@@ -1,0 +1,577 @@
+---
+title: "Statistics clinical"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+
+```{r}
+library(summarize)
+library(dplyr)
+library(xlsx)
+library(ggplot2)
+library(ggpubr)
+library(reshape2)
+```
+
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+```{r}
+clinical_2 <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/data_base_200_patients_COCOMO_filtered.csv")
+clinical_2 <- clinical_2[,colnames(clinical_2) %in% c("id", "diabetes")]
+names(clinical_2)[1] <- "COCOMO_ID"
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean.csv", stringsAsFactors = FALSE)
+clinical$X <- NULL
+clinical <- clinical[!is.na(clinical$COCOMO_ID),]
+clinical <- merge(clinical, clinical_2, by = "COCOMO_ID", all.x = TRUE)
+
+cluster <- read.csv("processing/cluster_SNF_transcriptomics_metabolomics_olink_3.csv")
+names(cluster)[3] <- "COCOMO_ID"
+clinical <- merge(cluster, clinical, by = "COCOMO_ID", all.y = TRUE)
+clinical$cluster[is.na(clinical$cluster) & clinical$HIV_Status == "Ctrl"] <- "Ctrl"
+
+clinical$Mreads <- NULL
+clinical$X..Q30 <- NULL
+colnames(clinical) <- gsub("\\..*", "", colnames(clinical))
+#clinical$User <- NULL
+clinical$NGI <- NULL
+```
+
+```{r}
+clinical <- clinical[clinical$COCOMO_ID %in% rownames(data_olink),]
+```
+
+```{r}
+data <- clinical
+data$AGE_cat[data$AGE < 55] <- "<55"
+data$AGE_cat[data$AGE >= 55 & data$AGE < 65] <- "55<x<65"
+data$AGE_cat[data$AGE >= 65] <- ">65"
+data$AGE_cat <- factor(data$AGE_cat, levels = c("<55", "55<x<65", ">65"))
+```
+
+```{r}
+table(data$Ethnic)
+data$Ethnic[data$Ethnic != 1] <- 0
+
+table(data$Origin)
+data$Origin[data$Origin != 1] <- 0
+
+table(data$Transm_mode)
+data$Transm_mode[!data$Transm_mode %in% c(1,6) & !is.na(data$Transm_mode)] <- 0
+```
+
+```{r}
+data$BMI_cat[data$BMI < 18.5] <- "underweight"
+data$BMI_cat[data$BMI >= 18.5 & data$BMI < 25] <- "normal"
+data$BMI_cat[data$BMI >= 25 & data$BMI < 30] <- "overweight"
+data$BMI_cat[data$BMI >= 30 & data$BMI < 35] <- "obese"
+data$BMI_cat[data$BMI >= 35] <- "extremely obese"
+
+data$BMI_cat <- factor(data$BMI_cat, levels = c("underweight", "normal", "overweight", "obese", "extremely obese"))
+```
+
+```{r}
+data$Combined_therapy <- gsub(".*ABC.*", "ABC", data$Combined_therapy)
+data$Combined_therapy <- gsub(".*AZT.*", "AZT", data$Combined_therapy)
+data$Combined_therapy <- gsub(".*TAF.*", "TAF-TDF", data$Combined_therapy)
+data$Combined_therapy <- gsub(".*TDF.*", "TAF-TDF", data$Combined_therapy)
+data$Combined_therapy[data$cluster != "Ctrl"] <- gsub(".*\\/.*", "Other", data$Combined_therapy[data$cluster != "Ctrl"])
+data$Combined_therapy <- factor(data$Combined_therapy, levels = c("ABC", "AZT", "TAF-TDF", "Other"))
+```
+
+```{r}
+table(data$Combined_therapy)
+```
+
+```{r}
+x <- which(names(data) == "Combined_therapy")
+
+names(data)[x] <- "first_drug"
+data$first_drug
+```
+
+```{r}
+data$Transm_mode[data$Transm_mode == 7] <- 3
+data$Transm_mode[data$Transm_mode == 8] <- 3
+```
+
+```{r}
+data$CDA_CD8 <- NA
+data$CDA_CD8[!is.na(data$CD8)] <- data$CD4[!is.na(data$CD8)] / data$CD8[!is.na(data$CD8)]
+```
+
+```{r}
+data$CDA_CD8_cat[!is.na(data$CDA_CD8)] <- ifelse(data$CDA_CD8[!is.na(data$CDA_CD8)] > 1, ">1", "<1")
+data$CDA_CD8_cat <- as.factor(data$CDA_CD8_cat)
+table(data$CDA_CD8_cat)
+```
+
+
+```{r}
+data$Duration_cat <- NA
+data$Duration_cat[data$Duration < 5] <- "<5"
+data$Duration_cat[data$Duration >= 5 & data$Duration < 10] <- "5<x<10"
+data$Duration_cat[data$Duration >= 10 & data$Duration < 15] <- "10<x<15"
+data$Duration_cat[data$Duration >= 15] <- ">15"
+
+data$Duration_cat <- as.factor(data$Duration_cat)
+table(data$Duration_cat)
+```
+
+```{r}
+data$VAT
+data$VAT_cat <- NA
+data$VAT_cat <- ifelse(data$VAT > 35 & data$GENDER == "Female", "high", data$VAT_cat)
+data$VAT_cat <- ifelse(data$VAT < 35 & data$GENDER == "Female", "low", data$VAT_cat)
+data$VAT_cat <- ifelse(data$VAT > 40 & data$GENDER == "Male", "high", data$VAT_cat)
+data$VAT_cat <- ifelse(data$VAT < 40 & data$GENDER == "Male", "low", data$VAT_cat)
+data$VAT_cat <- as.factor(data$VAT_cat)
+table(data$VAT_cat)
+```
+
+## separate numeric and logical
+```{r}
+data$AGE <- as.numeric(data$AGE)
+data$ob6 <- as.numeric(data$ob6)
+data$ob10 <- as.numeric(data$ob10)
+
+data$METS <- as.factor(data$METS)
+data$central_obesity <- as.factor(data$central_obesity)
+data$Ethnic <- as.factor(data$Ethnic)
+data$Origin <- as.factor(data$Origin)
+data$Transm_mode <- as.factor(data$Transm_mode)
+data$hypertension <- as.factor(data$hypertension)
+data$cluster <- as.factor(data$cluster)
+data$diabetes <- NULL
+data$X3rd_Drug <- as.factor(data$X3rd_Drug)
+data$GENDER <- as.factor(data$GENDER)
+```
+
+```{r}
+data$log10VL_ART <- log10(data$VL_ART)
+```
+
+```{r}
+data$H2_54[data$H2_54 == 2] <- 1
+data$H2_54[data$H2_54 == 7] <- 6
+data$H2_54[data$H2_54 == 3] <- 4
+data$H2_54 <- as.factor(data$H2_54)
+```
+
+```{r}
+data$H2_55[data$H2_55 == 0] <- 1
+data$H2_55[data$H2_55 == 4] <- 2
+data$H2_55[data$H2_55 == 3] <- 2
+data$H2_55[data$H2_55 == 6] <- 5
+data$H2_55[data$H2_55 == 7] <- 5
+data$H2_55 <- as.factor(data$H2_55)
+```
+
+```{r}
+data$H2_56[data$H2_56 == 0] <- 1
+data$H2_56[data$H2_56 == 4] <- 2
+data$H2_56[data$H2_56 == 3] <- 2
+data$H2_56[data$H2_56 == 6] <- 5
+data$H2_56[data$H2_56 == 7] <- 5
+data$H2_56 <- as.factor(data$H2_56)
+```
+
+
+```{r}
+drug <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/cocomo_drug_comorbidities_data.csv")
+drug$X <- NULL
+drug$ddiAZTd4t <- ifelse(drug$ddiAZTd4t == TRUE, 1 , 0)
+colnames(drug)[1] <- "COCOMO_ID"
+drug$alat <- as.numeric(drug$alat)
+drug$creatini <- as.numeric(drug$creatini)
+drug$ddiAZTd4t <- factor(drug$ddiAZTd4t)
+```
+
+```{r}
+data <- merge(data, drug, by = "COCOMO_ID")
+```
+
+```{r}
+# Function returning compact column classes
+col_classes <- function(df) {
+    t(as.data.frame(lapply(df, function(x) paste(class(x), collapse = ','))))
+}
+
+# Return example data's column classes
+
+```
+
+```{r}
+data$X <- NULL
+data$HIV_Status <- NULL
+```
+
+```{r}
+clinical_ctrl <- data[,c(1:5, 38, 39)]
+data_2 <- data
+data <- data
+write.csv(data, "processing/clinical_data_clean_with_clusters_and_categories.csv")
+data <- data[data$cluster != "Ctrl",]
+```
+
+```{r}
+data$diabetes <- as.factor(data$diabetes)
+```
+
+```{r}
+data$X <- NULL
+data$User <- NULL
+data_factor <- data[, c(which(col_classes(data) == "factor"))]
+data_numeric <- data[, c(2, which(col_classes(data) != "factor"))]
+```
+
+```{r}
+names(data_factor)
+```
+```{r}
+names(data_numeric)
+```
+
+### Numeric test normality
+
+```{r}
+library(nortest)
+#library(MVN)
+```
+data_numeric
+## test normality
+```{r}
+j = 1
+list_norm <- list()
+for (i in 3:ncol(data_numeric)){
+  c1 <- data_numeric[data_numeric$cluster == 1,i]
+  c2 <- data_numeric[data_numeric$cluster == 2,i]
+  #c3 <- data_numeric[data_numeric$cluster == 3,i]
+  #c4 <- data_numeric[data_numeric$cluster == 4,i]
+  #c5 <- data_numeric[data_numeric$cluster == 5,i]
+  test_c1 <- as.numeric(shapiro.test(c1)$p.value)
+  test_c2 <- as.numeric(shapiro.test(c2)$p.value)
+  #test_c3 <- as.numeric(shapiro.test(c3)$p.value)
+  #test_c4 <- as.numeric(shapiro.test(c4)$p.value)
+  #test_c5 <- as.numeric(shapiro.test(c5)$p.value)
+  test_c3 <- 0.01
+  test_c4 <- 0.01
+  test_c5 <- 0.01
+  #print(c(names(data_numeric)[i], test_c1, test_c2, test_c3, test_c4, test_c5))
+  if(test_c1 < 0.05 & test_c2 < 0.05 & test_c3 < 0.05 & test_c4 < 0.05 & test_c5 < 0.05){
+    print(paste0(names(data_numeric)[i], "is following normal distribution"))
+    list_norm[[j]] <- names(data_numeric)[i]
+    j = j + 1
+  }
+}
+```
+## normally distributed
+```{r}
+data_norm <- data_numeric[,colnames(data_numeric) %in% c( "cluster", unlist(list_norm))]
+```
+
+## global test
+```{r}
+table_numeric_2 <- data.frame(parameter = rep(names(data_norm)[2:ncol(data_norm)], each = 2), cluster = rep(c(1, 2), length(names(data_norm)[2:ncol(data_norm)])), Mean_SD = NA, pval_anova = NA)
+j = 1
+
+for (i in 2:ncol(data_norm)){
+  c1 <- data_norm[data_norm$cluster == 1,i]
+  c2 <- data_norm[data_norm$cluster == 2,i]
+  #c3 <- data_norm[data_norm$cluster == 3,i]
+  #c4 <- data_norm[data_norm$cluster == 4,i]
+  #c5 <- data_norm[data_norm$cluster == 5,i]
+  x <- paste0("Mean =",round(mean(c1, na.rm=TRUE), 2), ", SD =", round(sd(c1, na.rm = TRUE), 2))
+  y <- paste0("Mean =",round(mean(c2, na.rm=TRUE), 2), ", SD =", round(sd(c2, na.rm = TRUE), 2))
+  #z <- paste0("Mean =",round(mean(c3, na.rm=TRUE), 2), ", SD =", round(sd(c3, na.rm = TRUE), 2))
+  #a <- paste0("Mean =",round(mean(c4, na.rm=TRUE), 2), ", SD =", round(sd(c4, na.rm = TRUE), 2))
+  #b <- paste0("Mean =",round(mean(c5, na.rm=TRUE), 2), ", SD =", round(sd(c5, na.rm = TRUE), 2))
+  table_numeric_2[c(j, j+1), 3] <- c(x, y)
+  test <- t.test(c1, c2)
+  table_numeric_2[j, 4] <- test$p.value
+  j = j + 2
+}
+
+
+table_numeric_2$X <- paste0("C", table_numeric_2$cluster, "_", table_numeric_2$parameter)
+
+table_numeric_2$X <- NULL
+
+write.xlsx(table_numeric_2, "results/clinical/COCOMO_3_layers_normal_distrib_numeric_values_ANOVA_3.xlsx")
+```
+
+```{r}
+data_numeric$COCOMO_ID <- NULL
+```
+
+```{r}
+medIQR <- function(x, na.rm = TRUE, ...) {
+  qq <- stats::quantile(x, c(0.50, 0.25, 0.75), na.rm = na.rm, ...)
+  structure(qq, 
+            names = c("Median", "Q1", "Q3"),
+            class = "medIQR") # how about EstInterval? smry?
+}
+
+medIQR.formula <- function(formula,
+                           data = NULL, ...,
+                           subset, na.action = NULL,
+                           overall = FALSE,
+                           overall.label = "Overall") {
+  if (missing(formula) || (length(formula) != 3)) 
+    stop("'formula' missing or incorrect")
+  m <- match.call(expand.dots = FALSE)
+  if (is.matrix(eval(m$data, parent.frame()))) 
+    m$data <- as.data.frame(data)
+  m$... <- m$overall <- m$overall.label <- NULL
+  m$na.action <- na.action
+  require(stats, quietly = TRUE)
+  m[[1L]] <- as.name("model.frame")
+  mf <- eval(m, parent.frame())
+  response <- attr(attr(mf, "terms"), "response")
+  s <- split(mf[[response]], mf[-response])
+  
+  if(overall) {
+    if(any(names(s) == overall.label))
+    stop(sQuote(overall.label), " is an existing level")
+    s <- c(Overall = list(unlist(s)), s)
+  }
+  structure(sapply(s, FUN = medIQR, ...),
+            class = "medIQR")
+}
+```
+
+```{r}
+table_numeric <- data.frame(parameter = rep(names(data_numeric)[2:ncol(data_numeric)], each = 2), cluster = rep(c(1, 2), length(names(data_numeric)[2:ncol(data_numeric)])), Mean_SD = NA, pval_anova = NA)
+j = 1
+
+for (i in 2:ncol(data_numeric)){
+  c1 <- data_numeric[data_numeric$cluster == 1,i]
+  c2 <- data_numeric[data_numeric$cluster == 2,i]
+  #c3 <- data_numeric[data_numeric$cluster == 3,i]
+  #c4 <- data_numeric[data_numeric$cluster == 4,i]
+  #c5 <- data_numeric[data_numeric$cluster == 5,i]
+  x <- paste0(round(medIQR(c1)[[1]], 2), "(", round(medIQR(c1)[[2]], 2), "-", round(medIQR(c1)[[3]], 2), ")")
+  y <- paste0(round(medIQR(c2)[[1]], 2), "(", round(medIQR(c2)[[2]], 2), "-", round(medIQR(c2)[[3]], 2), ")")
+  #z <- paste0("Mean =",round(mean(c3, na.rm=TRUE), 2), ", SD =", round(sd(c3, na.rm = TRUE), 2))
+  #a <- paste0("Mean =",round(mean(c4, na.rm=TRUE), 2), ", SD =", round(sd(c4, na.rm = TRUE), 2))
+  #b <- paste0("Mean =",round(mean(c5, na.rm=TRUE), 2), ", SD =", round(sd(c5, na.rm = TRUE), 2))
+  table_numeric[c(j, j+1), 3] <- c(x, y)
+  test <- wilcox.test(c1, c2)
+  print(test)
+  table_numeric[j, 4] <- test$p.value
+  j = j + 2
+}
+
+
+
+
+table_numeric$X <- paste0("C", table_numeric$cluster, "_", table_numeric$parameter)
+
+#table_numeric <-  merge(table_numeric, reg, by = "X")
+
+table_numeric$X <- NULL
+
+write.xlsx(table_numeric, "results/clinical/COCOMO_3_layers_non_norm_numeric_values_kruskal_3.xlsx")
+```
+
+```{r}
+table(data$cluster)
+```
+
+```{r}
+data_factor$cluster <- as.factor(as.vector(data_factor$cluster))
+```
+
+```{r}
+table_factor <- data.frame(Var1 = NA, Var2 = NA, Level = NA, Freq= NA, Freq2 = NA, Parameter = NA, test = NA, pval = NA)
+j = 1
+
+for (i in 2:ncol(data_factor)) {
+  print(names(data_factor)[i])
+  x <- data.frame(t(table(data_factor$cluster, data_factor[,i])))
+  x$Level <- x$Var1
+  x$Var1 <- paste0(names(data_factor)[i], "_", x$Var1, "_", x$Var2)
+  x$Freq2 <- ""
+  x$Freq2[x$Var2 == 1] <- paste0(x$Freq[x$Var2 == 1], "(", round(x$Freq[x$Var2 == 1]/sum(x$Freq[x$Var2 == 1])*100, 2), "%)")
+  x$Freq2[x$Var2 == 2] <- paste0(x$Freq[x$Var2 == 2], "(", round(x$Freq[x$Var2 == 2]/sum(x$Freq[x$Var2 == 2])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 3] <- paste0(x$Freq[x$Var2 == 3], "(", round(x$Freq[x$Var2 == 3]/sum(x$Freq[x$Var2 == 3])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 4] <- paste0(x$Freq[x$Var2 == 4], "(", round(x$Freq[x$Var2 == 4]/sum(x$Freq[x$Var2 == 4])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 5] <- paste0(x$Freq[x$Var2 == 5], "(", round(x$Freq[x$Var2 == 5]/sum(x$Freq[x$Var2 == 5])*100, 2), "%)")
+  x$Parameter <- names(data_factor)[i]
+  m1 <- rbind(table(data_factor$cluster, data_factor[,i]))
+  f <- chisq.test(m1)
+  print(f$expected)
+  if(sum(as.vector(f$expected > 5), na.rm = TRUE) == length(as.vector(f$expected))){
+    x[1, 7] <- "Chi-Square Test"
+    print(x[1, 7])
+    x[1, 8] <- f$p.value
+    }else{
+      x[1, 7] <- "Fisher's Exact Test"
+      print(x[1, 7])
+      x[1, 8] <- fisher.test(m1, simulate.p.value=TRUE)$p.value
+    }
+  names(x)[7:8] <- c("test", "pval")
+  table_factor <- rbind(x,table_factor)
+}
+
+table_factor <- table_factor[,colnames(table_factor) %in% c("Var2", "Parameter", "Level", "Freq2", "test", "pval")]
+names(table_factor)[1] <- "cluster"
+write.xlsx(table_factor, "results/clinical/X2_results_results_cocomo_3_groups_3.xlsx")
+```
+```{r}
+x <- table_numeric$parameter[table_numeric$pval_anova < 0.05 & !is.na(table_numeric$pval_anova)]
+x
+```
+
+```{r}
+table_numeric_2$parameter[table_numeric_2$pval_anova < 0.05 & !is.na(table_numeric_2$pval_anova)]
+```
+
+
+```{r}
+y <- table_factor$Parameter[table_factor$pval < 0.05 & !is.na(table_factor$pval)]
+y
+```
+
+```{r}
+write.csv(y, "processing/factor_differing_groups_3.csv")
+write.csv(x, "processing/numeric_differing_groups_3.csv")
+```
+
+## Duration
+```{r}
+data$cluster <- factor(data$cluster, levels = c("Ctrl", 1, 2))
+num_data <- data[, colnames(data) %in% c("cluster", x)]
+log_data <- data[, colnames(data) %in% c("cluster", y)]
+```
+
+## boxplot numeric data
+
+for (r in 2:ncol(num_data)) {
+  name <- colnames(num_data)[r]
+  x <- pairwise.wilcox.test(num_data[,r], num_data$cluster, p.adj = "none")
+  x2 <- data.frame(x$p.value)
+  colnames(x2) <- gsub("X", "", colnames(x2))
+  colnames(x2)
+  list_pairs <- list()
+  a <- 1
+  for (i in 1:nrow(x2)) {
+    for (j in 1:ncol(x2)) {
+      if(!is.na(x2[i, j]) & x2[i, j] < 0.05){
+        list_pairs[[a]] <- c(colnames(x2)[j], rownames(x2)[i])
+        a = a + 1
+      }
+    }
+  }
+  a <- ggplot(num_data, aes(x = as.factor(cluster), y = num_data[,r], fill = as.factor(cluster), color =as.factor(cluster))) + 
+    geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = colnames(num_data)[r])+ 
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x = element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="bottom",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + scale_fill_manual(values=col[2:3])+ scale_color_manual(values=col[2:3]) + 
+    geom_jitter(shape=16, size=2, color="black", position=position_jitter(0.05))+ stat_compare_means(comparisons = list_pairs, method = "wilcox.test", label = "p.signif", bracket.size = 0.8, size = 5)
+  ggsave(paste0("results/figures/boxplot_", colnames(num_data)[r], "_3.pdf"))
+  
+}
+
+
+## logical
+```{r}
+pairwise.chisq.test <- function(x, g, p.adjust.method = p.adjust.methods, ...) {
+  DNAME <- paste(deparse(substitute(x)), "and", deparse(substitute(g)))
+  g <- factor(g)
+  p.adjust.method <- match.arg(p.adjust.method)
+
+  compare.levels <- function(i, j) {
+    xi <- x[as.integer(g) == i]
+    xj <- x[as.integer(g) == j]
+    m1 <- table(xi)
+    m2 <- table(xj)
+    m <- rbind(m1, m2)
+    print(m)
+    chisq.test(m)$p.value
+  }
+  PVAL <- pairwise.table(compare.levels, levels(g), p.adjust.method)
+  ans <- list(method = "chi-squared test", data.name = DNAME, p.value = PVAL, 
+              p.adjust.method = p.adjust.method)
+  class(ans) <- "pairwise.htest"
+  ans
+}
+```
+
+## barplot logical data
+
+log_data <- log_data[log_data$cluster != "Ctrl",]
+log_data$cluster <- as.factor(as.vector(log_data$cluster))
+
+for (r in 2:ncol(log_data)) {
+  name <- colnames(log_data)[r]
+  cluster <- as.vector(log_data$cluster)
+  comp <- as.vector(log_data[,r])
+  x <- pairwise.chisq.test(comp, cluster, p.adjust.method = "none")
+  
+  x2 <- data.frame(x$p.value)
+  colnames(x2) <- gsub("X", "", colnames(x2))
+  colnames(x2)
+  list_pairs <- list()
+  a <- 1
+  for (i in 1:nrow(x2)) {
+    for (j in 1:ncol(x2)) {
+      if(!is.na(x2[i, j]) & x2[i, j] < 0.05){
+        list_pairs[[a]] <- c(colnames(x2)[j], rownames(x2)[i])
+        a = a + 1
+      }
+    }
+  }
+  print(list_pairs)
+  m1 <- data.frame(rbind(table(cluster, comp)))
+  m1$cluster <- rownames(m1)
+  m1 <- melt(m1)
+  p <- ggplot(m1, aes(x=cluster, y=value, fill=variable)) + 
+    geom_bar(stat="identity")+theme_minimal()
+  p
+  ggsave(paste0("results/figures/barplot_", colnames(log_data)[r], "_3.pdf"))
+  
+}
+
+## PCAs
+(labelled for BMI x, duration of treatment (0à< 5,  5 à< 10, 10 à15, +15)x, genderx, CD4/CD8 ratio (< 1 and > 1)x, METSx, VATx,  transmission modex, 3rd drug x)
+```{r}
+#clinical_pca <- select(data_2, COCOMO_ID, cluster, BMI_cat, Duration_cat, GENDER, CDA_CD8_cat, METS, VAT_cat, Transm_mode, X3rd_Drug)
+```
+
+```{r}
+#write.csv(clinical_pca, "processing/clinical_data_PCA_3.csv")
+```
+

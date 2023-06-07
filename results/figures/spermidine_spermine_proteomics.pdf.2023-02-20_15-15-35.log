@@ -1,0 +1,15 @@
+INFO [2023-02-20 15:15:35] $x
+INFO [2023-02-20 15:15:35] list(a, b, c)
+INFO [2023-02-20 15:15:35] 
+INFO [2023-02-20 15:15:35] $category.names
+INFO [2023-02-20 15:15:35] c("Spermidine vs Ctl", "Spermine vs Ctl", "Spermine + Spermidine vs Ctrl")
+INFO [2023-02-20 15:15:35] 
+INFO [2023-02-20 15:15:35] $filename
+INFO [2023-02-20 15:15:35] [1] "results/figures/spermidine_spermine_proteomics.pdf"
+INFO [2023-02-20 15:15:35] 
+INFO [2023-02-20 15:15:35] $output
+INFO [2023-02-20 15:15:35] [1] TRUE
+INFO [2023-02-20 15:15:35] 
+INFO [2023-02-20 15:15:35] $fill
+INFO [2023-02-20 15:15:35] myCol
+INFO [2023-02-20 15:15:35] 

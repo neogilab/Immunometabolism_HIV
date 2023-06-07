@@ -1,0 +1,1144 @@
+BIOCHEMICAL,KEGG
+(12 or 13)-methylmyristate (a15:0 or i15:0),
+(14 or 15)-methylpalmitate (a17:0 or i17:0),
+(16 or 17)-methylstearate (a19:0 or i19:0),
+(2 or 3)-decenoate (10:1n7 or n8),
+"(2,4 or 2,5)-dimethylphenol sulfate",
+(2-butoxyethoxy)acetic acid,
+(N(1) + N(8))-acetylspermidine,
+(R)-3-hydroxybutyrylcarnitine,
+(S)-3-hydroxybutyrylcarnitine,
+(S)-a-amino-omega-caprolactam,C05328
+"1,2,3-benzenetriol sulfate (2)",
+"1,3,7-trimethylurate",C16361
+"1,3-dimethylurate",
+"1,5-anhydroglucitol (1,5-AG)",C07326
+"1,7-dimethylurate",C16356
+1-carboxyethylisoleucine,
+1-carboxyethylleucine,
+1-carboxyethylphenylalanine,
+1-carboxyethyltyrosine,
+1-carboxyethylvaline,
+1-linoleoyl-GPA (18:2)*,
+1-linoleoyl-GPG (18:2)*,
+1-methyl-4-imidazoleacetate,C05828
+1-methyl-5-imidazoleacetate,
+1-methylhistidine,C01152
+1-methylnicotinamide,C02918
+1-methylurate,C16359
+1-methylxanthine,C16358
+1-oleoyl-GPG (18:1)*,
+1-palmitoyl-GPG (16:0)*,
+1-ribosyl-imidazoleacetate*,C05131
+1-stearoyl-2-arachidonoyl-GPS (18:0/20:4),
+1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*,
+1-stearoyl-GPG (18:0),
+10-heptadecenoate (17:1n7),
+10-hydroxywarfarin,
+10-nonadecenoate (19:1n9),
+10-undecenoate (11:1n1),C13910
+11-ketoetiocholanolone glucuronide,
+11beta-hydroxyandrosterone glucuronide,
+"12,13-DiHOME",C14829
+13-HODE + 9-HODE,
+16-hydroxypalmitate,C18218
+16a-hydroxy DHEA 3-sulfate,
+17alpha-hydroxypregnanolone glucuronide,
+1H-indole-7-acetic acid,
+2'-deoxyuridine,C00526
+2'-O-methylcytidine,
+2'-O-methyluridine,
+"2,3-dihydroxy-2-methylbutyrate",
+"2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)*",
+"2,3-dihydroxyisovalerate",C04039
+"2,3-dihydroxypyridine",
+"2,6-dihydroxybenzoic acid",
+2-acetamidophenol sulfate,
+2-aminoadipate,C00956
+2-aminobutyrate,C02261
+2-aminoheptanoate,
+2-aminooctanoate,
+2-aminophenol sulfate,
+2-ethylphenylsulfate,
+2-hydroxy-3-methylvalerate,
+2-hydroxy-4-(methylthio)butanoic acid,
+2-hydroxyacetaminophen sulfate*,
+2-hydroxyarachidate*,
+2-hydroxybutyrate/2-hydroxyisobutyrate,
+2-hydroxydecanoate,
+2-hydroxyfluorene sulfate,
+2-hydroxyglutarate,C02630
+2-hydroxyhippurate (salicylurate),C07588
+2-hydroxylaurate,
+2-hydroxyoctanoate,
+2-hydroxypalmitate,
+2-hydroxyphenylacetate,C05852
+2-hydroxysebacate,
+2-hydroxystearate,C03045
+2-isopropylmalate,C02504
+2-ketocaprylate,
+2-methoxyacetaminophen glucuronide*,
+2-methoxyacetaminophen sulfate*,
+2-methoxyhydroquinone sulfate (1),
+2-methoxyhydroquinone sulfate (2),
+2-methoxyresorcinol sulfate,
+2-methylbutyrylcarnitine (C5),
+2-methylcitrate/homocitrate,
+2-methylmalonylcarnitine (C4-DC),
+2-methylserine,C02115
+2-naphthol sulfate,
+2-O-methylascorbic acid,
+2-oxindole-3-acetate,
+2-oxoarginine*,C03771
+2-piperidinone,
+21-hydroxypregnenolone disulfate,
+"2R,3R-dihydroxybutyrate",
+"2S,3R-dihydroxybutyrate",
+"3,4-dihydroxybutyrate",
+"3,5-dichloro-2,6-dihydroxybenzoic acid",
+"3,7-dimethylurate",C16360
+3-(3-amino-3-carboxypropyl)uridine*,
+3-(3-hydroxyphenyl)propionate,C11457
+3-(3-hydroxyphenyl)propionate sulfate,
+3-(4-hydroxyphenyl)lactate (HPLA),C03672
+3-(cystein-S-yl)acetaminophen*,
+3-(methylthio)acetaminophen sulfate*,
+3-(N-acetyl-L-cystein-S-yl) acetaminophen,
+3-acetylphenol sulfate,
+3-amino-2-piperidone,
+3-aminoisobutyrate,C05145
+"3-bromo-5-chloro-2,6-dihydroxybenzoic acid*",
+3-carboxy-4-methyl-5-pentyl-2-furanpropionate (3-CMPFP),
+3-carboxy-4-methyl-5-propyl-2-furanpropanoate (CMPF),
+3-decenoylcarnitine,
+3-ethylcatechol sulfate (1),
+3-ethylcatechol sulfate (2),
+3-formylindole,C08493
+3-hydroxy-2-ethylpropionate,
+3-hydroxy-2-methylpyridine sulfate,
+3-hydroxy-3-methylglutarate,C03761
+3-hydroxyadipate*,
+3-hydroxybutyrate (BHBA),C01089
+3-hydroxybutyroylglycine,
+3-hydroxycotinine glucuronide,
+3-hydroxydecanoate,
+3-hydroxydecanoylcarnitine,
+3-hydroxydodecanedioate*,
+3-hydroxyhexanoate,
+3-hydroxyhexanoylcarnitine (1),
+3-hydroxyhippurate,
+3-hydroxyhippurate sulfate,
+3-hydroxyisobutyrate,C06001
+3-hydroxylaurate,
+3-hydroxymyristate,
+3-hydroxyoctanoate,
+3-hydroxyoleoylcarnitine,
+3-hydroxypyridine glucuronide,
+3-hydroxypyridine sulfate,
+3-hydroxysebacate,
+3-hydroxystachydrine*,
+3-hydroxystearate,
+3-indoleglyoxylic acid,
+3-indoxyl sulfate,
+3-methoxycatechol sulfate (1),
+3-methoxycatechol sulfate (2),
+3-methoxytyramine sulfate,
+3-methoxytyrosine,
+3-methyl catechol sulfate (1),
+3-methyl catechol sulfate (2),
+3-methyl-2-oxobutyrate,C00141
+3-methyl-2-oxovalerate,C00671
+3-methyladipate,
+3-methylcytidine,
+3-methylglutaconate,
+3-methylglutarate/2-methylglutarate,
+3-methylglutarylcarnitine (2),
+3-methylhistidine,C01152
+3-methylxanthine,C16357
+3-phenylpropionate (hydrocinnamate),C05629
+3-phosphoglycerate,C00597
+3-ureidopropionate,C02642
+"3beta,7alpha-dihydroxy-5-cholestenoate",C17335
+3beta-hydroxy-5-cholestenoate,C17333
+4-acetamidobutanoate,C02946
+4-acetamidophenol,C06804
+4-acetamidophenylglucuronide,
+4-acetaminophen sulfate,C06804
+4-acetylcatechol sulfate (1),
+4-acetylphenyl sulfate,
+4-allylcatechol sulfate,
+4-allylphenol sulfate,
+4-chlorobenzoic acid,
+4-cholesten-3-one,C00599
+4-ethylcatechol sulfate,
+4-ethylphenyl sulfate,C13637
+4-guanidinobutanoate,C01035
+4-hydroxy-2-oxoglutaric acid,C01127
+4-hydroxychlorothalonil,
+4-hydroxycoumarin,C20414
+4-hydroxyglutamate,C03079
+4-hydroxyhippurate,
+4-hydroxyphenylacetatoylcarnitine,
+4-hydroxyphenylacetylglutamine,
+4-hydroxyphenylpyruvate,C01179
+4-imidazoleacetate,C02835
+4-methoxyphenol sulfate,
+4-methyl-2-oxopentanoate,C00233
+4-methylcatechol sulfate,
+4-methylguaiacol sulfate,
+4-methylhexanoylglutamine,
+4-methylnonanoylcarnitine,
+4-vinylguaiacol sulfate,
+4-vinylphenol sulfate,C05627
+"5,6-dihydrothymine",C00906
+"5,6-dihydrouracil",C00429
+"5,6-dihydrouridine",
+5-(galactosylhydroxy)-L-lysine,
+5-acetylamino-6-amino-3-methyluracil,C16366
+5-acetylamino-6-formylamino-3-methyluracil,C16365
+5-dodecenoate (12:1n7),
+5-dodecenoylcarnitine (C12:1),
+5-hydroxy-2-methylpyridine sulfate,
+5-hydroxyhexanoate,
+5-hydroxylysine,C16741
+5-hydroxymethyl-2-furoic acid,C20448
+5-hydroxymethyl-2-furoylcarnitine*,
+5-methylthioadenosine (MTA),C00170
+5-methyluridine (ribothymidine),
+5-oxoproline,C01879
+"5alpha-androstan-3alpha,17alpha-diol monosulfate",
+"5alpha-androstan-3alpha,17beta-diol 17-glucuronide",
+"5alpha-androstan-3alpha,17beta-diol disulfate",
+"5alpha-androstan-3alpha,17beta-diol monosulfate (1)",
+"5alpha-androstan-3alpha,17beta-diol monosulfate (2)",
+"5alpha-androstan-3beta,17alpha-diol disulfate",
+"5alpha-androstan-3beta,17beta-diol disulfate",C12525
+"5alpha-androstan-3beta,17beta-diol monosulfate (2)",
+"5alpha-pregnan-3beta,20alpha-diol disulfate",
+"5alpha-pregnan-3beta,20alpha-diol monosulfate (2)",
+"5alpha-pregnan-3beta,20beta-diol monosulfate (1)",
+5alpha-pregnan-diol disulfate,
+6-bromotryptophan,
+6-hydroxyindole sulfate,
+6-hydroxywarfarin,
+6-oxopiperidine-2-carboxylate,
+7-HOCA,C17337
+7-hydroxyindole sulfate,
+7-hydroxywarfarin,
+7-methylguanine,C02242
+7-methylxanthine,C16353
+8-methoxykynurenate,C05830
+"9,10-DiHOME",C14828
+9-hydroxystearate,
+abacavir,D07057
+acesulfame,
+acetoacetate,C00164
+acetylcarnitine (C2),C02571
+acisoga,
+aconitate [cis or trans],
+"adenosine 3',5'-cyclic monophosphate (cAMP)",C00575
+AMP,C00020
+adipate,C06104
+adipoylcarnitine (C6-DC),
+adrenate (22:4n6),C16527
+adrenoylcarnitine (C22:4)*,
+alanine,C00041
+allantoin,C02350
+alliin,C08265
+allo-threonine,C05519
+allopurinol,
+allopurinol riboside,
+alpha-hydroxyisocaproate,C03264
+alpha-hydroxyisovalerate,
+alpha-hydroxymetoprolol,
+alpha-ketobutyrate,C00109
+alpha-ketoglutaramate*,
+alpha-ketoglutarate,C00026
+alpha-tocopherol,C02477
+andro steroid monosulfate C19H28O6S (1)*,
+"androstenediol (3alpha, 17alpha) monosulfate (2)",
+"androstenediol (3alpha, 17alpha) monosulfate (3)",
+"androstenediol (3beta,17beta) disulfate (1)",C04295
+"androstenediol (3beta,17beta) disulfate (2)",
+"androstenediol (3beta,17beta) monosulfate (1)",
+"androstenediol (3beta,17beta) monosulfate (2)",
+androsterone glucuronide,C11135
+androsterone sulfate,
+anserine,C01262
+anthranilate,C00108
+arabinose,C00216
+arabitol/xylitol,
+arabonate/xylonate,
+arachidate (20:0),C06425
+arachidonate (20:4n6),C00219
+arachidonoylcarnitine (C20:4),
+arachidonoylcholine,
+arachidoylcarnitine (C20)*,
+argininate*,
+arginine,C00062
+ascorbic acid 2-sulfate,
+ascorbic acid 3-sulfate*,
+asparagine,C00152
+aspartate,C00049
+atazanavir,D07471
+azelate (C9-DC),C08261
+behenoylcarnitine (C22)*,
+benzoate,C00180
+benzoylcarnitine*,
+beta-alanine,C00099
+beta-citrylglutamate,C20775
+beta-cryptoxanthin,
+beta-hydroxyisovalerate,
+beta-hydroxyisovaleroylcarnitine,
+beta-sitosterol,C01753
+betaine,C00719
+"bilirubin (E,E)*",
+"bilirubin (E,Z or Z,E)*",
+bilirubin,C00486
+biliverdin,C00500
+branched chain 14:0 dicarboxylic acid,
+"branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (1)*",
+"branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (2)*",
+"branched-chain, straight-chain, or cyclopropyl 12:1 fatty acid*",
+butyrate/isobutyrate (4:0),C00246
+butyrylcarnitine (C4),C02862
+butyrylglycine (C4),
+C-glycosyltryptophan,
+caffeic acid sulfate,
+caffeine,C07481
+campesterol,C01789
+caprate (10:0),C01571
+caproate (6:0),C01585
+caprylate (8:0),C06423
+carboxyethyl-GABA,
+carboxyibuprofen,
+carboxyibuprofen glucuronide*,
+carnitine,C00318
+carotene diol (1),
+carotene diol (2),
+carotene diol (3),
+catechol glucuronide,
+catechol sulfate,
+cerotoylcarnitine (C26)*,
+cetirizine,C07778
+chenodeoxycholate,C02528
+chiro-inositol,C19891
+cholate,C00695
+cholesterol,C00187
+choline,C00114
+phosphocholine,C00588
+cinnamoylglycine,
+cis-4-decenoate (10:1n6)*,
+cis-4-decenoylcarnitine (C10:1),
+citalopram N-oxide*,C16607
+citalopram propionate*,C16610
+citalopram/escitalopram,D07913
+citraconate/glutaconate,
+citramalate,C00815
+citrate,C00158
+citrulline,C00327
+cobicistat,D09881
+cortisol,C00735
+cortisone,C00762
+cortolone glucuronide (1),
+cotinine,
+cotinine N-oxide,
+creatine,C00300
+creatinine,C00791
+"cys-gly, oxidized",
+cystathionine,C02291
+cysteine,C00097
+cysteine s-sulfate,C05824
+cysteine sulfinic acid,C00606
+cysteine-glutathione disulfide,
+cysteinylglycine,C01419
+cysteinylglycine disulfide*,
+cystine,C00491
+cytidine,C00475
+cytosine,C00380
+darunavir,D03656
+decadienedioic acid (C10:2-DC),
+decanoylcarnitine (C10),
+dehydroepiandrosterone sulfate (DHEA-S),C04555
+deoxycarnitine,C01181
+deoxycholate,C04483
+deoxycholic acid 12-sulfate*,
+deoxycholic acid glucuronide,
+desmethylcitalopram*,C16608
+didesmethylcitalopram*,
+dihomolinoleate (20:2n6),C16525
+dihomolinolenate (20:3n3 or 3n6),C03242
+dihomo-linolenoyl-choline,
+dihomo-linolenoylcarnitine (C20:3n3 or 6)*,
+dihomo-linoleoylcarnitine (C20:2)*,
+dihydrocaffeate sulfate (2),
+dihydroferulate,
+dihydroferulic acid sulfate,
+dihydroorotate,C00337
+dimethyl sulfone,C11142
+dimethylarginine (ADMA + SDMA),C03626
+dimethylglycine,C01026
+diphenhydramine,C06960
+docosadienoate (22:2n6),C16533
+docosadioate (C22-DC),C19625
+docosahexaenoate (DHA; 22:6n3),C06429
+docosahexaenoylcarnitine (C22:6)*,
+docosahexaenoylcholine,
+docosapentaenoate (DPA; 22:5n3),C16513
+docosapentaenoate (n6 DPA; 22:5n6),C16513
+docosapentaenoylcarnitine (C22:5n3)*,
+docosatrienoate (22:3n3),C16534
+docosatrienoate (22:3n6)*,
+dodecadienoate (12:2)*,
+dodecanedioate (C12),C02678
+dodecenedioate (C12:1-DC)*,
+dolutegravir,D10066
+dopamine 3-O-sulfate,C13690
+dopamine 4-sulfate,C13691
+doxycycline,
+ectoine,C06231
+EDTA,C00284
+efavirenz,D00896
+eicosanedioate (C20-DC),
+eicosapentaenoate (EPA; 20:5n3),C06428
+eicosapentaenoylcholine,
+eicosenoate (20:1n9 or 1n11),C16526
+eicosenoylcarnitine (C20:1)*,
+elvitegravir,D06677
+emtricitabine,D01199
+epiandrosterone sulfate,
+ergothioneine,C05570
+erucate (22:1n9),C08316
+erucoylcarnitine (C22:1)*,
+erythritol,C00503
+erythronate*,
+ethyl alpha-glucopyranoside,
+ethyl beta-glucopyranoside,
+ethyl glucuronide,
+ethylmalonate,
+etiocholanolone glucuronide,
+eugenol sulfate,
+ferulic acid 4-sulfate,
+fexofenadine,C06999
+formiminoglutamate,C00439
+fructose,C00095
+fructosyllysine,
+fumarate,C00122
+furosemide,D00331
+gabapentin,D00332
+galactonate,C00880
+gamma-CEHC,
+gamma-glutamyl-2-aminobutyrate,
+gamma-glutamyl-alpha-lysine,
+gamma-glutamyl-epsilon-lysine,
+gamma-glutamylcitrulline*,
+gamma-glutamylglutamate,C05282
+gamma-glutamylglutamine,C05283
+gamma-glutamylglycine,
+gamma-glutamylhistidine,
+gamma-glutamylisoleucine*,
+gamma-glutamylleucine,
+gamma-glutamylmethionine,
+gamma-glutamylphenylalanine,
+gamma-glutamylthreonine,
+gamma-glutamyltryptophan,
+gamma-glutamyltyrosine,
+gamma-glutamylvaline,
+gamma-tocopherol/beta-tocopherol,
+genistein sulfate*,
+gentisate,C00628
+GlcNAc sulfate conjugate of C21H34O2 steroid,
+gluconate,C00257
+glucose,C00031
+glucuronate,C00191
+glucuronide of C10H18O2 (1)*,
+glucuronide of C10H18O2 (7)*,
+glucuronide of C10H18O2 (8)*,
+glucuronide of C12H22O4 (1)*,
+glucuronide of C12H22O4 (2)*,
+glucuronide of C14H26O4 (1)*,
+glucuronide of piperine metabolite C17H21NO3 (3)*,
+glucuronide of piperine metabolite C17H21NO3 (4)*,
+glucuronide of piperine metabolite C17H21NO3 (5)*,
+glutamate,C00025
+"glutamate, gamma-methyl ester",
+glutamine,C00064
+glutamine conjugate of C6H10O2 (1)*,
+glutamine conjugate of C6H10O2 (2)*,
+glutamine conjugate of C7H12O2*,
+glutarate (C5-DC),C00489
+glutarylcarnitine (C5-DC),
+glycerate,C00258
+glycerol,C00116
+glycerol 3-phosphate,C00093
+glycerophosphoethanolamine,C01233
+glycerophosphorylcholine (GPC),C00670
+glycine,C00037
+glycine conjugate of C10H12O2*,
+glycine conjugate of C10H14O2 (1)*,
+glyco-beta-muricholate,
+glycochenodeoxycholate,C05466
+glycochenodeoxycholate 3-sulfate,
+glycochenodeoxycholate glucuronide (1),
+glycocholate,C01921
+glycocholenate sulfate*,
+glycodeoxycholate,C05464
+glycodeoxycholate 3-sulfate,
+glycohyocholate,
+glycolithocholate,C15557
+glycolithocholate sulfate*,C11301
+glycoursodeoxycholate,
+glycoursodeoxycholic acid sulfate (1),
+glycylvaline,
+glycyrrhetinate,C02283
+guaiacol sulfate,
+guanidinoacetate,C00581
+guanidinosuccinate,C03139
+gulonate*,C00257
+heme,C00032
+heneicosapentaenoate (21:5n3),
+heptanoate (7:0),C17714
+heptenedioate (C7:1-DC)*,
+hexadecadienoate (16:2n6),
+hexadecanedioate (C16),C19615
+hexadecasphingosine (d16:1)*,
+hexadecenedioate (C16:1-DC)*,
+hexanoylcarnitine (C6),
+hexanoylglutamine,
+hexanoylglycine (C6),
+hippurate,C01586
+histidine,C00135
+histidine betaine (hercynine)*,
+homoarginine,C01924
+homocitrulline,C02427
+homostachydrine*,C08283
+homovanillate (HVA),C05582
+hydantoin-5-propionate,C05565
+hydrochlorothiazide,C07041
+hydroquinone sulfate,C00530
+hydroxy-CMPF*,
+"hydroxy-N6,N6,N6-trimethyllysine*",
+hydroxyasparagine,C03124
+hydroxycotinine,
+hyocholate,C17649
+hypotaurine,C00519
+hypoxanthine,C00262
+ibuprofen,D00126
+ibuprofen acyl glucuronide,
+imidazole lactate,C05568
+imidazole propionate,
+iminodiacetate (IDA),C19911
+indole-3-carboxylate,C19837
+indoleacetate,C00954
+indoleacetoylcarnitine*,
+indoleacetylglutamine,
+indolelactate,C02043
+indolepropionate,
+indolin-2-one,C12312
+isobutyrylcarnitine (C4),
+isobutyrylglycine (C4),
+isocitric lactone,
+isoeugenol sulfate,
+isoleucine,C00407
+isoleucylglycine,
+isoursodeoxycholate,C17662
+isovalerate (C5),C08262
+isovalerylcarnitine (C5),
+isovalerylglycine,
+kynurenate,C01717
+kynurenine,C00328
+L-urobilin,C05793
+lactate,C00186
+lactobacillic acid,
+lamivudine,D00353
+lamotrigine,D00354
+lanthionine,
+laurate (12:0),C02679
+laurylcarnitine (C12),
+leucine,
+leucylglycine,
+levetiracetam,"D00709,C07841"
+levulinoylcarnitine,
+lignoceroylcarnitine (C24)*,
+linoleate (18:2n6),C01595
+linolenate (18:3n3 or 3n6),C06426
+linolenoylcarnitine (C18:3)*,
+linoleoylcarnitine (C18:2)*,
+linoleoylcholine*,
+lithocholate sulfate (1),
+lopinavir,D01425
+losartan,
+lysine,C00047
+m-tyramine sulfate,
+malate,C00149
+maleate,C01384
+malonate,C00383
+malonylcarnitine,
+maltol sulfate,
+maltose,C00208
+mannitol/sorbitol,C00794
+mannonate*,
+mannose,C00159
+maraviroc,D06670
+margarate (17:0),
+margaroylcarnitine (C17)*,
+mead acid (20:3n9),
+metabolonic lactone sulfate,
+metformin,C07151
+methionine,C00073
+methionine sulfone,
+methionine sulfoxide,C02989
+methyl glucopyranoside (alpha + beta),
+methyl indole-3-acetate,
+methyl vanillate sulfate,
+methyl-4-hydroxybenzoate sulfate,
+methylmalonate (MMA),C02170
+methylsuccinate,
+methylsuccinoylcarnitine,
+metoprolol,D02358
+metoprolol acid metabolite*,
+myo-inositol,C00137
+myristate (14:0),C06424
+myristoleate (14:1n5),C08322
+myristoleoylcarnitine (C14:1)*,
+myristoylcarnitine (C14),
+"N,N,N-trimethyl-5-aminovalerate",
+"N,N,N-trimethyl-alanylproline betaine (TMAP)",
+"N,N-dimethyl-5-aminovalerate",
+"N,N-dimethylalanine",
+"N,O-didesmethylvenlafaxine glucuronide",
+N-(2-furoyl)glycine,
+N-acetyl-1-methylhistidine*,
+N-acetyl-2-aminooctanoate*,
+N-acetyl-3-methylhistidine*,
+N-acetyl-aspartyl-glutamate (NAAG),C12270
+N-acetyl-beta-alanine,C01073
+N-acetyl-isoputreanine,
+N-acetyl-S-allyl-L-cysteine,
+N-acetylalanine,C02847
+N-acetylalliin,
+N-acetylarginine,C02562
+N-acetylasparagine,
+N-acetylaspartate (NAA),C01042
+N-acetylcarnosine,
+N-acetylcitrulline,C15532
+N-acetylglucosamine/N-acetylgalactosamine,
+N-acetylglucosaminylasparagine,C04540
+N-acetylglutamate,C00624
+N-acetylglutamine,C02716
+N-acetylglycine,
+N-acetylhistidine,C02997
+N-acetylisoleucine,
+N-acetylkynurenine (2),
+N-acetylleucine,C02710
+N-acetylmethionine,C02712
+N-acetylneuraminate,C00270
+N-acetylphenylalanine,C03519
+N-acetylproline,
+N-acetylputrescine,C02714
+N-acetylserine,
+N-acetyltaurine,
+N-acetyltheanine,
+N-acetylthreonine,
+N-acetyltryptophan,C03137
+N-acetyltyrosine,
+N-acetylvaline,
+N-carbamoylalanine,
+N-carbamoylaspartate,C00438
+N-delta-acetylornithine,
+N-desmethyl tramadol,
+N-formylanthranilic acid,C05653
+N-formylmethionine,C03145
+N-formylphenylalanine,
+N-methylhydroxyproline,
+N-methylpipecolate,
+N-methylproline,
+N-methyltaurine,
+N-monomethylarginine,C03884
+N-oleoylserine,
+N-oleoyltaurine,
+N-palmitoylglycine,
+N-palmitoylserine,
+N-stearoylserine*,
+N-stearoyltaurine,
+N1-Methyl-2-pyridone-5-carboxamide,C05842
+N1-Methyl-4-pyridone-3-carboxamide,C05843
+1-methyladenosine,C02494
+N1-methylinosine,
+"N2,N2-dimethylguanosine",
+"N2,N5-diacetylornithine",
+"N2-acetyl,N6,N6-dimethyllysine",
+"N2-acetyl,N6-methyllysine",
+N4-acetylcytidine,
+N4-acetylsulfamethoxazole*,"C13061,D01601"
+"N6,N6,N6-trimethyllysine",C03793
+"N6,N6-dimethyllysine",C05545
+N6-acetyllysine,C02727
+N6-carbamoylthreonyladenosine,
+N6-carboxymethyllysine,
+N6-methyladenosine,
+N6-methyllysine,C02728
+N6-succinyladenosine,
+nervonoylcarnitine (C24:1)*,
+nicotinamide,C00153
+nicotinamide riboside,C03150
+nisinate (24:6n3),
+nonadecanoate (19:0),C16535
+nonanoylcarnitine (C9),
+norcotinine,
+nornicotine,
+O-acetylhomoserine,C01077
+o-cresol sulfate,
+O-desmethyltramadol,
+O-desmethyltramadol glucuronide,
+O-desmethylvenlafaxine,D07793
+O-sulfo-L-tyrosine,
+octadecadienedioate (C18:2-DC)*,
+octadecanedioate (C18),
+octadecanedioylcarnitine (C18-DC)*,
+octadecenedioate (C18:1-DC),
+octadecenedioylcarnitine (C18:1-DC)*,
+octanoylcarnitine (C8),C02838
+oleate/vaccenate (18:1),
+oleoyl ethanolamide,
+oleoylcarnitine (C18:1),
+oleoylcholine,
+omeprazole,C07324
+ornithine,C00077
+orotate,C00295
+orotidine,
+oxalate (ethanedioate),C00209
+oxypurinol,D02365
+p-cresol glucuronide*,
+p-cresol sulfate,
+palmitate (16:0),C00249
+palmitoleate (16:1n7),C08362
+palmitoleoylcarnitine (C16:1)*,
+palmitoloelycholine,
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0),
+palmitoylcarnitine (C16),C02990
+palmitoylcholine,
+pantoate,C00522
+pantoprazole,C11806
+pantothenate (Vitamin B5),C00864
+paraxanthine,C13747
+pentadecanoate (15:0),C16537
+pentose acid*,
+perfluorooctanesulfonate (PFOS),C18142
+perfluorooctanoate (PFOA),
+phenol glucuronide,
+phenol sulfate,C02180
+phenylacetate,C07086
+phenylacetylcarnitine,
+phenylacetylglutamate,
+phenylacetylglutamine,C04148
+phenylacetylglycine,C05598
+phenylalanine,C00079
+phenylalanylglycine,
+phenyllactate (PLA),C05607
+phenylpyruvate,C00166
+phosphate,C00009
+phosphoethanolamine (PE),C00346
+picolinate,C10164
+picolinoylglycine,
+pimelate (C7-DC),C02656
+pimeloylcarnitine/3-methyladipoylcarnitine (C7-DC),
+pipecolate,C00408
+piperine,C03882
+pregnanediol-3-glucuronide,
+pregnen-diol disulfate*,
+pregnenediol sulfate (C21H34O5S)*,
+pregnenetriol disulfate*,
+pregnenetriol sulfate*,
+pregnenolone sulfate,
+prolylhydroxyproline,
+proline,C00148
+prolylglycine,
+propionylcarnitine (C3),C03017
+propionylglycine (C3),
+propyl 4-hydroxybenzoate sulfate,
+pseudouridine,C02067
+pyridoxal,C00250
+pyridoxate,C00847
+pyroglutamine*,
+pyrraline,
+pyruvate,C00022
+quinate,C00296
+quinolinate,C03722
+raltegravir,D06676
+retinal,C00376
+retinol (Vitamin A),C00473
+ribitol,C00474
+ribonate,C01685
+ribulonate/xylulonate/lyxonate*,
+rilpivirine,D09720
+ritalinic acid,
+ritonavir,D00427
+S-(3-hydroxypropyl)mercapturic acid (HPMA),
+S-1-pyrroline-5-carboxylate,C04322
+S-adenosylhomocysteine (SAH),C00021
+S-allylcysteine,
+S-methylcysteine,
+S-methylcysteine sulfoxide,
+S-methylmethionine,C05319
+saccharin,D01085
+salicylate,C00805
+salicyluric glucuronide*,
+saquinavir,D00429
+sarcosine,C00213
+sebacate (C10-DC),C08277
+serine,C00065
+serotonin,C00780
+solifenacin,
+spermidine,C00315
+spermine,C00750
+sphingadienine,
+sphinganine,C00836
+sphinganine-1-phosphate,
+sphingosine,C00319
+sphingosine 1-phosphate,C06124
+stachydrine,C10172
+stearate (18:0),C01530
+stearidonate (18:4n3),C16300
+stearoylcarnitine (C18),
+stearoylcholine*,
+suberate (C8-DC),C08278
+suberoylcarnitine (C8-DC),
+succinate,C00042
+succinoyltaurine,
+succinylcarnitine (C4-DC),
+sucrose,C00089
+sulfamethoxazole,"D00285,C07315,D00447"
+sulfate of piperine metabolite C16H19NO3 (2)*,
+sulfate of piperine metabolite C16H19NO3 (3)*,
+sulfate of piperine metabolite C18H21NO3 (1)*,
+sulfate of piperine metabolite C18H21NO3 (3)*,
+sulfate*,C00059
+syringol sulfate,
+tartarate,C00898
+tartronate (hydroxymalonate),C02287
+taurine,C00245
+tauro-beta-muricholate,
+taurochenodeoxycholate,C05465
+taurochenodeoxycholic acid 3-sulfate,
+taurocholate,C05122
+taurocholenate sulfate*,
+taurodeoxycholate,C05463
+taurodeoxycholic acid 3-sulfate,
+taurohyocholate*,
+taurolithocholate 3-sulfate,C03642
+testosterone sulfate,
+tetradecadienedioate (C14:2-DC)*,
+tetradecadienoate (14:2)*,
+tetradecanedioate (C14),
+THC carboxylic acid,
+THC carboxylic acid glucuronide,
+theanine,C01047
+theobromine,C07480
+theophylline,C07130
+thioproline,
+threonate,C01620
+threonine,C00188
+thymol sulfate,C09908
+thyroxine,C01829
+tiglyl carnitine (C5),
+tramadol,C07153
+trans-2-hexenoylglycine,
+"trans-3,4-methyleneheptanoate",
+hydroxyproline,C01157
+trans-urocanate,C00785
+tridecenedioate (C13:1-DC)*,
+trigonelline (N'-methylnicotinate),C01004
+trimethylamine N-oxide,C01104
+tryptophan,C00078
+tryptophan betaine,C09213
+tyramine O-sulfate,
+tyrosine,C00082
+umbelliferone sulfate,
+undecanedioate (C11-DC),
+undecenoylcarnitine (C11:1),
+uracil,C00106
+urate,C00366
+urea,C00086
+uridine,C00299
+ursodeoxycholate,C07880
+valine,C00183
+valylleucine,
+vanillactate,
+vanillic acid glycine,
+vanillic alcohol sulfate,
+vanillylmandelate (VMA),C05584
+venlafaxine,C07187
+warfarin,C01541
+xanthine,C00385
+xanthosine,C01762
+xanthurenate,C02470
+ximenoylcarnitine (C26:1)*,
+xylose,C00181
+zolpidem,
+X - 07765,
+X - 10458,
+"X - 11261 - retired for cis-3,4-methyleneheptanoyl carnitine",
+X - 11299,
+X - 11308,
+X - 11315,
+X - 11381,
+X - 11441,
+X - 11442,
+X - 11444,
+X - 11470,
+X - 11478,
+X - 11483,
+X - 11522,
+X - 11530,
+X - 11632,
+X - 11787,
+X - 11795,
+X - 11843,
+X - 11847,
+X - 11849,
+X - 11850,
+X - 11852,
+X - 11858,
+X - 11880,
+X - 11979,
+X - 12007,
+X - 12013,
+X - 12015,
+X - 12026,
+X - 12100,
+X - 12101,
+X - 12104,
+X - 12111,
+X - 12112,
+X - 12117,
+X - 12126,
+X - 12127,
+X - 12193,
+X - 12216,
+X - 12221,
+X - 12261,
+X - 12283,
+X - 12306,
+X - 12407,
+X - 12410,
+X - 12411,
+X - 12462,
+"X - 12524 - retired for 2,4-di-tert-butylphenol",
+X - 12544,
+X - 12680,
+X - 12701,
+X - 12707,
+X - 12714,
+X - 12718,
+X - 12726,
+X - 12729,
+X - 12730,
+X - 12731,
+X - 12738,
+X - 12740,
+X - 12798,
+X - 12812,
+X - 12816,
+X - 12818,
+X - 12822,
+X - 12844,
+X - 12847,
+X - 12849,
+X - 12906,
+X - 13431,
+X - 13507,
+X - 13553,
+X - 13684,
+X - 13695,
+X - 13723,
+X - 13728,
+X - 13729,
+X - 13835,
+X - 13844,
+X - 13846,
+X - 13866,
+X - 14056,
+X - 14082,
+X - 14939,
+X - 15220,
+X - 15461,
+X - 15469 - retired for 3-hydroxyoctanoylcarnitine (1),
+X - 15486,
+X - 15492,
+X - 15503,
+X - 15666,
+X - 15674,
+X - 15728,
+X - 16087,
+X - 16124,
+X - 16397,
+"X - 16570 - retired for cis-3,4-methyleneheptanoyl glycine",
+X - 16576,
+X - 16580,
+X - 16935,
+X - 16938,
+"X - 16944 - retired for cis-3,4-methyleneheptanoic acid",
+X - 16946,
+X - 16964,
+X - 17010,
+X - 17162,
+X - 17185,
+X - 17301,
+X - 17325,
+X - 17328,
+X - 17335,
+X - 17340,
+X - 17343,
+X - 17346,
+X - 17351,
+X - 17353,
+X - 17354,
+X - 17357,
+X - 17361,
+X - 17367,
+X - 17438,
+X - 17612,
+X - 17653,
+X - 17654,
+X - 17655,
+X - 17676,
+X - 17685,
+X - 17686,
+X - 17690,
+X - 17692,
+X - 18240,
+X - 18345,
+X - 18779,
+X - 18886,
+X - 18887,
+X - 18888,
+X - 18901,
+X - 18913,
+X - 18921,
+X - 18922,
+X - 19141,
+X - 19183,
+X - 19438,
+X - 21258,
+X - 21285,
+X - 21286,
+X - 21310,
+X - 21312,
+X - 21319,
+X - 21339,
+X - 21342,
+X - 21353,
+X - 21364,
+X - 21383,
+X - 21410,
+X - 21441,
+X - 21442,
+X - 21448,
+X - 21467,
+X - 21470,
+X - 21471,
+X - 21607,
+X - 21733,
+X - 21736,
+X - 21740,
+X - 21742,
+X - 21752,
+X - 21796,
+X - 21803,
+X - 21807,
+X - 21815,
+X - 21821,
+X - 21829,
+X - 21830,
+X - 21834,
+X - 21842,
+X - 21959,
+X - 22162,
+X - 22508,
+X - 22509,
+X - 22519 - retired for 3-hydroxyoctanoylcarnitine (2),
+X - 22771,
+X - 22776,
+X - 23276,
+X - 23587,
+X - 23590 - retired for N-acetyl-L-2-aminoadipic acid,
+X - 23593,
+X - 23636,
+X - 23639,
+X - 23641,
+X - 23644,
+X - 23648,
+X - 23655,
+X - 23659,
+X - 23662,
+X - 23665,
+X - 23666,
+X - 23678,
+X - 23680,
+X - 23739,
+X - 23780,
+X - 23782,
+X - 23890,
+X - 23974,
+X - 23997,
+X - 24241,
+X - 24295,
+X - 24306,
+X - 24307,
+X - 24328,
+X - 24334,
+X - 24337,
+X - 24344,
+X - 24411,
+X - 24422,
+X - 24455 ,
+X - 24456,
+X - 24462,
+X - 24473,
+X - 24475,
+X - 24494,
+X - 24518,
+X - 24541,
+X - 24544,
+X - 24546,
+X - 24549,
+X - 24556,
+X - 24565,
+X - 24571,
+X - 24585,
+X - 24588,
+X - 24699,
+X - 24728,
+X - 24736,
+X - 24757,
+X - 24762,
+X - 24811,
+X - 24812,
+X - 24849,
+X - 24947,
+X - 24949,
+X - 24951,
+X - 24970,
+X - 25172,
+X - 25265,
+X - 25267,
+X - 25271,
+X - 25279,
+X - 25343,
+X - 25371,
+X - 25417,
+X - 25419,
+X - 25420,
+X - 25422,
+X - 25433,
+X - 25468,
+X - 25503,
+X - 25519,
+X - 25520,
+X - 25617,
+X - 25790,
+X - 25810,
+X - 25828,
+X - 25948,
+X - 25957,

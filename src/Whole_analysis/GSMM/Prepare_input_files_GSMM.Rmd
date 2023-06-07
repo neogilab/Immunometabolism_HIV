@@ -1,0 +1,104 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+# 1 --> transcriptomics data
+1) Calculate median TPM
+a) Per cluster
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+## load libraries
+```{r}
+library(org.Hs.eg.db)
+library(mygene)
+library(ggpubr)
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical <- clinical[,c(4,3)]
+clinical$cluster
+```
+
+```{r}
+data <- read.delim("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/salmon.merged.gene_tpm_length_scaled.tsv")
+data$gene_id <- gsub("\\..*", "", data$gene_id)
+#data$Gene_name <- mapIds(org.Hs.eg.db, data$gene_id, keytype="ENSEMBL", column="SYMBOL")
+#data_2 <- data[!duplicated(data$Gene_name),]
+#data_2 <- data_2[!is.na(data_2$Gene_name),]
+#rownames(data_2) <- data_2$Gene_name
+data_2 <- data
+rownames(data_2) <- data_2$gene_id
+data_2$gene_id <- NULL
+#data_2$Gene_name <- NULL
+data_2 <- data_2[apply(data_2, 1, var) > 0, ]
+data_3 <- data.frame(t(data_2))
+data_3$User <- rownames(data_3)
+```
+
+```{r}
+write.table(data_3, "results/GSMM/transcriptomics_data_gene_names_tpm.txt")
+
+data_4 <- data.frame(t(data_3[,-1]))
+colnames(data_4)
+
+write.csv(data_4, "results/GSMM/transcriptomics_data_tpm_GEM.csv", quote=FALSE)
+
+write.csv(colnames(data_4), "results/GSMM/names_patinets.csv", quote=FALSE)
+```
+
+```{r}
+data_4 <- merge(clinical, data_3, by = "User", all.y = TRUE)
+```
+
+```{r}
+
+```
+
+```{r}
+clusters <- unique(clinical$cluster)
+```
+
+```{r}
+genes <- colnames(data_4)[-c(1,2)]
+
+m <- matrix(0, ncol = length(genes), nrow = 1)
+table_median <- data.frame(m)
+colnames(table_median) <- genes
+
+for (i in clusters) {
+  data_a <- data_4[data_4$cluster == i,]
+  data_a <- data_a[complete.cases(data_a),]
+  print(i)
+  data_a2 <- apply(data_a[,-c(1:2)], 2, median)
+  table_median <- rbind(data_a2, table_median)
+}
+
+table_median <- table_median[-4,]
+rownames(table_median) <- rev(clusters)
+rownames(table_median)[1] <- 0
+```
+
+```{r}
+table_median <- data.frame(t(table_median))
+```
+
+```{r}
+write.csv(table_median, "results/GSMM/transcriptomics_data_median_per_group.csv", quote=FALSE)
+```
+

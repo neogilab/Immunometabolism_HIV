@@ -1,0 +1,9 @@
+"","X","Name","Stat..dist.dir.up.","p.adj..dist.dir.up.","Genes..up.","Stat..dist.dir.dn.","p.adj..dist.dir.dn.","Genes..down.","comp","sign","pvalue","Nb","Stat"
+"41",94,"G2M_CHECKPOINT",0.52865,1,48,0.47135,0.024975,57,"SPD_controls","down",0.024975,57,-0.47135
+"42",26,"MTORC1_SIGNALING",0.46164,1,84,0.53836,0.11655,67,"SPD_controls","down",0.11655,67,-0.53836
+"43",282,"MYC_TARGETS_V1",0.49374,1,100,0.50626,0.024975,92,"SPD_controls","down",0.024975,92,-0.50626
+"44",121,"ADIPOGENESIS",0.33548,0.0999,95,0.66452,0.997,38,"SPD_controls","up",0.0999,95,0.33548
+"45",192,"INTERFERON_GAMMA_RESPONSE",0.31643,0.1665,41,0.68357,0.997,13,"SPD_controls","up",0.1665,41,0.31643
+"46",232,"COMPLEMENT",0.33414,0.12488,72,0.66586,0.997,24,"SPD_controls","up",0.12488,72,0.33414
+"47",33,"FATTY_ACID_METABOLISM",0.31719,0.0999,82,0.68281,0.997,26,"SPD_controls","up",0.0999,82,0.31719
+"49",424,"COAGULATION",0.2957,0.0999,56,0.7043,0.997,12,"SPD_controls","up",0.0999,56,0.2957

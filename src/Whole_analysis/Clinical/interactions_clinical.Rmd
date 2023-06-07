@@ -1,0 +1,388 @@
+---
+title: "interactions clinical"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+## load clinical data
+```{r}
+data <- read.csv("processing/clinical_data_clean_paper_4.csv", row.names = 2)
+data$X.1 <- NULL
+```
+
+```{r}
+features <- read.xlsx("manuscript/all_clinical_parameters_comparisons_tests_paper_4.xlsx", 1)
+```
+
+## significant parameters
+```{r}
+features <- features[features$pval < 0.1,]
+```
+
+```{r}
+features$parameter
+```
+
+## co-founding effects
+```{r}
+co_funding <- c("Ethnic", "H2_56", "status_smoking", "	H2_52c", "H2_53a")
+```
+
+## extract data
+```{r}
+data_co <- data[, colnames(data) %in% c("cluster", co_funding)]
+data <- data[, colnames(data) %in% c("cluster", features$parameter)]
+```
+
+```{r}
+data$cluster <- as.factor(data$cluster)
+data$METS <- as.factor(data$METS)
+data$Ethnic <- as.factor(data$Ethnic)
+data$Origin <- as.factor(data$Origin)
+data$H2_56 <- as.factor(data$H2_56)
+data$hypertension <- as.factor(data$hypertension)
+data$ob2 <- as.factor(data$ob2)
+data$H2_32b <- as.factor(data$H2_32b)
+data$status_smoking <- as.factor(data$status_smoking)
+data$CDA_CD8_cat <- as.factor(data$CDA_CD8_cat)
+data$central_obesity <- as.factor(data$central_obesity)
+data$first_drug <- as.factor(data$first_drug)
+data$CDCAIDS <- as.factor(data$CDCAIDS)
+data$VAT_cat <- as.factor(data$VAT_cat)
+```
+
+```{r}
+#' Run binomial logistic regression univariate
+#'
+#' @param table_test dataframe with samples as row and clinical as columns
+#' @param condition vector with condition for dep variable
+#' @param dep1 string c1
+#' @param dep1 string c2
+#' @param title title of analysis
+#' @return clinical parameters significant
+#' @export
+my_logit <- function(table_test, condition, dep1, dep2, title){
+  plm <- as.data.frame(matrix(0,nrow=1,ncol=4))
+  colnames(plm) <- c("Odd Ratio", "pvalue", "CI_Low", "CI_high")
+  for (i in 1:ncol(table_test)) {
+    print(colnames(table_test)[i])
+    model <- glm(group ~ table_test[,i], data=table_test, family=binomial, na.action = na.exclude)
+    a <- col_classes(table_test[1,i])
+    a <- as.vector(a)
+    print(a)
+    if(a == "factor"){
+      table_test[,i] <- as.factor(as.vector(table_test[,i]))
+      line <- length(levels(table_test[,i]))
+      tab <- as.data.frame(matrix(0,nrow=line,ncol=4))
+      tab[1, ] <- rep(1,4)
+    
+      p <- as.vector(coef(summary(model))[,'Pr(>|z|)'])
+      p <- p[-1]
+      tab[2:line,2] <- p
+    
+      int <- data.frame(exp(confint(model)))
+      int <- int[-1,]
+      tab[2:line,3:4] <- int
+    
+      odd <- as.vector(exp(model$coefficients))
+      odd <- odd[-1]
+      tab[2:line,1] <- odd
+      rownames(tab) <- paste0(names(table_test)[i],"_", levels(table_test[,i]))
+    }else{
+      tab <- as.data.frame(matrix(0,nrow=1,ncol=4))
+      p <- as.vector(coef(summary(model))[,'Pr(>|z|)'])
+      p <- p[-1]
+      tab[, 2] <- p
+      odd <- as.vector(exp(model$coefficients))
+      odd <- odd[-1]
+      tab[,1] <- odd
+    
+      int <- data.frame(exp(confint(model)))
+      int <- int[-1,]
+      tab[,3:4] <- int
+    
+      rownames(tab) <- paste0(names(table_test)[i])
+    }
+    colnames(tab) <- c("Odd Ratio", "pvalue", "CI_Low", "CI_high")
+    plm <- rbind(plm, tab)
+    
+  }
+  plm <- plm[-1,]
+  sigplm <- plm[plm$pvalue <0.2,] #look only at those with adjusted p.value < 0.1 (loose for multivariate)
+  write.csv(plm, paste0("results/results_logistic_regression_", title, ".csv"))
+  write.csv(sigplm, paste0("results/results_logistic_regression_", title, "_filt.csv"))
+  criteria <- rownames(sigplm)
+  #criteria <- gsub("\\_", "-", criteria)
+  #criteria <- sub("^([^-]*-[^-]*).*", "\\1", criteria)
+  #criteria <- unique(gsub("-", "\\_", criteria))
+  return(criteria)
+}
+```
+
+```{r}
+col_classes <- function(df) {
+    t(as.data.frame(lapply(df, function(x) paste(class(x), collapse = ','))))
+}
+
+# Return example data's column classes
+```
+```{r}
+group <- data$cluster
+```
+
+
+```{r}
+criteria <- my_logit(data[,-c(1)], group, "1", "2", "clusters")
+criteria
+```
+
+```{r}
+features <- features[,c(2, 3)]
+names(features) <- c("label", "X")
+```
+
+```{r}
+table_reg <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/results_logistic_regression_clusters_filt.csv")
+table_reg <- table_reg[table_reg$pvalue < 0.05,]
+table_reg <- merge(table_reg, features, by  = "X")
+```
+
+```{r}
+table_reg <- table_reg[!table_reg$X %in% c("WHR"),]
+```
+
+```{r}
+plot1 <- ggplot(table_reg, aes(y = label, x = Odd.Ratio)) +
+  geom_point(shape = 18, size = 5) +  
+  geom_errorbarh(aes(xmin = CI_Low, xmax = CI_high), height = 0.25) +
+  geom_vline(xintercept = 1, color = "red", linetype = "dashed", cex = 1, alpha = 0.5) +
+  xlab("Odds Ratio (95% CI)") + 
+  ylab(" ") + 
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        axis.text.y = element_text(size = 12, colour = "black"),
+        axis.text.x.bottom = element_text(size = 12, colour = "black"),
+        axis.title.x = element_text(size = 12, colour = "black"))
+
+plot1
+
+ggsave("results/figures/ODD_ratio_univariate_models_clusters.pdf")
+```
+```{r}
+clinical <- data
+```
+
+```{r}
+names(clinical)
+```
+
+
+### Test interactions --> 3 cases : cat-cat, num-cat and num-num
+anova of potential interactions
+```{r}
+table_anova <- data.frame(Var1 = NA, Var2 = NA, pval = NA)
+f = 1
+y <- ncol(clinical) - 1
+for (i in 2:y) {
+  m <- i + 1
+  x = y + 1
+  for (j in m:x) {
+    print(i)
+    print(j)
+    print(names(clinical)[j])
+    print(names(clinical)[i])
+    table_anova[f, 1] <- colnames(clinical)[j]
+    table_anova[f, 2] <- colnames(clinical)[i]
+    two_cat     <- glm(cluster ~ clinical[,j]+clinical[,i], clinical, family = binomial())
+    two_cat_int <- glm(cluster ~ clinical[,j]*clinical[,i], clinical, family = binomial())
+    z <- anova(two_cat, two_cat_int, test = "Chisq")
+    table_anova[f, 3] <- z$`Pr(>Chi)`[2]
+    f = f + 1
+  }
+}
+```
+
+```{r}
+write.csv(table_anova, "results/anova_interactions_clinical_parameters.csv")
+table_anova_filt <- table_anova[table_anova$pval <0.05,]
+table_anova_filt
+```
+
+```{r}
+library(effects)
+library(sjPlot)
+```
+
+## Example two categorical values
+```{r}
+two_cat_int <- glm(cluster ~ H2_56+Origin + H2_56*Origin, clinical, family = binomial())
+tab_model(two_cat_int, p.style = "numeric_stars", transform = NULL, file = "results/regression_models_interactions_fruits_Origin.doc")
+result <- allEffects(two_cat_int)
+
+pdf("results/figures/effects/probabilites_fruits_Origin.pdf", width = 5, height = 4)
+plot_model(two_cat_int, type = "int")+theme_bw()  
+dev.off()
+
+pdf("results/figures/effects/probabilites_fruits_Origin_v2.pdf", width = 5, height = 4)
+plot_model(two_cat_int, transform      = NULL, show.intercept = T, show.values    = TRUE, value.offset   = .3)+theme_bw()
+dev.off()
+
+
+pdf("results/figures/effects/probabilites_fruits_Origin_v3.pdf", width = 5, height = 4)
+plot(allEffects(two_cat_int))
+dev.off()
+```
+
+```{r}
+two_cat_int <- glm(cluster ~ 	status_smoking+ob2 + status_smoking*ob2, clinical, family = binomial())
+tab_model(two_cat_int, p.style = "numeric_stars", transform = NULL, file = "results/regression_models_interactions_smoking_grandparents.doc")
+result <- allEffects(two_cat_int)
+
+pdf("results/figures/effects/probabilites_smoking_grandparents.pdf", width = 5, height = 4)
+plot_model(two_cat_int, type = "int")+theme_bw()  
+dev.off()
+
+pdf("results/figures/effects/probabilites_smoking_grandparents_v2.pdf", width = 5, height = 4)
+plot_model(two_cat_int, transform      = NULL, show.intercept = T, show.values    = TRUE, value.offset   = .3)+theme_bw()
+dev.off()
+
+
+pdf("results/figures/effects/probabilites_smoking_grandparents_v3.pdf", width = 5, height = 4)
+plot(allEffects(two_cat_int))
+dev.off()
+```
+
+```{r}
+two_cat_int <- glm(cluster ~ H2_32b	+ob2 + 	H2_32b*ob2, clinical, family = binomial())
+tab_model(two_cat_int, p.style = "numeric_stars", transform = NULL, file = "results/regression_models_interactions_H2_32b_grandparents.doc")
+result <- allEffects(two_cat_int)
+
+pdf("results/figures/effects/probabilites_H2_32b_grandparents.pdf", width = 5, height = 4)
+plot_model(two_cat_int, type = "int")+theme_bw()  
+dev.off()
+
+pdf("results/figures/effects/probabilites_H2_32b_grandparents_v2.pdf", width = 5, height = 4)
+plot_model(two_cat_int, transform      = NULL, show.intercept = T, show.values    = TRUE, value.offset   = .3)+theme_bw()
+dev.off()
+
+
+pdf("results/figures/effects/probabilites_H2_32b_grandparents_v3.pdf", width = 5, height = 4)
+plot(allEffects(two_cat_int))
+dev.off()
+```
+
+## Example one categorical one numerical
+
+```{r}
+one_cat_one_num_int <- glm(cluster ~ H2_53a*Ethnic, clinical, family = binomial())
+one_cat_one_num <- glm(cluster ~  H2_53a + Ethnic, clinical, family = binomial())
+
+anova(one_cat_one_num, one_cat_one_num_int, test = "Chisq")
+
+tab_model(one_cat_one_num_int, p.style = "numeric_stars", transform = NULL,file = "results/regression_models_interactions_H2_53a_Ethnic.doc")
+
+pdf("results/figures/effects/All_effects_H2_53a*Ethnic.pdf", width = 5, height = 4)
+plot(allEffects(one_cat_one_num_int))
+dev.off()
+
+#pdf("results/figures/effects/Probabilities_ob6_status_smoking.pdf", width = 5, height = 4)
+#plot_model(one_cat_one_num_int, type = "int")+theme_blank()
+#dev.off()
+
+pdf("results/figures/effects/Probabilities_H2_53a*Ethnic_v2.pdf", width = 5, height = 4)
+plot_model(one_cat_one_num_int, 
+           transform      = NULL, 
+           show.intercept = T,
+           show.values    = TRUE, 
+           value.offset   = .3)
+dev.off()
+```
+
+```{r}
+one_cat_one_num_int <- glm(cluster ~ ob6*status_smoking, clinical, family = binomial())
+one_cat_one_num <- glm(cluster ~  ob6 + status_smoking, clinical, family = binomial())
+
+anova(one_cat_one_num, one_cat_one_num_int, test = "Chisq")
+
+tab_model(one_cat_one_num_int, p.style = "numeric_stars", transform = NULL,file = "results/regression_models_interactions_ob6_status_smoking.doc")
+
+pdf("results/figures/effects/All_effects_ob6_status_smoking_drug.pdf", width = 5, height = 4)
+plot(allEffects(one_cat_one_num_int))
+dev.off()
+
+#pdf("results/figures/effects/Probabilities_ob6_status_smoking.pdf", width = 5, height = 4)
+#plot_model(one_cat_one_num_int, type = "int")+theme_blank()
+#dev.off()
+
+pdf("results/figures/effects/Probabilities_ob6_status_smoking_v2.pdf", width = 5, height = 4)
+plot_model(one_cat_one_num_int, 
+           transform      = NULL, 
+           show.intercept = T,
+           show.values    = TRUE, 
+           value.offset   = .3)
+dev.off()
+```
+```{r}
+one_cat_one_num_int <- glm(cluster ~ ob6*H2_32b, clinical, family = binomial())
+one_cat_one_num <- glm(cluster ~  ob6 + H2_32b, clinical, family = binomial())
+
+anova(one_cat_one_num, one_cat_one_num_int, test = "Chisq")
+
+tab_model(one_cat_one_num_int, p.style = "numeric_stars", transform = NULL,file = "results/regression_models_interactions_ob6_H2_32b.doc")
+
+pdf("results/figures/effects/All_effects_ob6_H2_32b.pdf", width = 5, height = 4)
+plot(allEffects(one_cat_one_num_int))
+dev.off()
+
+#pdf("results/figures/effects/Probabilities_ob6_status_smoking.pdf", width = 5, height = 4)
+#plot_model(one_cat_one_num_int, type = "int")+theme_blank()
+#dev.off()
+
+pdf("results/figures/effects/Probabilities_ob6_H2_32b_v2.pdf", width = 5, height = 4)
+plot_model(one_cat_one_num_int, 
+           transform      = NULL, 
+           show.intercept = T,
+           show.values    = TRUE, 
+           value.offset   = .3)
+dev.off()
+```
+
+```{r}
+one_cat_one_num_int <- glm(cluster ~ VAT*H2_32b, clinical, family = binomial())
+one_cat_one_num <- glm(cluster ~  VAT + H2_32b, clinical, family = binomial())
+
+anova(one_cat_one_num, one_cat_one_num_int, test = "Chisq")
+
+tab_model(one_cat_one_num_int, p.style = "numeric_stars", transform = NULL,file = "results/regression_models_interactions_VAT_H2_32b.doc")
+
+pdf("results/figures/effects/All_effects_VAT_H2_32b.pdf", width = 5, height = 4)
+plot(allEffects(one_cat_one_num_int))
+dev.off()
+
+#pdf("results/figures/effects/Probabilities_ob6_status_smoking.pdf", width = 5, height = 4)
+#plot_model(one_cat_one_num_int, type = "int")+theme_blank()
+#dev.off()
+
+pdf("results/figures/effects/Probabilities_VAT_H2_32b_v2.pdf", width = 5, height = 4)
+plot_model(one_cat_one_num_int, 
+           transform      = NULL, 
+           show.intercept = T,
+           show.values    = TRUE, 
+           value.offset   = .3)
+dev.off()
+```
+

@@ -1,0 +1,774 @@
+feat1	feat2	R	p	Padj	name_int
+GENDER.x	AGE.x	-0.227811330515927	0.00399243555858741	0.0394576706761167	GENDER.x (interacts with) AGE.x
+Duration.of.therapy	AGE.x	0.310682066923814	7.09801460327952e-05	0.00152381881462028	Duration.of.therapy (interacts with) AGE.x
+Ethnic	AGE.x	0.268697365069543	0.00069478001220169	0.0101497587432199	Ethnic (interacts with) AGE.x
+hypertension	AGE.x	0.232380000243816	0.00330222483147491	0.0342490185935354	hypertension (interacts with) AGE.x
+VAT	AGE.x	0.230302203741149	0.0041843321149555	0.0408292879032492	VAT (interacts with) AGE.x
+1,5-anhydroglucitol (1,5-AG)	AGE.x	-0.236489839272717	0.00277536421400404	0.0299823610865759	1,5-anhydroglucitol (1,5-AG) (interacts with) AGE.x
+1-methyl-4-imidazoleacetate	AGE.x	0.300832968082586	0.000122662532864526	0.00242904404470835	1-methyl-4-imidazoleacetate (interacts with) AGE.x
+1-ribosyl-imidazoleacetate*	AGE.x	0.333826017789235	1.81570346449167e-05	0.000472991355723822	1-ribosyl-imidazoleacetate* (interacts with) AGE.x
+11-ketoetiocholanolone glucuronide	AGE.x	0.253577020206511	0.00130528197814539	0.0167362318489471	11-ketoetiocholanolone glucuronide (interacts with) AGE.x
+11beta-hydroxyandrosterone glucuronide	AGE.x	0.321714098609157	3.75764257785072e-05	0.000888340985639525	11beta-hydroxyandrosterone glucuronide (interacts with) AGE.x
+2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)*	AGE.x	0.295586830336543	0.000162871767457773	0.00308263893089232	2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)* (interacts with) AGE.x
+2-methylcitrate/homocitrate	AGE.x	0.223511310551158	0.00475781298849443	0.044867341501376	2-methylcitrate/homocitrate (interacts with) AGE.x
+2-methylmalonylcarnitine (C4-DC)	AGE.x	0.238435831999697	0.00255348693333124	0.0281105835698569	2-methylmalonylcarnitine (C4-DC) (interacts with) AGE.x
+2-oxindole-3-acetate	AGE.x	0.254633150444045	0.00124370098571536	0.0161249493922239	2-oxindole-3-acetate (interacts with) AGE.x
+3-carboxy-4-methyl-5-propyl-2-furanpropanoate (CMPF)	AGE.x	0.288531718254966	0.00023646095910923	0.00421195949121541	3-carboxy-4-methyl-5-propyl-2-furanpropanoate (CMPF) (interacts with) AGE.x
+3-hydroxy-3-methylglutarate	AGE.x	0.303366541952995	0.000106758161186882	0.00215746687462889	3-hydroxy-3-methylglutarate (interacts with) AGE.x
+3-hydroxyoleoylcarnitine	AGE.x	0.234847555128233	0.00297602480030257	0.0316104496951699	3-hydroxyoleoylcarnitine (interacts with) AGE.x
+3-methyladipate	AGE.x	0.283762432802386	0.000302587846285451	0.0051659324551363	3-methyladipate (interacts with) AGE.x
+3-methylglutarylcarnitine (2)	AGE.x	0.329364603153263	2.38206072733504e-05	0.000599610949813089	3-methylglutarylcarnitine (2) (interacts with) AGE.x
+4-acetamidobutanoate	AGE.x	0.287515175567674	0.000249312656731338	0.00439811802598502	4-acetamidobutanoate (interacts with) AGE.x
+4-hydroxychlorothalonil	AGE.x	-0.225657080896522	0.00436082333321908	0.0420635716633913	4-hydroxychlorothalonil (interacts with) AGE.x
+4-hydroxyhippurate	AGE.x	0.245725826338437	0.001857877979905	0.0219989923182028	4-hydroxyhippurate (interacts with) AGE.x
+4-hydroxyphenylacetylglutamine	AGE.x	0.360410566819434	3.29342021432311e-06	0.000103902412109601	4-hydroxyphenylacetylglutamine (interacts with) AGE.x
+5-(galactosylhydroxy)-L-lysine	AGE.x	0.265163879235654	0.00075970611886822	0.0109004927177808	5-(galactosylhydroxy)-L-lysine (interacts with) AGE.x
+5-hydroxymethyl-2-furoylcarnitine*	AGE.x	0.24029266442082	0.00235688316876326	0.0264331354796791	5-hydroxymethyl-2-furoylcarnitine* (interacts with) AGE.x
+5alpha-androstan-3alpha,17alpha-diol monosulfate	AGE.x	-0.251722207459657	0.00142021650026569	0.0178621884889858	5alpha-androstan-3alpha,17alpha-diol monosulfate (interacts with) AGE.x
+5alpha-androstan-3alpha,17beta-diol monosulfate (1)	AGE.x	-0.28707768286246	0.000255040907341186	0.00448403752840191	5alpha-androstan-3alpha,17beta-diol monosulfate (1) (interacts with) AGE.x
+5alpha-androstan-3beta,17beta-diol monosulfate (2)	AGE.x	-0.239771149491425	0.00241066711448168	0.0269031959645285	5alpha-androstan-3beta,17beta-diol monosulfate (2) (interacts with) AGE.x
+5alpha-pregnan-3beta,20alpha-diol disulfate	AGE.x	-0.263717024429354	0.000813911895851227	0.0115047808084858	5alpha-pregnan-3beta,20alpha-diol disulfate (interacts with) AGE.x
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)	AGE.x	-0.233112344024611	0.00320219869520688	0.0334567638058827	5alpha-pregnan-3beta,20alpha-diol monosulfate (2) (interacts with) AGE.x
+5alpha-pregnan-3beta,20beta-diol monosulfate (1)	AGE.x	-0.304458272150906	0.000100517615416962	0.00204899041631915	5alpha-pregnan-3beta,20beta-diol monosulfate (1) (interacts with) AGE.x
+5alpha-pregnan-diol disulfate	AGE.x	-0.378046347714772	9.72014145173006e-07	3.48571145235071e-05	5alpha-pregnan-diol disulfate (interacts with) AGE.x
+acesulfame	AGE.x	-0.231743959588571	0.00339137501685283	0.0349388713567784	acesulfame (interacts with) AGE.x
+androstenediol (3alpha, 17alpha) monosulfate (2)	AGE.x	-0.303170381784727	0.000107917123400192	0.00217707275807427	androstenediol (3alpha, 17alpha) monosulfate (2) (interacts with) AGE.x
+androstenediol (3alpha, 17alpha) monosulfate (3)	AGE.x	-0.268598621656552	0.000644050751471559	0.00955325297062839	androstenediol (3alpha, 17alpha) monosulfate (3) (interacts with) AGE.x
+androstenediol (3beta,17beta) disulfate (1)	AGE.x	-0.22511369090143	0.00445843903505461	0.0427987659217518	androstenediol (3beta,17beta) disulfate (1) (interacts with) AGE.x
+androstenediol (3beta,17beta) disulfate (2)	AGE.x	-0.308235227394743	8.1460218492424e-05	0.00171453927313096	androstenediol (3beta,17beta) disulfate (2) (interacts with) AGE.x
+androstenediol (3beta,17beta) monosulfate (1)	AGE.x	-0.397173025634714	2.38028438737103e-07	9.70160759873143e-06	androstenediol (3beta,17beta) monosulfate (1) (interacts with) AGE.x
+androstenediol (3beta,17beta) monosulfate (2)	AGE.x	-0.309999973539699	7.37670012194158e-05	0.00157433718721152	androstenediol (3beta,17beta) monosulfate (2) (interacts with) AGE.x
+androsterone sulfate	AGE.x	-0.27091751344717	0.000575388174256286	0.008729979097589	androsterone sulfate (interacts with) AGE.x
+arabitol/xylitol	AGE.x	0.342403240871418	1.06458056532421e-05	0.000294941703326305	arabitol/xylitol (interacts with) AGE.x
+benzoylcarnitine*	AGE.x	0.236274593609242	0.00280094761203076	0.0301971652451394	benzoylcarnitine* (interacts with) AGE.x
+branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (2)*	AGE.x	-0.278130018132522	0.000402624454659328	0.00652731775720769	branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (2)* (interacts with) AGE.x
+C-glycosyltryptophan	AGE.x	0.358035337702632	3.86059780210779e-06	0.000119876362277029	C-glycosyltryptophan (interacts with) AGE.x
+carotene diol (3)	AGE.x	-0.235149026286829	0.00293823549210259	0.031309633599296	carotene diol (3) (interacts with) AGE.x
+cysteine	AGE.x	-0.264242156358521	0.000793840058513906	0.0112851112416577	cysteine (interacts with) AGE.x
+cysteine s-sulfate	AGE.x	0.330189331615965	2.26617962604259e-05	0.000573868053823068	cysteine s-sulfate (interacts with) AGE.x
+cysteinylglycine disulfide*	AGE.x	0.245149528761059	0.0019058269966159	0.0224265447520561	cysteinylglycine disulfide* (interacts with) AGE.x
+cystine	AGE.x	0.307309203977365	8.57914853595876e-05	0.00179356952005985	cystine (interacts with) AGE.x
+cytosine	AGE.x	0.263068687448327	0.00083933593906238	0.0118007592941446	cytosine (interacts with) AGE.x
+dehydroepiandrosterone sulfate (DHEA-S)	AGE.x	-0.423055272686093	3.06363991953162e-08	1.47248893143574e-06	dehydroepiandrosterone sulfate (DHEA-S) (interacts with) AGE.x
+eicosanedioate (C20-DC)	AGE.x	-0.250061190083157	0.001530906599712	0.0189330470690795	eicosanedioate (C20-DC) (interacts with) AGE.x
+epiandrosterone sulfate	AGE.x	-0.261125228445707	0.000919981926054803	0.0127018479382858	epiandrosterone sulfate (interacts with) AGE.x
+erythritol	AGE.x	0.351397864859212	5.9782501953265e-06	0.00017698338169813	erythritol (interacts with) AGE.x
+erythronate*	AGE.x	0.233158428178125	0.00319599677233295	0.0334133366022254	erythronate* (interacts with) AGE.x
+ethyl glucuronide	AGE.x	0.258184277316171	0.00105561344295357	0.0141561969266385	ethyl glucuronide (interacts with) AGE.x
+gamma-glutamylphenylalanine	AGE.x	0.238105879771649	0.0025899379199803	0.0284169072915604	gamma-glutamylphenylalanine (interacts with) AGE.x
+gamma-glutamylvaline	AGE.x	0.223574360894657	0.0047457009212688	0.0447811274498459	gamma-glutamylvaline (interacts with) AGE.x
+gentisate	AGE.x	0.239965134438808	0.00239053279806112	0.0267348115894071	gentisate (interacts with) AGE.x
+GlcNAc sulfate conjugate of C21H34O2 steroid	AGE.x	-0.290241271921246	0.000216227044901762	0.00391089046110309	GlcNAc sulfate conjugate of C21H34O2 steroid (interacts with) AGE.x
+glucuronate	AGE.x	0.386067021727739	5.44667628110673e-07	2.05740993933591e-05	glucuronate (interacts with) AGE.x
+glucuronide of C10H18O2 (7)*	AGE.x	0.240509264439071	0.00233486675814265	0.0262402613481468	glucuronide of C10H18O2 (7)* (interacts with) AGE.x
+gulonate*	AGE.x	0.415904902226267	5.4926633241692e-08	2.52511155514834e-06	gulonate* (interacts with) AGE.x
+heptenedioate (C7:1-DC)*	AGE.x	0.29335123087525	0.000183487637568813	0.00340755429736943	heptenedioate (C7:1-DC)* (interacts with) AGE.x
+hydroxyasparagine	AGE.x	0.441306150531149	6.48307008077609e-09	3.48943859744441e-07	hydroxyasparagine (interacts with) AGE.x
+imidazole propionate	AGE.x	0.263099818175385	0.000838098688030753	0.0117867455227794	imidazole propionate (interacts with) AGE.x
+mannonate*	AGE.x	0.317259568591718	4.8724831136937e-05	0.00110907548895318	mannonate* (interacts with) AGE.x
+mannose	AGE.x	0.226803756487501	0.00416110286826088	0.040687782046445	mannose (interacts with) AGE.x
+methyl indole-3-acetate	AGE.x	0.2791122599658	0.000383226021068772	0.00626803968452546	methyl indole-3-acetate (interacts with) AGE.x
+methylsuccinoylcarnitine	AGE.x	0.311101435874258	6.9316003845632e-05	0.00149299787142575	methylsuccinoylcarnitine (interacts with) AGE.x
+myo-inositol	AGE.x	0.324205585892308	3.24360898722453e-05	0.00078229624710663	myo-inositol (interacts with) AGE.x
+N-acetylhistidine	AGE.x	0.247218718741658	0.001738727310715	0.0208929186976354	N-acetylhistidine (interacts with) AGE.x
+N-acetylneuraminate	AGE.x	0.229396887451804	0.00373943720089365	0.0376105072581313	N-acetylneuraminate (interacts with) AGE.x
+N-acetylphenylalanine	AGE.x	0.282962441329581	0.000315231721736531	0.00534224700449434	N-acetylphenylalanine (interacts with) AGE.x
+N-acetylputrescine	AGE.x	0.221959070634124	0.00506487304531755	0.0469909996458784	N-acetylputrescine (interacts with) AGE.x
+N-acetyltaurine	AGE.x	0.353330556952042	5.26883507001585e-06	0.000158276193066043	N-acetyltaurine (interacts with) AGE.x
+N-acetylvaline	AGE.x	0.24706246608702	0.00175086372164635	0.0210091321477249	N-acetylvaline (interacts with) AGE.x
+N1-methylinosine	AGE.x	0.235390487993308	0.002908281705154	0.0310774501172216	N1-methylinosine (interacts with) AGE.x
+N2,N2-dimethylguanosine	AGE.x	0.252931834055298	0.00134425999114773	0.0171244204025683	N2,N2-dimethylguanosine (interacts with) AGE.x
+N2,N5-diacetylornithine	AGE.x	0.299298419980638	0.000133343895919014	0.0026078955615453	N2,N5-diacetylornithine (interacts with) AGE.x
+O-sulfo-L-tyrosine	AGE.x	0.253789992926709	0.00129264407769369	0.0166099108056781	O-sulfo-L-tyrosine (interacts with) AGE.x
+p-cresol glucuronide*	AGE.x	0.301008133954994	0.000121495427539697	0.00240982732233234	p-cresol glucuronide* (interacts with) AGE.x
+p-cresol sulfate	AGE.x	0.323731055484684	3.33610427531994e-05	0.000801378401722939	p-cresol sulfate (interacts with) AGE.x
+pantoate	AGE.x	0.246058323515837	0.00183071548266223	0.0217449818181749	pantoate (interacts with) AGE.x
+perfluorooctanesulfonate (PFOS)	AGE.x	0.372513577235757	1.43654508533153e-06	4.95776241496024e-05	perfluorooctanesulfonate (PFOS) (interacts with) AGE.x
+perfluorooctanoate (PFOA)	AGE.x	0.310189696826734	7.29817244133901e-05	0.0015601957568684	perfluorooctanoate (PFOA) (interacts with) AGE.x
+phenylacetylglutamate	AGE.x	0.30742806931572	8.52237069985939e-05	0.00178388734649865	phenylacetylglutamate (interacts with) AGE.x
+phenylacetylglutamine	AGE.x	0.318209659515779	4.61140165946006e-05	0.00105781630963448	phenylacetylglutamine (interacts with) AGE.x
+picolinoylglycine	AGE.x	0.245101955835827	0.00190983500867148	0.0224650132571695	picolinoylglycine (interacts with) AGE.x
+pregnenediol sulfate (C21H34O5S)*	AGE.x	-0.292990156179653	0.000187036830854304	0.00346149691497934	pregnenediol sulfate (C21H34O5S)* (interacts with) AGE.x
+pregnenetriol sulfate*	AGE.x	-0.269274443075385	0.000623298419729412	0.00930918153714953	pregnenetriol sulfate* (interacts with) AGE.x
+quinolinate	AGE.x	0.231450675558391	0.00343320930988655	0.0352642199053932	quinolinate (interacts with) AGE.x
+serine	AGE.x	-0.23894576527618	0.00249806607099901	0.0276583981922678	serine (interacts with) AGE.x
+succinoyltaurine	AGE.x	0.251040597432736	0.001464723556859	0.018298099755831	succinoyltaurine (interacts with) AGE.x
+tartronate (hydroxymalonate)	AGE.x	-0.267992076725693	0.000663215797327865	0.00978385547071725	tartronate (hydroxymalonate) (interacts with) AGE.x
+tryptophan betaine	AGE.x	-0.264764491153266	0.000774327376205086	0.0110645249416238	tryptophan betaine (interacts with) AGE.x
+urea	AGE.x	0.247704234235244	0.00170150370339828	0.0205476553651133	urea (interacts with) AGE.x
+vanillactate	AGE.x	0.318054875563478	4.65302017385039e-05	0.00106655198679757	vanillactate (interacts with) AGE.x
+Ethnic	GENDER.x	-0.384838417905316	7.0360471737807e-07	2.60064429397779e-05	Ethnic (interacts with) GENDER.x
+Transm_mode	GENDER.x	-0.567655265782756	8.88178419700125e-15	1.03882164074789e-12	Transm_mode (interacts with) GENDER.x
+VAT	GENDER.x	-0.306255391941135	0.000118102008999976	0.00235359360211801	VAT (interacts with) GENDER.x
+SAT	GENDER.x	0.336095379365073	2.16263158017149e-05	0.000550348045502385	SAT (interacts with) GENDER.x
+(2,4 or 2,5)-dimethylphenol sulfate	GENDER.x	-0.278280063985549	0.000399603545169658	0.00648531558945233	(2,4 or 2,5)-dimethylphenol sulfate (interacts with) GENDER.x
+1-ribosyl-imidazoleacetate*	GENDER.x	-0.22974394385234	0.0036860227796689	0.0372156823343112	1-ribosyl-imidazoleacetate* (interacts with) GENDER.x
+11beta-hydroxyandrosterone glucuronide	GENDER.x	-0.266862161747519	0.000700324717076484	0.0102148296552694	11beta-hydroxyandrosterone glucuronide (interacts with) GENDER.x
+17alpha-hydroxypregnanolone glucuronide	GENDER.x	-0.269357598600539	0.000620787993755423	0.00928123385256434	17alpha-hydroxypregnanolone glucuronide (interacts with) GENDER.x
+2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)*	GENDER.x	-0.238490362083802	0.00254750774205137	0.0280597306510779	2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)* (interacts with) GENDER.x
+2-aminoadipate	GENDER.x	-0.230597042156032	0.00355763293485079	0.036213959885942	2-aminoadipate (interacts with) GENDER.x
+2-ethylphenylsulfate	GENDER.x	-0.266276007258565	0.000720319320070217	0.0104490325176015	2-ethylphenylsulfate (interacts with) GENDER.x
+2-hydroxyphenylacetate	GENDER.x	-0.244036278335262	0.00200165146616005	0.0233063863119988	2-hydroxyphenylacetate (interacts with) GENDER.x
+2R,3R-dihydroxybutyrate	GENDER.x	-0.265794959866506	0.000737119508358086	0.0106402766793193	2R,3R-dihydroxybutyrate (interacts with) GENDER.x
+2S,3R-dihydroxybutyrate	GENDER.x	-0.323177414054127	3.44715496511938e-05	0.000824568301122604	2S,3R-dihydroxybutyrate (interacts with) GENDER.x
+3,5-dichloro-2,6-dihydroxybenzoic acid	GENDER.x	-0.264728165571731	0.000775669978692939	0.0110808826029916	3,5-dichloro-2,6-dihydroxybenzoic acid (interacts with) GENDER.x
+3-(3-hydroxyphenyl)propionate	GENDER.x	-0.224218301699627	0.00462357234091826	0.0439492746858814	3-(3-hydroxyphenyl)propionate (interacts with) GENDER.x
+3-bromo-5-chloro-2,6-dihydroxybenzoic acid*	GENDER.x	-0.232730578823722	0.00325399512976632	0.0338625724003364	3-bromo-5-chloro-2,6-dihydroxybenzoic acid* (interacts with) GENDER.x
+3-methylcytidine	GENDER.x	-0.333430901168334	1.86020656527397e-05	0.000482500538892065	3-methylcytidine (interacts with) GENDER.x
+4-hydroxyglutamate	GENDER.x	-0.240851890989429	0.00230042096451966	0.0259282124080849	4-hydroxyglutamate (interacts with) GENDER.x
+4-methylguaiacol sulfate	GENDER.x	-0.253850663652919	0.00128906437360787	0.0165704303375877	4-methylguaiacol sulfate (interacts with) GENDER.x
+5alpha-androstan-3alpha,17beta-diol 17-glucuronide	GENDER.x	-0.344890093978688	9.09203028287564e-06	0.000256902711391388	5alpha-androstan-3alpha,17beta-diol 17-glucuronide (interacts with) GENDER.x
+5alpha-androstan-3alpha,17beta-diol disulfate	GENDER.x	-0.398118909153284	2.21512682418989e-07	9.09083132842166e-06	5alpha-androstan-3alpha,17beta-diol disulfate (interacts with) GENDER.x
+5alpha-androstan-3alpha,17beta-diol monosulfate (2)	GENDER.x	-0.471844341326028	3.89419385626866e-10	2.50941877700805e-08	5alpha-androstan-3alpha,17beta-diol monosulfate (2) (interacts with) GENDER.x
+5alpha-androstan-3beta,17alpha-diol disulfate	GENDER.x	-0.297492470457981	0.000147024419700159	0.00283194285234875	5alpha-androstan-3beta,17alpha-diol disulfate (interacts with) GENDER.x
+5alpha-androstan-3beta,17beta-diol disulfate	GENDER.x	-0.367547366914748	2.02742918675725e-06	6.72640852124684e-05	5alpha-androstan-3beta,17beta-diol disulfate (interacts with) GENDER.x
+5alpha-androstan-3beta,17beta-diol monosulfate (2)	GENDER.x	-0.266065836037143	0.000727615566011863	0.0105348942130752	5alpha-androstan-3beta,17beta-diol monosulfate (2) (interacts with) GENDER.x
+alpha-ketoglutaramate*	GENDER.x	-0.297153018231427	0.000149737685756879	0.00287431986457313	alpha-ketoglutaramate* (interacts with) GENDER.x
+androstenediol (3alpha, 17alpha) monosulfate (3)	GENDER.x	-0.345575848691542	8.70289931098611e-06	0.000247335830632116	androstenediol (3alpha, 17alpha) monosulfate (3) (interacts with) GENDER.x
+androstenediol (3beta,17beta) disulfate (1)	GENDER.x	-0.254062244315819	0.00127665144271072	0.0164469975048983	androstenediol (3beta,17beta) disulfate (1) (interacts with) GENDER.x
+androsterone glucuronide	GENDER.x	-0.399342419388531	2.01770542496149e-07	8.35407609010907e-06	androsterone glucuronide (interacts with) GENDER.x
+arachidonoylcarnitine (C20:4)	GENDER.x	-0.227184468353532	0.0040966336377557	0.0402231329801665	arachidonoylcarnitine (C20:4) (interacts with) GENDER.x
+beta-citrylglutamate	GENDER.x	-0.236144215071546	0.0028165475124069	0.0303269864019571	beta-citrylglutamate (interacts with) GENDER.x
+beta-cryptoxanthin	GENDER.x	0.264301729754896	0.000791591983193785	0.0112611492357151	beta-cryptoxanthin (interacts with) GENDER.x
+branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (1)*	GENDER.x	0.254062824052691	0.00127661758156994	0.0164469975048983	branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (1)* (interacts with) GENDER.x
+caprate (10:0)	GENDER.x	0.227183949950207	0.00409672080966939	0.0402231329801665	caprate (10:0) (interacts with) GENDER.x
+carotene diol (1)	GENDER.x	0.234010134361856	0.00308331036923315	0.0324978111188796	carotene diol (1) (interacts with) GENDER.x
+carotene diol (2)	GENDER.x	0.281793639581189	0.000334587274944731	0.00561307633093387	carotene diol (2) (interacts with) GENDER.x
+carotene diol (3)	GENDER.x	0.251075786364164	0.00146239502275458	0.018274251158794	carotene diol (3) (interacts with) GENDER.x
+cotinine	GENDER.x	-0.235353119033285	0.0029128992693308	0.0311140719605206	cotinine (interacts with) GENDER.x
+creatine	GENDER.x	0.344509518607068	9.31503300627412e-06	0.000262430772866397	creatine (interacts with) GENDER.x
+creatinine	GENDER.x	-0.310591626972151	7.13439026904794e-05	0.00153028728972046	creatinine (interacts with) GENDER.x
+cys-gly, oxidized	GENDER.x	-0.223984687109116	0.00466754957619964	0.0442535081134143	cys-gly, oxidized (interacts with) GENDER.x
+cystathionine	GENDER.x	-0.283073550131899	0.00031344682723855	0.00531935628773939	cystathionine (interacts with) GENDER.x
+cysteinylglycine disulfide*	GENDER.x	-0.324244252806652	3.23617933428721e-05	0.000780771579412496	cysteinylglycine disulfide* (interacts with) GENDER.x
+dimethyl sulfone	GENDER.x	-0.234865193850306	0.00297380175526607	0.0315915973325384	dimethyl sulfone (interacts with) GENDER.x
+docosapentaenoylcarnitine (C22:5n3)*	GENDER.x	-0.306697014973389	8.87721822149246e-05	0.00184534329334671	docosapentaenoylcarnitine (C22:5n3)* (interacts with) GENDER.x
+epiandrosterone sulfate	GENDER.x	-0.309525270277929	7.57666383659483e-05	0.00161104988997099	epiandrosterone sulfate (interacts with) GENDER.x
+ethylmalonate	GENDER.x	-0.225691408772248	0.00435472152931426	0.0420212567312079	ethylmalonate (interacts with) GENDER.x
+gamma-glutamylglutamate	GENDER.x	-0.269420965997288	0.000618881220474377	0.00925731549525527	gamma-glutamylglutamate (interacts with) GENDER.x
+gamma-glutamylleucine	GENDER.x	-0.224197664799266	0.00462744215761757	0.0439774702499319	gamma-glutamylleucine (interacts with) GENDER.x
+glutarylcarnitine (C5-DC)	GENDER.x	-0.299072432015767	0.000134988314081763	0.00263479404180606	glutarylcarnitine (C5-DC) (interacts with) GENDER.x
+glycerol	GENDER.x	0.36370819147062	2.63584258308747e-06	8.51087129160921e-05	glycerol (interacts with) GENDER.x
+guaiacol sulfate	GENDER.x	-0.225904040373023	0.00431709659783008	0.0417537663427343	guaiacol sulfate (interacts with) GENDER.x
+guanidinoacetate	GENDER.x	-0.269208262030195	0.000625303075163508	0.00933260061511878	guanidinoacetate (interacts with) GENDER.x
+hydroxy-N6,N6,N6-trimethyllysine*	GENDER.x	-0.368187601754075	1.9399727424485e-06	6.47075151944158e-05	hydroxy-N6,N6,N6-trimethyllysine* (interacts with) GENDER.x
+hypotaurine	GENDER.x	-0.235505332639289	0.00289413209773404	0.0309591588352776	hypotaurine (interacts with) GENDER.x
+isoeugenol sulfate	GENDER.x	-0.229187645628229	0.00377197667578955	0.0378547854290062	isoeugenol sulfate (interacts with) GENDER.x
+laurate (12:0)	GENDER.x	0.292886197687338	0.000188070480059421	0.00347767172524933	laurate (12:0) (interacts with) GENDER.x
+linolenoylcarnitine (C18:3)*	GENDER.x	-0.273900857851815	0.000496975264388189	0.00775330852881745	linolenoylcarnitine (C18:3)* (interacts with) GENDER.x
+malonylcarnitine	GENDER.x	-0.221829529166392	0.00509128360935285	0.0471668284434323	malonylcarnitine (interacts with) GENDER.x
+methylmalonate (MMA)	GENDER.x	-0.320617592952708	4.00733052980939e-05	0.000938802483539505	methylmalonate (MMA) (interacts with) GENDER.x
+methylsuccinoylcarnitine	GENDER.x	-0.226331365507897	0.00424236342017714	0.0412353056929935	methylsuccinoylcarnitine (interacts with) GENDER.x
+N,N,N-trimethyl-alanylproline betaine (TMAP)	GENDER.x	-0.343656767043564	9.83364539663967e-06	0.000275006741348684	N,N,N-trimethyl-alanylproline betaine (TMAP) (interacts with) GENDER.x
+N,N-dimethylalanine	GENDER.x	0.219931463581354	0.00549264555113038	0.0498457676395066	N,N-dimethylalanine (interacts with) GENDER.x
+N-acetyl-aspartyl-glutamate (NAAG)	GENDER.x	-0.254647174991566	0.001242901421038	0.0161175943777399	N-acetyl-aspartyl-glutamate (NAAG) (interacts with) GENDER.x
+N-acetyl-beta-alanine	GENDER.x	-0.231450843346087	0.00343318524409586	0.0352642199053932	N-acetyl-beta-alanine (interacts with) GENDER.x
+N-acetylcarnosine	GENDER.x	-0.375653746633213	1.15191156990768e-06	4.06416834698539e-05	N-acetylcarnosine (interacts with) GENDER.x
+N-acetylneuraminate	GENDER.x	-0.245743012653463	0.00185646505129156	0.0219849179228541	N-acetylneuraminate (interacts with) GENDER.x
+N-acetylthreonine	GENDER.x	-0.228037396451394	0.00395544717304475	0.0391968488368858	N-acetylthreonine (interacts with) GENDER.x
+N-methylpipecolate	GENDER.x	-0.306543007022187	8.95371400311262e-05	0.00185898979826421	N-methylpipecolate (interacts with) GENDER.x
+N1-methylinosine	GENDER.x	-0.251293309879258	0.00144807581566386	0.0181352010144854	N1-methylinosine (interacts with) GENDER.x
+N6,N6,N6-trimethyllysine	GENDER.x	-0.389306421955356	4.29169511484417e-07	1.65584127281687e-05	N6,N6,N6-trimethyllysine (interacts with) GENDER.x
+N6,N6-dimethyllysine	GENDER.x	-0.292032923986865	0.000196757639698841	0.00361458274534169	N6,N6-dimethyllysine (interacts with) GENDER.x
+N6-methyllysine	GENDER.x	-0.260248478644248	0.000958640916108422	0.0131265034605705	N6-methyllysine (interacts with) GENDER.x
+o-cresol sulfate	GENDER.x	-0.301419622490724	0.000118794398713984	0.00236498757929282	o-cresol sulfate (interacts with) GENDER.x
+orotidine	GENDER.x	-0.338962719690966	1.32132868717605e-05	0.000357312804724062	orotidine (interacts with) GENDER.x
+perfluorooctanesulfonate (PFOS)	GENDER.x	-0.267714827152861	0.000672149770379882	0.00988885972405973	perfluorooctanesulfonate (PFOS) (interacts with) GENDER.x
+perfluorooctanoate (PFOA)	GENDER.x	-0.265581641279133	0.000744684212510727	0.0107226266919152	perfluorooctanoate (PFOA) (interacts with) GENDER.x
+phenol sulfate	GENDER.x	0.281367002730953	0.000341922665847871	0.00571186701238466	phenol sulfate (interacts with) GENDER.x
+pregnen-diol disulfate*	GENDER.x	-0.295872655638993	0.000160397474341156	0.0030440928905765	pregnen-diol disulfate* (interacts with) GENDER.x
+pregnenediol sulfate (C21H34O5S)*	GENDER.x	-0.272834058203112	0.000523804566134878	0.00809137713029461	pregnenediol sulfate (C21H34O5S)* (interacts with) GENDER.x
+pregnenetriol disulfate*	GENDER.x	-0.235716680464769	0.00286825520731249	0.0307469460747678	pregnenetriol disulfate* (interacts with) GENDER.x
+pregnenetriol sulfate*	GENDER.x	-0.307818253312816	8.33845522403287e-05	0.00175024969801251	pregnenetriol sulfate* (interacts with) GENDER.x
+propyl 4-hydroxybenzoate sulfate	GENDER.x	0.356336161359297	4.32196761912529e-06	0.0001326268292878	propyl 4-hydroxybenzoate sulfate (interacts with) GENDER.x
+pyroglutamine*	GENDER.x	-0.462261027231217	9.69894387026216e-10	5.90909097306587e-08	pyroglutamine* (interacts with) GENDER.x
+testosterone sulfate	GENDER.x	-0.339663726802724	1.26468568457661e-05	0.000343653879051367	testosterone sulfate (interacts with) GENDER.x
+hydroxyproline	GENDER.x	-0.234437127522705	0.003028177642596	0.0320312467438131	hydroxyproline (interacts with) GENDER.x
+urate	GENDER.x	-0.21993112901283	0.00549271872313684	0.0498457676395066	urate (interacts with) GENDER.x
+METS	BMI.x	0.390658271731764	3.88246036875373e-07	1.51098989786071e-05	METS (interacts with) BMI.x
+diabetes	BMI.x	0.26965580569266	0.0006118616777262	0.00917086081498604	diabetes (interacts with) BMI.x
+VAT	BMI.x	0.527727678606698	2.39475106411646e-12	2.08082743559409e-10	VAT (interacts with) BMI.x
+SAT	BMI.x	0.634721332734798	0	0	SAT (interacts with) BMI.x
+1-stearoyl-GPG (18:0)	BMI.x	0.309680806176579	7.51059355601491e-05	0.00159925631947443	1-stearoyl-GPG (18:0) (interacts with) BMI.x
+2-hydroxybutyrate/2-hydroxyisobutyrate	BMI.x	0.285544107048532	0.000276099897741133	0.00478646001366812	2-hydroxybutyrate/2-hydroxyisobutyrate (interacts with) BMI.x
+4-hydroxyglutamate	BMI.x	0.24226503770617	0.00216316910017733	0.0247397005610217	4-hydroxyglutamate (interacts with) BMI.x
+alpha-ketoglutarate	BMI.x	0.2271722119742	0.00409869505082705	0.040237021503453	alpha-ketoglutarate (interacts with) BMI.x
+arachidonoylcarnitine (C20:4)	BMI.x	0.233364878682996	0.00316834588833359	0.0331888612648315	arachidonoylcarnitine (C20:4) (interacts with) BMI.x
+branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (2)*	BMI.x	0.222150080151578	0.00502615427919295	0.0467244139514711	branched-chain, straight-chain, or cyclopropyl 10:1 fatty acid (2)* (interacts with) BMI.x
+butyrylcarnitine (C4)	BMI.x	0.312152976932996	6.53026101287146e-05	0.00141965643832721	butyrylcarnitine (C4) (interacts with) BMI.x
+carboxyibuprofen	BMI.x	0.321713756297055	3.75771819265402e-05	0.000888340985639525	carboxyibuprofen (interacts with) BMI.x
+carboxyibuprofen glucuronide*	BMI.x	0.241333835270373	0.00225274895666083	0.0255135091638443	carboxyibuprofen glucuronide* (interacts with) BMI.x
+cysteine-glutathione disulfide	BMI.x	-0.248929292535983	0.00161078483773025	0.0196923205583791	cysteine-glutathione disulfide (interacts with) BMI.x
+cystine	BMI.x	0.260500028948342	0.000947399475251576	0.012998908324729	cystine (interacts with) BMI.x
+deoxycholic acid 12-sulfate*	BMI.x	0.294451743694187	0.000173053127664247	0.00324327156461355	deoxycholic acid 12-sulfate* (interacts with) BMI.x
+deoxycholic acid glucuronide	BMI.x	0.223978349144017	0.00466874788688343	0.0442595177313161	deoxycholic acid glucuronide (interacts with) BMI.x
+dodecanedioate (C12)	BMI.x	-0.221237195874818	0.00521362419943205	0.0479771150187761	dodecanedioate (C12) (interacts with) BMI.x
+etiocholanolone glucuronide	BMI.x	-0.367672768135444	2.01000925237338e-06	6.67765577002577e-05	etiocholanolone glucuronide (interacts with) BMI.x
+gamma-glutamylglutamate	BMI.x	0.240105708990565	0.00237603751963045	0.0266000182091284	gamma-glutamylglutamate (interacts with) BMI.x
+gamma-glutamylglutamine	BMI.x	-0.251410350763805	0.00144042427698143	0.0180630328513115	gamma-glutamylglutamine (interacts with) BMI.x
+gamma-glutamylglycine	BMI.x	-0.241281180885164	0.00225791334594616	0.0255608021777036	gamma-glutamylglycine (interacts with) BMI.x
+glutamate	BMI.x	0.355455398253336	4.58124612734423e-06	0.00013964323495286	glutamate (interacts with) BMI.x
+hexadecenedioate (C16:1-DC)*	BMI.x	-0.249218948271595	0.00158998990588977	0.0194928019191907	hexadecenedioate (C16:1-DC)* (interacts with) BMI.x
+hypotaurine	BMI.x	-0.278910055046667	0.000387147239993668	0.00631715307284462	hypotaurine (interacts with) BMI.x
+indoleacetoylcarnitine*	BMI.x	0.227283620576454	0.00407999135319814	0.0401022362419074	indoleacetoylcarnitine* (interacts with) BMI.x
+leucine	BMI.x	0.235591867994921	0.00288351152207778	0.0308703493365723	leucine (interacts with) BMI.x
+lithocholate sulfate (1)	BMI.x	0.242656883083583	0.00212645073767037	0.0244202053679335	lithocholate sulfate (1) (interacts with) BMI.x
+metabolonic lactone sulfate	BMI.x	0.265651513174373	0.000742198587734055	0.0106935130247657	metabolonic lactone sulfate (interacts with) BMI.x
+N-formylanthranilic acid	BMI.x	-0.278373040224746	0.000397742169723658	0.00646125842656292	N-formylanthranilic acid (interacts with) BMI.x
+N-stearoyltaurine	BMI.x	0.231346615640255	0.00344816395159464	0.0353761991305497	N-stearoyltaurine (interacts with) BMI.x
+octadecenedioate (C18:1-DC)	BMI.x	-0.238384597466046	0.00255911634754158	0.028158323970776	octadecenedioate (C18:1-DC) (interacts with) BMI.x
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)	BMI.x	-0.237432593562056	0.00266578363881553	0.0290668726484744	palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0) (interacts with) BMI.x
+propionylglycine (C3)	BMI.x	-0.258146575667434	0.00105746534351026	0.0141752131951731	propionylglycine (C3) (interacts with) BMI.x
+urate	BMI.x	0.305444135395087	9.51768521089136e-05	0.00195834839927868	urate (interacts with) BMI.x
+valine	BMI.x	0.219844086980598	0.00551178492855509	0.0499748338712953	valine (interacts with) BMI.x
+CD4_nadir	Duration.of.therapy	-0.481023083262876	1.5819257015437e-10	1.07792019366315e-08	CD4_nadir (interacts with) Duration.of.therapy
+CD4_ART	Duration.of.therapy	-0.432921761739503	3.89830354663445e-08	1.84209334509463e-06	CD4_ART (interacts with) Duration.of.therapy
+diabetes	Duration.of.therapy	0.232100293084388	0.00334116606513923	0.0345596092642494	diabetes (interacts with) Duration.of.therapy
+VAT	Duration.of.therapy	0.259599598495324	0.00119330261371164	0.0156013562414877	VAT (interacts with) Duration.of.therapy
+(S)-3-hydroxybutyrylcarnitine	Duration.of.therapy	0.231011660531032	0.00349670049600337	0.0357440596448676	(S)-3-hydroxybutyrylcarnitine (interacts with) Duration.of.therapy
+21-hydroxypregnenolone disulfate	Duration.of.therapy	-0.268914037518599	0.000634287387859089	0.00943950323687821	21-hydroxypregnenolone disulfate (interacts with) Duration.of.therapy
+3,7-dimethylurate	Duration.of.therapy	-0.234668315863547	0.0029987000014986	0.031788052446667	3,7-dimethylurate (interacts with) Duration.of.therapy
+3-hydroxymyristate	Duration.of.therapy	0.233523357287771	0.00314726681102773	0.0330227591345873	3-hydroxymyristate (interacts with) Duration.of.therapy
+3-hydroxystearate	Duration.of.therapy	0.221606414306662	0.00513706080094178	0.0474742497746889	3-hydroxystearate (interacts with) Duration.of.therapy
+5alpha-pregnan-3beta,20beta-diol monosulfate (1)	Duration.of.therapy	-0.280150785657437	0.000363659485738577	0.00600791337753429	5alpha-pregnan-3beta,20beta-diol monosulfate (1) (interacts with) Duration.of.therapy
+7-methylxanthine	Duration.of.therapy	-0.224598319117964	0.00455282862333473	0.0434664585477718	7-methylxanthine (interacts with) Duration.of.therapy
+androstenediol (3alpha, 17alpha) monosulfate (2)	Duration.of.therapy	-0.289956034768705	0.000219487112990358	0.00395598478802908	androstenediol (3alpha, 17alpha) monosulfate (2) (interacts with) Duration.of.therapy
+androstenediol (3alpha, 17alpha) monosulfate (3)	Duration.of.therapy	-0.260097123421602	0.000965463594926552	0.0132024031664367	androstenediol (3alpha, 17alpha) monosulfate (3) (interacts with) Duration.of.therapy
+androsterone sulfate	Duration.of.therapy	-0.249112245598867	0.00159762164885646	0.019566785176943	androsterone sulfate (interacts with) Duration.of.therapy
+arachidoylcarnitine (C20)*	Duration.of.therapy	0.237420903106944	0.00266711814312526	0.0290725295233599	arachidoylcarnitine (C20)* (interacts with) Duration.of.therapy
+betaine	Duration.of.therapy	-0.236526157808773	0.00277106841243135	0.0299497586486729	betaine (interacts with) Duration.of.therapy
+cobicistat	Duration.of.therapy	-0.221439485213645	0.00517155072368825	0.0477007875749711	cobicistat (interacts with) Duration.of.therapy
+cortolone glucuronide (1)	Duration.of.therapy	0.248674784939084	0.00162926070536074	0.0198698649117738	cortolone glucuronide (1) (interacts with) Duration.of.therapy
+dehydroepiandrosterone sulfate (DHEA-S)	Duration.of.therapy	-0.256329701792171	0.00115031865658244	0.0151484961966046	dehydroepiandrosterone sulfate (DHEA-S) (interacts with) Duration.of.therapy
+emtricitabine	Duration.of.therapy	-0.222740004859765	0.00490824071414098	0.0459126383064782	emtricitabine (interacts with) Duration.of.therapy
+epiandrosterone sulfate	Duration.of.therapy	-0.24915130209681	0.00159482432737823	0.0195386288560238	epiandrosterone sulfate (interacts with) Duration.of.therapy
+ethylmalonate	Duration.of.therapy	0.269227669517578	0.000624714598401521	0.00932606931867762	ethylmalonate (interacts with) Duration.of.therapy
+gamma-glutamyltyrosine	Duration.of.therapy	0.245441593827762	0.00188138775528279	0.0222044482326998	gamma-glutamyltyrosine (interacts with) Duration.of.therapy
+GlcNAc sulfate conjugate of C21H34O2 steroid	Duration.of.therapy	-0.257393201896385	0.0010951006298856	0.014578027477795	GlcNAc sulfate conjugate of C21H34O2 steroid (interacts with) Duration.of.therapy
+glutamate	Duration.of.therapy	0.280911538788226	0.000349917930962285	0.00582355141871319	glutamate (interacts with) Duration.of.therapy
+gulonate*	Duration.of.therapy	0.271009808088162	0.000572800432017129	0.00869968363281534	gulonate* (interacts with) Duration.of.therapy
+myristoylcarnitine (C14)	Duration.of.therapy	0.230833329643664	0.00352279184776716	0.0359526516280791	myristoylcarnitine (C14) (interacts with) Duration.of.therapy
+N,N,N-trimethyl-5-aminovalerate	Duration.of.therapy	0.294706271233718	0.000170719840478117	0.00320567199669368	N,N,N-trimethyl-5-aminovalerate (interacts with) Duration.of.therapy
+nisinate (24:6n3)	Duration.of.therapy	0.298218467951024	0.000141374619247792	0.00273926774735368	nisinate (24:6n3) (interacts with) Duration.of.therapy
+palmitoleoylcarnitine (C16:1)*	Duration.of.therapy	0.230182673196289	0.00361948280832869	0.0366835326488041	palmitoleoylcarnitine (C16:1)* (interacts with) Duration.of.therapy
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)	Duration.of.therapy	-0.330969681647504	2.16144346372182e-05	0.000550139200089054	palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0) (interacts with) Duration.of.therapy
+pimeloylcarnitine/3-methyladipoylcarnitine (C7-DC)	Duration.of.therapy	-0.226926054175566	0.00414029445140529	0.0405469203046686	pimeloylcarnitine/3-methyladipoylcarnitine (C7-DC) (interacts with) Duration.of.therapy
+pregnenediol sulfate (C21H34O5S)*	Duration.of.therapy	-0.24350835518996	0.00204860631427972	0.023734109081924	pregnenediol sulfate (C21H34O5S)* (interacts with) Duration.of.therapy
+raltegravir	Duration.of.therapy	0.268476133709019	0.000647879409334973	0.00959978979087717	raltegravir (interacts with) Duration.of.therapy
+hypertension	METS	0.303598630239399	0.000105401949931139	0.00213390914930817	hypertension (interacts with) METS
+diabetes	METS	0.236862610185517	0.00273155743011122	0.0296086435711761	diabetes (interacts with) METS
+VAT	METS	0.539862253067551	5.96633853433559e-13	5.60805783122002e-11	VAT (interacts with) METS
+SAT	METS	0.256907918384892	0.00134736242971156	0.0171501376608693	SAT (interacts with) METS
+1-carboxyethylisoleucine	METS	0.254440846599102	0.0012547121210309	0.0162283468984734	1-carboxyethylisoleucine (interacts with) METS
+1-carboxyethylleucine	METS	0.284563083617308	0.000290405828039519	0.0049907717573479	1-carboxyethylleucine (interacts with) METS
+1-carboxyethyltyrosine	METS	0.245245542912889	0.00189776110960471	0.0223517580033621	1-carboxyethyltyrosine (interacts with) METS
+1-carboxyethylvaline	METS	0.258050132899793	0.00106221615534019	0.0142252785772703	1-carboxyethylvaline (interacts with) METS
+1-oleoyl-GPG (18:1)*	METS	0.25599133053354	0.00116841452079464	0.0153404245712166	1-oleoyl-GPG (18:1)* (interacts with) METS
+1-palmitoyl-GPG (16:0)*	METS	0.254174050984066	0.00127013623294348	0.0163813645810313	1-palmitoyl-GPG (16:0)* (interacts with) METS
+1-stearoyl-GPG (18:0)	METS	0.271687736009396	0.000554119234258854	0.00846625518896674	1-stearoyl-GPG (18:0) (interacts with) METS
+2-aminoadipate	METS	0.364934525755068	2.42478364853582e-06	7.89899213759381e-05	2-aminoadipate (interacts with) METS
+2-aminooctanoate	METS	-0.272486296712514	0.000532835406788612	0.00820290259795704	2-aminooctanoate (interacts with) METS
+2-hydroxybutyrate/2-hydroxyisobutyrate	METS	0.222514281013836	0.00495306228768277	0.0462183250999142	2-hydroxybutyrate/2-hydroxyisobutyrate (interacts with) METS
+3-methyladipate	METS	-0.352522918918175	5.55499018872752e-06	0.000165906190939376	3-methyladipate (interacts with) METS
+3-phenylpropionate (hydrocinnamate)	METS	-0.223375353724639	0.00478402483767093	0.0450462638922929	3-phenylpropionate (hydrocinnamate) (interacts with) METS
+4-cholesten-3-one	METS	0.264991099030504	0.000766000014200685	0.0109679194904284	4-cholesten-3-one (interacts with) METS
+4-hydroxyglutamate	METS	0.467962658559344	5.65479219005738e-10	3.56542013909387e-08	4-hydroxyglutamate (interacts with) METS
+4-methyl-2-oxopentanoate	METS	0.237506247027426	0.00265738974027285	0.0289975086096499	4-methyl-2-oxopentanoate (interacts with) METS
+5-hydroxylysine	METS	0.296639437633541	0.000153931647460581	0.00294085883640482	5-hydroxylysine (interacts with) METS
+5-methylthioadenosine (MTA)	METS	0.308438854994121	8.05356589310691e-05	0.00169891023357021	5-methylthioadenosine (MTA) (interacts with) METS
+5-methyluridine (ribothymidine)	METS	-0.228067074147318	0.00395061433064825	0.0391601571894165	5-methyluridine (ribothymidine) (interacts with) METS
+5alpha-androstan-3alpha,17alpha-diol monosulfate	METS	-0.222489090986273	0.00495808689449606	0.0462531014431034	5alpha-androstan-3alpha,17alpha-diol monosulfate (interacts with) METS
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)	METS	-0.263047938510317	0.000840161510676118	0.0118098254184183	5alpha-pregnan-3beta,20alpha-diol monosulfate (2) (interacts with) METS
+7-HOCA	METS	0.22251461951196	0.00495299479917177	0.0462183250999142	7-HOCA (interacts with) METS
+abacavir	METS	-0.241475260095917	0.00223893089336724	0.0253869612892558	abacavir (interacts with) METS
+alanine	METS	0.255412913226455	0.00119995220234292	0.0156705259913111	alanine (interacts with) METS
+alpha-ketobutyrate	METS	0.251942245814168	0.00140611449932138	0.0177265021905276	alpha-ketobutyrate (interacts with) METS
+alpha-ketoglutarate	METS	0.383535220487353	6.55023465467863e-07	2.43369896424443e-05	alpha-ketoglutarate (interacts with) METS
+aspartate	METS	0.353413468726666	5.24026290893431e-06	0.000157550674404634	aspartate (interacts with) METS
+beta-citrylglutamate	METS	0.330510616351171	2.22249139949504e-05	0.000564153072610055	beta-citrylglutamate (interacts with) METS
+beta-cryptoxanthin	METS	-0.309132911823541	7.74576052469111e-05	0.00164299553697275	beta-cryptoxanthin (interacts with) METS
+butyrylcarnitine (C4)	METS	0.346057261586396	8.43919603488175e-06	0.000240608837398261	butyrylcarnitine (C4) (interacts with) METS
+carboxyethyl-GABA	METS	-0.241546842621095	0.00223196620390675	0.0253318601198531	carboxyethyl-GABA (interacts with) METS
+carotene diol (1)	METS	-0.283868811399435	0.000300942419615424	0.00514209537753262	carotene diol (1) (interacts with) METS
+carotene diol (2)	METS	-0.413518744437054	6.6541031351619e-08	3.0131220795214e-06	carotene diol (2) (interacts with) METS
+carotene diol (3)	METS	-0.260826358105815	0.000932996463555824	0.0128439925041768	carotene diol (3) (interacts with) METS
+phosphocholine	METS	0.248055722158112	0.00167501031527983	0.0202877649455941	phosphocholine (interacts with) METS
+cinnamoylglycine	METS	-0.230428269521551	0.00358270855215959	0.0363926737485704	cinnamoylglycine (interacts with) METS
+cortolone glucuronide (1)	METS	0.256941988052346	0.00111822469541423	0.0148139266916008	cortolone glucuronide (1) (interacts with) METS
+creatine	METS	0.31052102548238	7.16290804165798e-05	0.00153548011725963	creatine (interacts with) METS
+cystathionine	METS	0.307744564087596	8.37290202024832e-05	0.00175672768690164	cystathionine (interacts with) METS
+cystine	METS	0.280260360891874	0.000361649883537929	0.00598000513668054	cystine (interacts with) METS
+deoxycholic acid 12-sulfate*	METS	0.244501205234883	0.00196111200248139	0.0229325571601646	deoxycholic acid 12-sulfate* (interacts with) METS
+deoxycholic acid glucuronide	METS	0.219831714497946	0.00551449986715258	0.0499902010825187	deoxycholic acid glucuronide (interacts with) METS
+dimethylglycine	METS	0.258882803550096	0.00102183505191866	0.0138033110846524	dimethylglycine (interacts with) METS
+etiocholanolone glucuronide	METS	-0.273331014247237	0.000511144359376825	0.00793171349564321	etiocholanolone glucuronide (interacts with) METS
+formiminoglutamate	METS	0.362852634427143	2.79330593544458e-06	8.96246805719661e-05	formiminoglutamate (interacts with) METS
+fructosyllysine	METS	0.228899594130889	0.00381718884006599	0.0381838679436224	fructosyllysine (interacts with) METS
+gamma-glutamylglutamate	METS	0.440170171612522	7.16032899639174e-09	3.83239380753907e-07	gamma-glutamylglutamate (interacts with) METS
+gamma-glutamylisoleucine*	METS	0.331897470932053	2.04285656013603e-05	0.000523777413492258	gamma-glutamylisoleucine* (interacts with) METS
+gamma-glutamylleucine	METS	0.281370424630382	0.000341863243221496	0.0057111176962126	gamma-glutamylleucine (interacts with) METS
+gamma-glutamylphenylalanine	METS	0.260548735585213	0.000945236866155552	0.0129755934554231	gamma-glutamylphenylalanine (interacts with) METS
+gamma-glutamylvaline	METS	0.31565680592476	5.34460940975201e-05	0.00119885549925712	gamma-glutamylvaline (interacts with) METS
+glucuronide of piperine metabolite C17H21NO3 (3)*	METS	0.24394240245912	0.00200992885033169	0.0233806674645904	glucuronide of piperine metabolite C17H21NO3 (3)* (interacts with) METS
+glucuronide of piperine metabolite C17H21NO3 (4)*	METS	0.227034996998178	0.00412183710221781	0.0404125991306124	glucuronide of piperine metabolite C17H21NO3 (4)* (interacts with) METS
+glucuronide of piperine metabolite C17H21NO3 (5)*	METS	0.239174517255133	0.00247356066210669	0.0274477763863633	glucuronide of piperine metabolite C17H21NO3 (5)* (interacts with) METS
+glutamate	METS	0.487227523656952	8.47402148451692e-11	6.01073739623405e-09	glutamate (interacts with) METS
+glycerate	METS	-0.317600163568976	4.77733308368311e-05	0.00109077384395621	glycerate (interacts with) METS
+guanidinosuccinate	METS	-0.272159102002825	0.000541463129762665	0.00830980366448141	guanidinosuccinate (interacts with) METS
+hydroxyasparagine	METS	0.235424076539167	0.0029041369220093	0.0310458524481789	hydroxyasparagine (interacts with) METS
+isoleucine	METS	0.31190890189663	6.62142689482614e-05	0.00143636932351977	isoleucine (interacts with) METS
+isoursodeoxycholate	METS	0.266379011131286	0.000716768099984666	0.0104066616266077	isoursodeoxycholate (interacts with) METS
+isovalerate (C5)	METS	0.227629940993004	0.00402233865824986	0.0396771905392586	isovalerate (C5) (interacts with) METS
+isovalerylcarnitine (C5)	METS	0.236395396485691	0.00278656323731563	0.0300730132619293	isovalerylcarnitine (C5) (interacts with) METS
+lactate	METS	0.224874412731987	0.00450204188305703	0.0431165283266851	lactate (interacts with) METS
+leucine	METS	0.346889339492513	8.00115287802328e-06	0.000229488330476821	leucine (interacts with) METS
+linoleoylcholine*	METS	-0.220015680228902	0.00547425458899875	0.0497242206058058	linoleoylcholine* (interacts with) METS
+metabolonic lactone sulfate	METS	0.228949927208319	0.00380925363931461	0.0381239454995587	metabolonic lactone sulfate (interacts with) METS
+N,N,N-trimethyl-5-aminovalerate	METS	0.223069695303909	0.00484342749031219	0.0454549438147065	N,N,N-trimethyl-5-aminovalerate (interacts with) METS
+N-acetylcitrulline	METS	0.261127617360827	0.000919878573384825	0.0127018383981884	N-acetylcitrulline (interacts with) METS
+N-acetylglucosamine/N-acetylgalactosamine	METS	0.33939378958624	1.28622004293977e-05	0.000348925011413413	N-acetylglucosamine/N-acetylgalactosamine (interacts with) METS
+N-acetylglutamate	METS	0.306911696525789	8.77160558381274e-05	0.00182766490431045	N-acetylglutamate (interacts with) METS
+N-acetylglycine	METS	-0.295251326086356	0.000165821475374806	0.00312852776155528	N-acetylglycine (interacts with) METS
+N-acetylisoleucine	METS	0.235284907247942	0.00292134507481689	0.0311804993089728	N-acetylisoleucine (interacts with) METS
+N-acetylleucine	METS	0.255967963995276	0.00116967371274335	0.0153538539077112	N-acetylleucine (interacts with) METS
+N-acetylneuraminate	METS	0.2429198902969	0.00210212373398599	0.024208909798796	N-acetylneuraminate (interacts with) METS
+N-acetylphenylalanine	METS	0.236673018795128	0.002753758779376	0.0297932883718492	N-acetylphenylalanine (interacts with) METS
+N-acetylvaline	METS	0.233341728566193	0.00317143570612521	0.0332162614775214	N-acetylvaline (interacts with) METS
+oxalate (ethanedioate)	METS	-0.330093176996077	2.27941126604847e-05	0.000576877201995346	oxalate (ethanedioate) (interacts with) METS
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)	METS	-0.440447793921959	6.9887837739202e-09	3.74569192743231e-07	palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0) (interacts with) METS
+phenylacetylcarnitine	METS	0.231537358294417	0.00342079663967132	0.0351615957467637	phenylacetylcarnitine (interacts with) METS
+phenylalanine	METS	0.248749967664025	0.00162378284825526	0.0198160037666382	phenylalanine (interacts with) METS
+pimeloylcarnitine/3-methyladipoylcarnitine (C7-DC)	METS	-0.415323290820969	5.75636280863989e-08	2.63798867120479e-06	pimeloylcarnitine/3-methyladipoylcarnitine (C7-DC) (interacts with) METS
+pregnanediol-3-glucuronide	METS	-0.329440468855542	2.37117218562233e-05	0.000597522283641722	pregnanediol-3-glucuronide (interacts with) METS
+propionylcarnitine (C3)	METS	0.248611156298141	0.00163390987807421	0.0199135560006413	propionylcarnitine (C3) (interacts with) METS
+sphinganine	METS	0.24541830821239	0.00188332572503658	0.0222197863520242	sphinganine (interacts with) METS
+tartronate (hydroxymalonate)	METS	-0.385617974425593	5.62848946117356e-07	2.11975617552495e-05	tartronate (hydroxymalonate) (interacts with) METS
+thioproline	METS	0.22307003464747	0.00484336117636053	0.0454549438147065	thioproline (interacts with) METS
+threonate	METS	-0.268321962070957	0.000652728213886622	0.00966053426598082	threonate (interacts with) METS
+tryptophan betaine	METS	-0.301083913707956	0.000120993737748876	0.00240182065142582	tryptophan betaine (interacts with) METS
+valine	METS	0.353414006354983	5.24007811764093e-06	0.000157550674404634	valine (interacts with) METS
+xylose	METS	-0.223271505804053	0.00480413334045604	0.0451851525543124	xylose (interacts with) METS
+Transm_mode	Ethnic	0.339731616927874	1.52720948740637e-05	0.000405499169354331	Transm_mode (interacts with) Ethnic
+10-undecenoate (11:1n1)	Ethnic	0.249936072003789	0.00165130105269817	0.0200687414865147	10-undecenoate (11:1n1) (interacts with) Ethnic
+11beta-hydroxyandrosterone glucuronide	Ethnic	0.281445086576571	0.000371987596197165	0.00611919829865679	11beta-hydroxyandrosterone glucuronide (interacts with) Ethnic
+17alpha-hydroxypregnanolone glucuronide	Ethnic	0.22285702338311	0.00516828697640692	0.0476774139147101	17alpha-hydroxypregnanolone glucuronide (interacts with) Ethnic
+2-hydroxysebacate	Ethnic	0.23631112364865	0.00297829520409554	0.0316247649003648	2-hydroxysebacate (interacts with) Ethnic
+2S,3R-dihydroxybutyrate	Ethnic	0.310823394485121	7.84014089942886e-05	0.00166058928149313	2S,3R-dihydroxybutyrate (interacts with) Ethnic
+3,5-dichloro-2,6-dihydroxybenzoic acid	Ethnic	0.378097499044914	1.13684240909961e-06	4.01461427683959e-05	3,5-dichloro-2,6-dihydroxybenzoic acid (interacts with) Ethnic
+3-bromo-5-chloro-2,6-dihydroxybenzoic acid*	Ethnic	0.298049830328198	0.000157486381160199	0.00299912605979499	3-bromo-5-chloro-2,6-dihydroxybenzoic acid* (interacts with) Ethnic
+3-decenoylcarnitine	Ethnic	0.28570182586662	0.000299918194924587	0.00512727632995112	3-decenoylcarnitine (interacts with) Ethnic
+3-hydroxydecanoylcarnitine	Ethnic	0.274205627210288	0.000532366362496095	0.0081984378001289	3-hydroxydecanoylcarnitine (interacts with) Ethnic
+3-hydroxyhexanoate	Ethnic	0.239291435206353	0.00262501540640914	0.0287238037659137	3-hydroxyhexanoate (interacts with) Ethnic
+3-hydroxyoleoylcarnitine	Ethnic	0.287405193530762	0.000274891960509116	0.00476931529820244	3-hydroxyoleoylcarnitine (interacts with) Ethnic
+3-methyladipate	Ethnic	0.270549149297346	0.000635684787772872	0.00945563334600743	3-methyladipate (interacts with) Ethnic
+3-methylxanthine	Ethnic	0.226092800260452	0.00453927130966281	0.0433708218937741	3-methylxanthine (interacts with) Ethnic
+4-methylhexanoylglutamine	Ethnic	0.247034826796976	0.00187734115553617	0.0221691988923592	4-methylhexanoylglutamine (interacts with) Ethnic
+5-acetylamino-6-formylamino-3-methyluracil	Ethnic	0.243778172833661	0.00216433500505309	0.0247484656802822	5-acetylamino-6-formylamino-3-methyluracil (interacts with) Ethnic
+5alpha-androstan-3alpha,17beta-diol 17-glucuronide	Ethnic	0.230474462551855	0.00379706869193397	0.0380252923926228	5alpha-androstan-3alpha,17beta-diol 17-glucuronide (interacts with) Ethnic
+5alpha-androstan-3alpha,17beta-diol disulfate	Ethnic	0.256802768275014	0.00121167911342046	0.0157963100273944	5alpha-androstan-3alpha,17beta-diol disulfate (interacts with) Ethnic
+5alpha-androstan-3beta,17beta-diol disulfate	Ethnic	0.279315048835325	0.000413784221779512	0.00667896354322216	5alpha-androstan-3beta,17beta-diol disulfate (interacts with) Ethnic
+5alpha-androstan-3beta,17beta-diol monosulfate (2)	Ethnic	0.228956603974579	0.00404080299194653	0.0398162495074297	5alpha-androstan-3beta,17beta-diol monosulfate (2) (interacts with) Ethnic
+androstenediol (3alpha, 17alpha) monosulfate (3)	Ethnic	0.276760556733327	0.000469624161288262	0.00741094676000431	androstenediol (3alpha, 17alpha) monosulfate (3) (interacts with) Ethnic
+androsterone glucuronide	Ethnic	0.293799869704117	0.000197225729951178	0.00362185297224925	androsterone glucuronide (interacts with) Ethnic
+arabitol/xylitol	Ethnic	0.27420627728679	0.000532349458465031	0.0081984378001289	arabitol/xylitol (interacts with) Ethnic
+arachidoylcarnitine (C20)*	Ethnic	0.319339103923069	4.83674453097827e-05	0.00110196432101559	arachidoylcarnitine (C20)* (interacts with) Ethnic
+behenoylcarnitine (C22)*	Ethnic	0.292542362396298	0.000210662963384234	0.00382613947853604	behenoylcarnitine (C22)* (interacts with) Ethnic
+beta-citrylglutamate	Ethnic	0.320616713707087	4.49295692699359e-05	0.00103397349266178	beta-citrylglutamate (interacts with) Ethnic
+beta-cryptoxanthin	Ethnic	-0.241846339157537	0.00235285115977524	0.0263999987333895	beta-cryptoxanthin (interacts with) Ethnic
+caffeic acid sulfate	Ethnic	0.22631517277523	0.00449867770528889	0.0430988923247476	caffeic acid sulfate (interacts with) Ethnic
+carotene diol (1)	Ethnic	-0.235459179887096	0.0030868917883371	0.0325241920530213	carotene diol (1) (interacts with) Ethnic
+carotene diol (2)	Ethnic	-0.232478867655994	0.00349549389647419	0.0357345206934653	carotene diol (2) (interacts with) Ethnic
+cortolone glucuronide (1)	Ethnic	0.273569759977317	0.0005491401321982	0.00840688961883326	cortolone glucuronide (1) (interacts with) Ethnic
+cys-gly, oxidized	Ethnic	0.229711625149415	0.00391785884377693	0.0389050002097028	cys-gly, oxidized (interacts with) Ethnic
+cysteine s-sulfate	Ethnic	0.278889484092814	0.00042263876010562	0.00679224405885176	cysteine s-sulfate (interacts with) Ethnic
+cysteinylglycine disulfide*	Ethnic	0.277612347061117	0.000450274313247068	0.00715919358145237	cysteinylglycine disulfide* (interacts with) Ethnic
+decanoylcarnitine (C10)	Ethnic	0.236736722374969	0.0029253478126634	0.0312121754251769	decanoylcarnitine (C10) (interacts with) Ethnic
+dimethyl sulfone	Ethnic	0.225880799373516	0.00457827720701731	0.0436392821434625	dimethyl sulfone (interacts with) Ethnic
+docosapentaenoylcarnitine (C22:5n3)*	Ethnic	0.269215370748796	0.000677759308296277	0.00995085084430515	docosapentaenoylcarnitine (C22:5n3)* (interacts with) Ethnic
+eicosenoylcarnitine (C20:1)*	Ethnic	0.324874315057736	3.505729576192e-05	0.000836575578324776	eicosenoylcarnitine (C20:1)* (interacts with) Ethnic
+epiandrosterone sulfate	Ethnic	0.253981234696252	0.00137742336288293	0.0174499292884074	epiandrosterone sulfate (interacts with) Ethnic
+ethylmalonate	Ethnic	0.259516860373914	0.00106966245050688	0.0143030140760087	ethylmalonate (interacts with) Ethnic
+gamma-glutamylphenylalanine	Ethnic	0.226730763785379	0.0044236846127379	0.0425380496793734	gamma-glutamylphenylalanine (interacts with) Ethnic
+gamma-glutamyltryptophan	Ethnic	0.223111587274251	0.00511611410104806	0.0473431652384685	gamma-glutamyltryptophan (interacts with) Ethnic
+gamma-glutamylvaline	Ethnic	0.322319347512715	4.07037431746637e-05	0.000951468198357766	gamma-glutamylvaline (interacts with) Ethnic
+glutamine conjugate of C7H12O2*	Ethnic	0.260581120651422	0.00101826441784203	0.0137674111048805	glutamine conjugate of C7H12O2* (interacts with) Ethnic
+heptenedioate (C7:1-DC)*	Ethnic	0.339776806574146	1.42809490379925e-05	0.000382516151751866	heptenedioate (C7:1-DC)* (interacts with) Ethnic
+homoarginine	Ethnic	-0.25419412760044	0.00136423017864784	0.0173158033614809	homoarginine (interacts with) Ethnic
+hypotaurine	Ethnic	0.223964928113946	0.00494464287946217	0.046162631717595	hypotaurine (interacts with) Ethnic
+imidazole lactate	Ethnic	0.292940636162651	0.000206317729015471	0.00375766443434462	imidazole lactate (interacts with) Ethnic
+indole-3-carboxylate	Ethnic	0.254247098513403	0.00136096549979747	0.0172849981240759	indole-3-carboxylate (interacts with) Ethnic
+indoleacetate	Ethnic	0.249084304220526	0.00171494622519042	0.0206717851629386	indoleacetate (interacts with) Ethnic
+kynurenate	Ethnic	0.248232930116199	0.00178078668978143	0.0212870574983672	kynurenate (interacts with) Ethnic
+kynurenine	Ethnic	0.280166840508506	0.000396574477653733	0.00644602875984987	kynurenine (interacts with) Ethnic
+laurylcarnitine (C12)	Ethnic	0.2976240448563	0.000161102228081189	0.00305492681141061	laurylcarnitine (C12) (interacts with) Ethnic
+lignoceroylcarnitine (C24)*	Ethnic	0.223537726049014	0.00502983117497413	0.0467477515027886	lignoceroylcarnitine (C24)* (interacts with) Ethnic
+mannose	Ethnic	0.234607795015481	0.00319897631934984	0.0334337881992446	mannose (interacts with) Ethnic
+margaroylcarnitine (C17)*	Ethnic	0.293365958304175	0.0002017695308969	0.00368870831880263	margaroylcarnitine (C17)* (interacts with) Ethnic
+myristoleoylcarnitine (C14:1)*	Ethnic	0.277186342205224	0.000459857704608879	0.00728468191300759	myristoleoylcarnitine (C14:1)* (interacts with) Ethnic
+myristoylcarnitine (C14)	Ethnic	0.28783097900266	0.000268946445326268	0.00468419638958238	myristoylcarnitine (C14) (interacts with) Ethnic
+N-acetyl-2-aminooctanoate*	Ethnic	0.240568601512132	0.00248559090667233	0.0275433400716113	N-acetyl-2-aminooctanoate* (interacts with) Ethnic
+N-acetyl-beta-alanine	Ethnic	0.261219799868705	0.000988516673503304	0.0134486909600927	N-acetyl-beta-alanine (interacts with) Ethnic
+N-acetylcarnosine	Ethnic	0.263561207104506	0.000886146758438011	0.0123225283051905	N-acetylcarnosine (interacts with) Ethnic
+N-acetylhistidine	Ethnic	0.26994820251035	0.000654334831172054	0.00967943001039495	N-acetylhistidine (interacts with) Ethnic
+N-acetylkynurenine (2)	Ethnic	0.244206258150015	0.00212446291752633	0.0244009509639933	N-acetylkynurenine (2) (interacts with) Ethnic
+N-acetylphenylalanine	Ethnic	0.221408270418245	0.00547437518785188	0.0497242206058058	N-acetylphenylalanine (interacts with) Ethnic
+N-acetyltaurine	Ethnic	0.294430886491967	0.000190787555136795	0.00352060780165895	N-acetyltaurine (interacts with) Ethnic
+N6-methyllysine	Ethnic	0.232904653127892	0.00343428124196477	0.0352715339050117	N6-methyllysine (interacts with) Ethnic
+nervonoylcarnitine (C24:1)*	Ethnic	0.344035476918988	1.09536472683303e-05	0.000302497484213388	nervonoylcarnitine (C24:1)* (interacts with) Ethnic
+nonanoylcarnitine (C9)	Ethnic	0.275057632210861	0.000510631693796615	0.00792567747923687	nonanoylcarnitine (C9) (interacts with) Ethnic
+octanoylcarnitine (C8)	Ethnic	0.229923973126639	0.00388389259003397	0.038661717445743	octanoylcarnitine (C8) (interacts with) Ethnic
+oleoylcarnitine (C18:1)	Ethnic	0.332113192987106	2.2795358343819e-05	0.000576877201995346	oleoylcarnitine (C18:1) (interacts with) Ethnic
+palmitoleoylcarnitine (C16:1)*	Ethnic	0.308694711072561	8.82622485733897e-05	0.0018369952402157	palmitoleoylcarnitine (C16:1)* (interacts with) Ethnic
+palmitoylcarnitine (C16)	Ethnic	0.328706384304812	2.79517977070931e-05	0.000688266935464073	palmitoylcarnitine (C16) (interacts with) Ethnic
+perfluorooctanesulfonate (PFOS)	Ethnic	0.400664445681765	2.18523511508195e-07	8.97661339661802e-06	perfluorooctanesulfonate (PFOS) (interacts with) Ethnic
+perfluorooctanoate (PFOA)	Ethnic	0.344034933167765	1.09540209700665e-05	0.000302497484213388	perfluorooctanoate (PFOA) (interacts with) Ethnic
+pyroglutamine*	Ethnic	0.250787642947584	0.0015898290569516	0.0194920070028767	pyroglutamine* (interacts with) Ethnic
+quinate	Ethnic	0.22992415482461	0.00388386364019389	0.038661717445743	quinate (interacts with) Ethnic
+quinolinate	Ethnic	0.269096418239173	0.000681633562943151	0.00999218441798752	quinolinate (interacts with) Ethnic
+retinol (Vitamin A)	Ethnic	0.256748436658081	0.00121469040792244	0.0158273460118338	retinol (Vitamin A) (interacts with) Ethnic
+sphingosine 1-phosphate	Ethnic	0.236524016552838	0.00295170260268574	0.0314130095955577	sphingosine 1-phosphate (interacts with) Ethnic
+stearoylcarnitine (C18)	Ethnic	0.321468539365725	4.27663919246868e-05	0.000991759863554314	stearoylcarnitine (C18) (interacts with) Ethnic
+tridecenedioate (C13:1-DC)*	Ethnic	0.297198024522952	0.000164797364379021	0.00311295114897077	tridecenedioate (C13:1-DC)* (interacts with) Ethnic
+undecenoylcarnitine (C11:1)	Ethnic	0.355957217099001	5.10512583606904e-06	0.00015392447123036	undecenoylcarnitine (C11:1) (interacts with) Ethnic
+vanillylmandelate (VMA)	Ethnic	0.242697910774289	0.00226798889349844	0.0256474616995801	vanillylmandelate (VMA) (interacts with) Ethnic
+alcohol	Transm_mode	0.243202347190919	0.00309733307908666	0.0326107004686708	alcohol (interacts with) Transm_mode
+SAT	Transm_mode	-0.236505839285045	0.00335159130900609	0.0346336696750069	SAT (interacts with) Transm_mode
+1-methylnicotinamide	Transm_mode	0.235676200968005	0.00296456803790912	0.0315046024332209	1-methylnicotinamide (interacts with) Transm_mode
+12,13-DiHOME	Transm_mode	-0.244003311764574	0.00207274157006387	0.0239507368554408	12,13-DiHOME (interacts with) Transm_mode
+2S,3R-dihydroxybutyrate	Transm_mode	0.226777145229334	0.00428866396387639	0.0415628509672624	2S,3R-dihydroxybutyrate (interacts with) Transm_mode
+4-methylguaiacol sulfate	Transm_mode	0.313009881018759	6.56757317774037e-05	0.00142658139899864	4-methylguaiacol sulfate (interacts with) Transm_mode
+5alpha-androstan-3alpha,17beta-diol 17-glucuronide	Transm_mode	0.368212394798	2.0892412551099e-06	6.91130598672678e-05	5alpha-androstan-3alpha,17beta-diol 17-glucuronide (interacts with) Transm_mode
+5alpha-androstan-3alpha,17beta-diol disulfate	Transm_mode	0.258163493743692	0.00109677213064074	0.0145943320141905	5alpha-androstan-3alpha,17beta-diol disulfate (interacts with) Transm_mode
+5alpha-androstan-3beta,17alpha-diol disulfate	Transm_mode	0.30796572821643	8.71764642971229e-05	0.00181845141564671	5alpha-androstan-3beta,17alpha-diol disulfate (interacts with) Transm_mode
+5alpha-androstan-3beta,17beta-diol disulfate	Transm_mode	0.316996765104101	5.23136522514456e-05	0.00117648851638479	5alpha-androstan-3beta,17beta-diol disulfate (interacts with) Transm_mode
+5alpha-androstan-3beta,17beta-diol monosulfate (2)	Transm_mode	0.232036584717954	0.00345348275123492	0.035413079618913	5alpha-androstan-3beta,17beta-diol monosulfate (2) (interacts with) Transm_mode
+androstenediol (3alpha, 17alpha) monosulfate (3)	Transm_mode	0.233835161927947	0.0032034611996159	0.0334663870628067	androstenediol (3alpha, 17alpha) monosulfate (3) (interacts with) Transm_mode
+androsterone glucuronide	Transm_mode	0.265296359667644	0.00078517508993392	0.0111907360590427	androsterone glucuronide (interacts with) Transm_mode
+ascorbic acid 3-sulfate*	Transm_mode	0.224322182899382	0.00473730425958374	0.0447212700910808	ascorbic acid 3-sulfate* (interacts with) Transm_mode
+cys-gly, oxidized	Transm_mode	0.232761476804558	0.00335067271723011	0.0346266088207918	cys-gly, oxidized (interacts with) Transm_mode
+cysteinylglycine disulfide*	Transm_mode	0.277104087817795	0.000442382270638753	0.00705488514280568	cysteinylglycine disulfide* (interacts with) Transm_mode
+epiandrosterone sulfate	Transm_mode	0.279405616786382	0.00039438587734586	0.00641793655668781	epiandrosterone sulfate (interacts with) Transm_mode
+ethylmalonate	Transm_mode	0.265136548275199	0.0007911567177461	0.0112569995159509	ethylmalonate (interacts with) Transm_mode
+glycerol	Transm_mode	-0.240433059584986	0.00242002758711335	0.0269849152776606	glycerol (interacts with) Transm_mode
+L-urobilin	Transm_mode	0.236591250505408	0.00285192534678069	0.0306204542785543	L-urobilin (interacts with) Transm_mode
+methylmalonate (MMA)	Transm_mode	0.231380199597994	0.00354902026325954	0.0361477929387444	methylmalonate (MMA) (interacts with) Transm_mode
+N-acetyl-beta-alanine	Transm_mode	0.227544673764772	0.0041564452971341	0.0406593854004021	N-acetyl-beta-alanine (interacts with) Transm_mode
+N-methylpipecolate	Transm_mode	0.273425457005728	0.000530426823336594	0.00817563403717493	N-methylpipecolate (interacts with) Transm_mode
+N6-methyllysine	Transm_mode	0.294442044448641	0.000181696167977918	0.00338038552884234	N6-methyllysine (interacts with) Transm_mode
+nicotinamide riboside	Transm_mode	0.232416647482636	0.00339922993654396	0.0349977230051175	nicotinamide riboside (interacts with) Transm_mode
+o-cresol sulfate	Transm_mode	0.222481478587407	0.00510081544297059	0.0472216580524439	o-cresol sulfate (interacts with) Transm_mode
+perfluorooctanesulfonate (PFOS)	Transm_mode	0.22186722056943	0.00522756423939397	0.0480593107816019	perfluorooctanesulfonate (PFOS) (interacts with) Transm_mode
+perfluorooctanoate (PFOA)	Transm_mode	0.250252916517621	0.00157197817421828	0.0193209216608188	perfluorooctanoate (PFOA) (interacts with) Transm_mode
+phenol glucuronide	Transm_mode	-0.260516567644873	0.000983274336025408	0.0133913104269903	phenol glucuronide (interacts with) Transm_mode
+phenol sulfate	Transm_mode	-0.32865808192235	2.63969598064406e-05	0.000655705967369605	phenol sulfate (interacts with) Transm_mode
+CD4_ART	CD4	0.250991170102662	0.00209124276689554	0.0241126404473177	CD4_ART (interacts with) CD4
+CD4_CD8	CD4	0.486516349171623	1.04575903492332e-10	7.32653622085048e-09	CD4_CD8 (interacts with) CD4
+16a-hydroxy DHEA 3-sulfate	CD4	-0.26581935810131	0.000736258817540802	0.0106309654736227	16a-hydroxy DHEA 3-sulfate (interacts with) CD4
+acetoacetate	CD4	-0.232299044841764	0.00331345324481958	0.0343445771201155	acetoacetate (interacts with) CD4
+andro steroid monosulfate C19H28O6S (1)*	CD4	-0.231723199898954	0.00339432101155235	0.0349637091916169	andro steroid monosulfate C19H28O6S (1)* (interacts with) CD4
+gamma-glutamyltryptophan	CD4	0.236192094273937	0.00281080962023461	0.0302784786491378	gamma-glutamyltryptophan (interacts with) CD4
+gamma-glutamyltyrosine	CD4	0.25091036167487	0.00147337102914946	0.0183850387374243	gamma-glutamyltyrosine (interacts with) CD4
+hexanoylglutamine	CD4	-0.223421752262392	0.00477506490229773	0.0449921536239884	hexanoylglutamine (interacts with) CD4
+linoleoylcarnitine (C18:2)*	CD4	-0.243188371600436	0.00207755137742227	0.0239886390461369	linoleoylcarnitine (C18:2)* (interacts with) CD4
+N6-carbamoylthreonyladenosine	CD4	-0.22864602097445	0.00385739229164361	0.0384672691691447	N6-carbamoylthreonyladenosine (interacts with) CD4
+tyrosine	CD4	0.232575123479039	0.00327530241165563	0.0340319128696286	tyrosine (interacts with) CD4
+CD4_ART	CD4_nadir	0.928568057725033	0	0	CD4_ART (interacts with) CD4_nadir
+hypertension	CD4_nadir	-0.270109644746448	0.000598503554216423	0.00900852742892507	hypertension (interacts with) CD4_nadir
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)	CD4_nadir	0.305644822401401	9.41226892110514e-05	0.00194134483760839	5alpha-pregnan-3beta,20alpha-diol monosulfate (2) (interacts with) CD4_nadir
+5alpha-pregnan-3beta,20beta-diol monosulfate (1)	CD4_nadir	0.237730742199529	0.00263195258176641	0.0287816220676465	5alpha-pregnan-3beta,20beta-diol monosulfate (1) (interacts with) CD4_nadir
+androsterone sulfate	CD4_nadir	0.243215016871629	0.00207512699645007	0.023971941904038	androsterone sulfate (interacts with) CD4_nadir
+epiandrosterone sulfate	CD4_nadir	0.28267637425797	0.000319870665935973	0.00540987249006497	epiandrosterone sulfate (interacts with) CD4_nadir
+gamma-glutamylglutamine	CD4_nadir	0.25261301238084	0.00136391113908729	0.0173128748887065	gamma-glutamylglutamine (interacts with) CD4_nadir
+glutamine	CD4_nadir	0.220581190549632	0.00535217960589218	0.0489066092769805	glutamine (interacts with) CD4_nadir
+hippurate	CD4_nadir	0.259894578603837	0.000974663440044932	0.013299910398522	hippurate (interacts with) CD4_nadir
+hypertension	CD4_ART	-0.233645139966738	0.0042634477009349	0.0413911165959594	hypertension (interacts with) CD4_ART
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)	CD4_ART	0.2795012224057	0.000581122723714689	0.00879697941310888	5alpha-pregnan-3beta,20alpha-diol monosulfate (2) (interacts with) CD4_ART
+5alpha-pregnan-3beta,20beta-diol monosulfate (1)	CD4_ART	0.25763862761895	0.00157079098034441	0.0193117788647172	5alpha-pregnan-3beta,20beta-diol monosulfate (1) (interacts with) CD4_ART
+androstenediol (3beta,17beta) monosulfate (2)	CD4_ART	0.229169310304544	0.00508321363376574	0.0471154464693073	androstenediol (3beta,17beta) monosulfate (2) (interacts with) CD4_ART
+androsterone sulfate	CD4_ART	0.276549684668005	0.000667840726954694	0.00983875546838902	androsterone sulfate (interacts with) CD4_ART
+cysteine-glutathione disulfide	CD4_ART	0.238756030783824	0.00347401137764769	0.0355733429791028	cysteine-glutathione disulfide (interacts with) CD4_ART
+epiandrosterone sulfate	CD4_ART	0.290733602679802	0.000337480588315175	0.00565428534575767	epiandrosterone sulfate (interacts with) CD4_ART
+gamma-glutamylglutamine	CD4_ART	0.281993969653871	0.000516098108868546	0.00799690980460991	gamma-glutamylglutamine (interacts with) CD4_ART
+isoursodeoxycholate	CD4_ART	-0.230900096332835	0.00475082473427602	0.0448154541408319	isoursodeoxycholate (interacts with) CD4_ART
+CD4_CD8	CD8	-0.71540672109961	0	0	CD4_CD8 (interacts with) CD8
+1,7-dimethylurate	CD8	0.23555791012093	0.00297941937025215	0.0316332747214825	1,7-dimethylurate (interacts with) CD8
+4-hydroxyglutamate	CD8	0.226792948868438	0.00428590389783867	0.0415473995712322	4-hydroxyglutamate (interacts with) CD8
+aspartate	CD8	0.236403784915025	0.00287468213891273	0.0308057334045962	aspartate (interacts with) CD8
+beta-citrylglutamate	CD8	0.239037514987769	0.00256953803197013	0.0282476262246021	beta-citrylglutamate (interacts with) CD8
+carboxyethyl-GABA	CD8	-0.260112769999997	0.00100195158224281	0.0135909117971505	carboxyethyl-GABA (interacts with) CD8
+gamma-glutamylglutamate	CD8	0.240800441458999	0.00238200221545548	0.0266553764685591	gamma-glutamylglutamate (interacts with) CD8
+leucylglycine	CD8	0.257899632797247	0.001110220531513	0.0147312854110828	leucylglycine (interacts with) CD8
+spermine	CD8	0.26447914397532	0.000816206015810783	0.0115301415024201	spermine (interacts with) CD8
+sphinganine-1-phosphate	CD8	0.253105741665157	0.0013823796118837	0.0174968869726502	sphinganine-1-phosphate (interacts with) CD8
+valylleucine	CD8	0.232797717864111	0.00334560592202204	0.034591878225289	valylleucine (interacts with) CD8
+(2-butoxyethoxy)acetic acid	VL	0.229773058478055	0.00379307077655588	0.0380027287102569	(2-butoxyethoxy)acetic acid (interacts with) VL
+arachidate (20:0)	VL	0.252097813851574	0.00144683982394356	0.0181278288803983	arachidate (20:0) (interacts with) VL
+gluconate	VL	-0.33068355578439	2.33726790790367e-05	0.000590002507950138	gluconate (interacts with) VL
+linoleate (18:2n6)	VL	0.224510367614123	0.00470148135989668	0.0444859263308291	linoleate (18:2n6) (interacts with) VL
+N-palmitoylglycine	VL	0.232131669960851	0.00343983691017158	0.0353165657608416	N-palmitoylglycine (interacts with) VL
+pyridoxal	VL	0.223625117195301	0.00487213908012651	0.0456599116216675	pyridoxal (interacts with) VL
+ribulonate/xylulonate/lyxonate*	VL	-0.228462373411337	0.00400317212799939	0.0395328463200202	ribulonate/xylulonate/lyxonate* (interacts with) VL
+hypertension	VL_ART	0.267563176731255	0.00208717806836112	0.0240735613319756	hypertension (interacts with) VL_ART
+ectoine	VL_ART	0.246943467497575	0.00462002230045888	0.0439271863743951	ectoine (interacts with) VL_ART
+indoleacetate	VL_ART	-0.246160829107325	0.00475565936874922	0.0448502687569757	indoleacetate (interacts with) VL_ART
+(2,4 or 2,5)-dimethylphenol sulfate	cum_smoking	0.389632817769191	0.000208813128017127	0.00379782024858502	(2,4 or 2,5)-dimethylphenol sulfate (interacts with) cum_smoking
+2-ethylphenylsulfate	cum_smoking	0.38918574931651	0.000212658709253688	0.00385765359618115	2-ethylphenylsulfate (interacts with) cum_smoking
+2-naphthol sulfate	cum_smoking	0.41491239303188	7.12599583756468e-05	0.00152873764492736	2-naphthol sulfate (interacts with) cum_smoking
+3-ethylcatechol sulfate (1)	cum_smoking	0.370155791750038	0.000451614493560015	0.00717555489538742	3-ethylcatechol sulfate (1) (interacts with) cum_smoking
+3-ethylcatechol sulfate (2)	cum_smoking	0.31580842231895	0.00305615957555139	0.0322682183930599	3-ethylcatechol sulfate (2) (interacts with) cum_smoking
+3-hydroxybutyroylglycine	cum_smoking	0.335049093729134	0.00161422914051856	0.019725325597912	3-hydroxybutyroylglycine (interacts with) cum_smoking
+3-hydroxycotinine glucuronide	cum_smoking	0.523652385345679	2.29611490709658e-07	9.39468521886804e-06	3-hydroxycotinine glucuronide (interacts with) cum_smoking
+4-vinylphenol sulfate	cum_smoking	0.357014129508646	0.000740057838696462	0.0106689426671985	4-vinylphenol sulfate (interacts with) cum_smoking
+betaine	cum_smoking	-0.315921082304657	0.00304511779581618	0.0321679079353089	betaine (interacts with) cum_smoking
+cerotoylcarnitine (C26)*	cum_smoking	-0.300333088279171	0.00496043767388388	0.0462720985592685	cerotoylcarnitine (C26)* (interacts with) cum_smoking
+cotinine	cum_smoking	0.529581874863454	1.58063877098158e-07	6.67630006549926e-06	cotinine (interacts with) cum_smoking
+cotinine N-oxide	cum_smoking	0.538313881703279	9.00141756687844e-08	3.97906501448573e-06	cotinine N-oxide (interacts with) cum_smoking
+cysteine sulfinic acid	cum_smoking	0.314124765661231	0.00322550071812255	0.0336392645520883	cysteine sulfinic acid (interacts with) cum_smoking
+hydroxycotinine	cum_smoking	0.505588483582454	6.86186017562207e-07	2.54009335042315e-05	hydroxycotinine (interacts with) cum_smoking
+lignoceroylcarnitine (C24)*	cum_smoking	-0.304503725905844	0.00436428564276881	0.0420886842079167	lignoceroylcarnitine (C24)* (interacts with) cum_smoking
+N-acetylglucosaminylasparagine	cum_smoking	0.377988127774695	0.000333081775569122	0.00559109904766231	N-acetylglucosaminylasparagine (interacts with) cum_smoking
+N-acetyltaurine	cum_smoking	0.318971865279603	0.00275937303234786	0.0298425002193339	N-acetyltaurine (interacts with) cum_smoking
+norcotinine	cum_smoking	0.466660225594754	5.92831143553241e-06	0.000175730997484924	norcotinine (interacts with) cum_smoking
+nornicotine	cum_smoking	0.529544441007171	1.58440468300824e-07	6.68932381205504e-06	nornicotine (interacts with) cum_smoking
+o-cresol sulfate	cum_smoking	0.396967313652829	0.000154211319487674	0.00294505384768381	o-cresol sulfate (interacts with) cum_smoking
+S-(3-hydroxypropyl)mercapturic acid (HPMA)	cum_smoking	0.325367033791332	0.00223705247687489	0.0253707985396231	S-(3-hydroxypropyl)mercapturic acid (HPMA) (interacts with) cum_smoking
+1-methylnicotinamide	alcohol	0.277482237381532	0.000667372066245786	0.00983295955082337	1-methylnicotinamide (interacts with) alcohol
+1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*	alcohol	0.281930626723242	0.000541186653826742	0.00830686129483735	1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)* (interacts with) alcohol
+2,3-dihydroxyisovalerate	alcohol	0.248871828895969	0.00236872932904553	0.0265310813256088	2,3-dihydroxyisovalerate (interacts with) alcohol
+2-hydroxy-3-methylvalerate	alcohol	0.269069038134719	0.000982710154720401	0.0133864168822695	2-hydroxy-3-methylvalerate (interacts with) alcohol
+2S,3R-dihydroxybutyrate	alcohol	0.242281810195766	0.00311036387718122	0.0327152301642037	2S,3R-dihydroxybutyrate (interacts with) alcohol
+3-methoxytyrosine	alcohol	-0.267245612866951	0.00106696639656878	0.0142752406468273	3-methoxytyrosine (interacts with) alcohol
+4-methylnonanoylcarnitine	alcohol	0.317232723789405	9.03957880287187e-05	0.0018747323256466	4-methylnonanoylcarnitine (interacts with) alcohol
+5alpha-androstan-3alpha,17beta-diol 17-glucuronide	alcohol	0.263042485591033	0.00128694959063824	0.0165497572033488	5alpha-androstan-3alpha,17beta-diol 17-glucuronide (interacts with) alcohol
+5alpha-androstan-3beta,17beta-diol disulfate	alcohol	0.238099588938636	0.00368375856851078	0.0372003348030898	5alpha-androstan-3beta,17beta-diol disulfate (interacts with) alcohol
+5alpha-androstan-3beta,17beta-diol monosulfate (2)	alcohol	0.267200776565783	0.00106911908058738	0.0142972112733746	5alpha-androstan-3beta,17beta-diol monosulfate (2) (interacts with) alcohol
+alpha-hydroxyisovalerate	alcohol	0.330845450139534	4.2598687095774e-05	0.000988630975667997	alpha-hydroxyisovalerate (interacts with) alcohol
+androstenediol (3beta,17beta) disulfate (1)	alcohol	0.285401275127969	0.000458439185292869	0.00726653565327679	androstenediol (3beta,17beta) disulfate (1) (interacts with) alcohol
+androstenediol (3beta,17beta) monosulfate (2)	alcohol	0.228153993785684	0.00544660018142706	0.0495407730535931	androstenediol (3beta,17beta) monosulfate (2) (interacts with) alcohol
+arabonate/xylonate	alcohol	0.250519992293157	0.00221027023022469	0.0251398615822081	arabonate/xylonate (interacts with) alcohol
+ethyl alpha-glucopyranoside	alcohol	0.38333342171647	1.64834303895134e-06	5.59077630807154e-05	ethyl alpha-glucopyranoside (interacts with) alcohol
+ethyl beta-glucopyranoside	alcohol	0.306482204895258	0.000159721093701659	0.00303372578600923	ethyl beta-glucopyranoside (interacts with) alcohol
+ethyl glucuronide	alcohol	0.347078442573932	1.65606026292231e-05	0.000436069174732675	ethyl glucuronide (interacts with) alcohol
+glucuronide of piperine metabolite C17H21NO3 (3)*	alcohol	0.253411739437989	0.00195530705107805	0.0228769582887076	glucuronide of piperine metabolite C17H21NO3 (3)* (interacts with) alcohol
+glucuronide of piperine metabolite C17H21NO3 (4)*	alcohol	0.233132059230126	0.00448721331334001	0.0430054866192801	glucuronide of piperine metabolite C17H21NO3 (4)* (interacts with) alcohol
+glucuronide of piperine metabolite C17H21NO3 (5)*	alcohol	0.259294288211352	0.00151727260166101	0.0188128212277946	glucuronide of piperine metabolite C17H21NO3 (5)* (interacts with) alcohol
+kynurenate	alcohol	0.247518818854191	0.00250642792514055	0.0277212725964726	kynurenate (interacts with) alcohol
+N-acetylputrescine	alcohol	0.260583522717381	0.00143412120734498	0.0179989602952565	N-acetylputrescine (interacts with) alcohol
+N-acetyltyrosine	alcohol	-0.245652725733253	0.00270823638769002	0.0294111575995966	N-acetyltyrosine (interacts with) alcohol
+octanoylcarnitine (C8)	alcohol	0.22813548777938	0.00545048477477139	0.0495657568056098	octanoylcarnitine (C8) (interacts with) alcohol
+oleoylcarnitine (C18:1)	alcohol	0.234856261168639	0.00419209071200521	0.0408841579713027	oleoylcarnitine (C18:1) (interacts with) alcohol
+perfluorooctanesulfonate (PFOS)	alcohol	0.247905288328789	0.00246637495235724	0.0273799325856981	perfluorooctanesulfonate (PFOS) (interacts with) alcohol
+retinal	alcohol	0.25070273208973	0.00219330668579243	0.0249997809653733	retinal (interacts with) alcohol
+retinol (Vitamin A)	alcohol	0.261353844634296	0.00138644369505148	0.0175352104659041	retinol (Vitamin A) (interacts with) alcohol
+S-1-pyrroline-5-carboxylate	alcohol	-0.258906101986135	0.00154315669167326	0.019054493100708	S-1-pyrroline-5-carboxylate (interacts with) alcohol
+VAT	hypertension	0.32942252613168	3.21075807638849e-05	0.000775688523614947	VAT (interacts with) hypertension
+3-ureidopropionate	hypertension	-0.287837600754887	0.000245167767310317	0.00433827219161002	3-ureidopropionate (interacts with) hypertension
+5-dodecenoylcarnitine (C12:1)	hypertension	0.220657010071386	0.00533599912725546	0.0488008413230822	5-dodecenoylcarnitine (C12:1) (interacts with) hypertension
+adrenoylcarnitine (C22:4)*	hypertension	0.226000869704576	0.00430005968376213	0.0416393237137351	adrenoylcarnitine (C22:4)* (interacts with) hypertension
+beta-citrylglutamate	hypertension	0.236339462661155	0.00279321512509689	0.0301287140462655	beta-citrylglutamate (interacts with) hypertension
+butyrate/isobutyrate (4:0)	hypertension	-0.255856015850841	0.00117572369570818	0.0154157386734048	butyrate/isobutyrate (4:0) (interacts with) hypertension
+butyrylcarnitine (C4)	hypertension	0.256462122601936	0.00114330699514253	0.0150820213993505	butyrylcarnitine (C4) (interacts with) hypertension
+carotene diol (2)	hypertension	-0.244942972669744	0.00192328499635086	0.022582499331367	carotene diol (2) (interacts with) hypertension
+cholesterol	hypertension	0.25354739459146	0.00130704889485944	0.0167516325719624	cholesterol (interacts with) hypertension
+cortolone glucuronide (1)	hypertension	0.225793685027592	0.00433658726596287	0.0418895717195787	cortolone glucuronide (1) (interacts with) hypertension
+cytidine	hypertension	-0.272120594652853	0.00054248695464354	0.00832388042677314	cytidine (interacts with) hypertension
+docosatrienoate (22:3n6)*	hypertension	0.249401903576767	0.00157698162431519	0.0193684526411341	docosatrienoate (22:3n6)* (interacts with) hypertension
+glucuronide of piperine metabolite C17H21NO3 (3)*	hypertension	0.243188929894772	0.00207750055335487	0.0239886390461369	glucuronide of piperine metabolite C17H21NO3 (3)* (interacts with) hypertension
+glucuronide of piperine metabolite C17H21NO3 (4)*	hypertension	0.264602244923433	0.000780340621843845	0.0111340299913778	glucuronide of piperine metabolite C17H21NO3 (4)* (interacts with) hypertension
+glucuronide of piperine metabolite C17H21NO3 (5)*	hypertension	0.222573455445677	0.00494127681222123	0.0461411323636819	glucuronide of piperine metabolite C17H21NO3 (5)* (interacts with) hypertension
+hexanoylcarnitine (C6)	hypertension	0.237448966707043	0.00266391560584456	0.0290545847943631	hexanoylcarnitine (C6) (interacts with) hypertension
+margaroylcarnitine (C17)*	hypertension	0.262567564756701	0.000859484694099244	0.0120258227257563	margaroylcarnitine (C17)* (interacts with) hypertension
+metoprolol acid metabolite*	hypertension	0.240732173988565	0.00231240390939691	0.0260385699483237	metoprolol acid metabolite* (interacts with) hypertension
+nonanoylcarnitine (C9)	hypertension	0.242445155091013	0.0021462200782123	0.0245888959767203	nonanoylcarnitine (C9) (interacts with) hypertension
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)	hypertension	-0.267286009366494	0.000686186243450848	0.0100497357130874	palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0) (interacts with) hypertension
+palmitoylcarnitine (C16)	hypertension	0.269090325216223	0.000628890169109386	0.00937519591885023	palmitoylcarnitine (C16) (interacts with) hypertension
+taurocholenate sulfate*	hypertension	-0.228705785792306	0.00384788255355994	0.0384039846232376	taurocholenate sulfate* (interacts with) hypertension
+(R)-3-hydroxybutyrylcarnitine	diabetes	0.233549159201941	0.00314384693406167	0.0329992402355942	(R)-3-hydroxybutyrylcarnitine (interacts with) diabetes
+(S)-3-hydroxybutyrylcarnitine	diabetes	0.293044066966122	0.000186502885738404	0.00345308221310029	(S)-3-hydroxybutyrylcarnitine (interacts with) diabetes
+1-carboxyethyltyrosine	diabetes	0.245046573263839	0.00191451063820014	0.022508460708258	1-carboxyethyltyrosine (interacts with) diabetes
+1-linoleoyl-GPA (18:2)*	diabetes	-0.225652706799388	0.0043616013831107	0.0420700415059957	1-linoleoyl-GPA (18:2)* (interacts with) diabetes
+3-hydroxyadipate*	diabetes	0.226590953222994	0.00419753451625948	0.0409214472138028	3-hydroxyadipate* (interacts with) diabetes
+3-hydroxydecanoate	diabetes	0.24114407039107	0.00227141171023693	0.0256772807944845	3-hydroxydecanoate (interacts with) diabetes
+5,6-dihydrothymine	diabetes	-0.222474164097086	0.00496106648626871	0.0462764929607686	5,6-dihydrothymine (interacts with) diabetes
+adrenate (22:4n6)	diabetes	0.228485936587643	0.00388296907392593	0.0386564504288841	adrenate (22:4n6) (interacts with) diabetes
+alpha-hydroxymetoprolol	diabetes	0.327961989325048	2.59205714088218e-05	0.000645426343762642	alpha-hydroxymetoprolol (interacts with) diabetes
+citalopram N-oxide*	diabetes	0.230431784382806	0.00358218470780436	0.0363901811532874	citalopram N-oxide* (interacts with) diabetes
+cortisone	diabetes	-0.227220259352172	0.00409061924520948	0.0401768556490245	cortisone (interacts with) diabetes
+dihomo-linolenoyl-choline	diabetes	-0.248106423867645	0.001671219848151	0.0202555648167417	dihomo-linolenoyl-choline (interacts with) diabetes
+docosahexaenoylcholine	diabetes	-0.245574538875946	0.00187035796603197	0.0221073728980895	docosahexaenoylcholine (interacts with) diabetes
+gabapentin	diabetes	0.232070759913518	0.00334530179415271	0.0345896459187951	gabapentin (interacts with) diabetes
+gamma-glutamylglutamine	diabetes	-0.222789780757561	0.00489840583469592	0.0458414222593283	gamma-glutamylglutamine (interacts with) diabetes
+gluconate	diabetes	0.222156517289652	0.00502485406172037	0.0467147828948723	gluconate (interacts with) diabetes
+glucose	diabetes	0.32089323535251	3.94313610210251e-05	0.00092564417594012	glucose (interacts with) diabetes
+glutamate	diabetes	0.292411142415439	0.000192861928752119	0.00355503774286777	glutamate (interacts with) diabetes
+glycerophosphorylcholine (GPC)	diabetes	-0.230384711683939	0.00358920601019674	0.0364426225342673	glycerophosphorylcholine (GPC) (interacts with) diabetes
+guanidinoacetate	diabetes	-0.232283663460298	0.00331559051228414	0.0343619198066989	guanidinoacetate (interacts with) diabetes
+linoleoylcholine*	diabetes	-0.279752438616412	0.000371052588132414	0.00610740502687256	linoleoylcholine* (interacts with) diabetes
+losartan	diabetes	0.256118700775412	0.00116157249117022	0.0152674661352004	losartan (interacts with) diabetes
+metformin	diabetes	0.746336084653267	0	0	metformin (interacts with) diabetes
+metoprolol	diabetes	0.365698788601234	2.30148483715276e-06	7.53615664294871e-05	metoprolol (interacts with) diabetes
+oleoylcholine	diabetes	-0.253169820273107	0.00132976027123188	0.0169821982350329	oleoylcholine (interacts with) diabetes
+p-cresol glucuronide*	diabetes	0.224075573801395	0.00465039605517514	0.0441335655060294	p-cresol glucuronide* (interacts with) diabetes
+palmitoloelycholine	diabetes	-0.237980536122867	0.0026039081121243	0.0285462218858752	palmitoloelycholine (interacts with) diabetes
+palmitoylcholine	diabetes	-0.265828311286763	0.000735943210034007	0.0106276011390277	palmitoylcholine (interacts with) diabetes
+stearoylcholine*	diabetes	-0.250638122070376	0.00149159802643162	0.0185627049685381	stearoylcholine* (interacts with) diabetes
+(R)-3-hydroxybutyrylcarnitine	VAT	0.318496702134972	6.01366967134531e-05	0.00132513333838801	(R)-3-hydroxybutyrylcarnitine (interacts with) VAT
+(S)-3-hydroxybutyrylcarnitine	VAT	0.292876038071609	0.000238912047731521	0.00424671330002275	(S)-3-hydroxybutyrylcarnitine (interacts with) VAT
+1-oleoyl-GPG (18:1)*	VAT	0.266832373700834	0.000855668632815165	0.0119809805178959	1-oleoyl-GPG (18:1)* (interacts with) VAT
+1-stearoyl-GPG (18:0)	VAT	0.332610335982782	2.661415519567e-05	0.000660348040435923	1-stearoyl-GPG (18:0) (interacts with) VAT
+10-undecenoate (11:1n1)	VAT	0.225104330535138	0.00514917718835939	0.0475447565762568	10-undecenoate (11:1n1) (interacts with) VAT
+11beta-hydroxyandrosterone glucuronide	VAT	0.327678277499091	3.55481914848799e-05	0.000846808550019541	11beta-hydroxyandrosterone glucuronide (interacts with) VAT
+2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)*	VAT	0.304822160478295	0.000127569318212117	0.0025101096066758	2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)* (interacts with) VAT
+2-aminobutyrate	VAT	0.251506741911716	0.00171256343525483	0.0206500471329877	2-aminobutyrate (interacts with) VAT
+2-hydroxyarachidate*	VAT	0.229078188846672	0.00439562334818677	0.0423232310164219	2-hydroxyarachidate* (interacts with) VAT
+2-hydroxybutyrate/2-hydroxyisobutyrate	VAT	0.417343565064227	8.01125039640027e-08	3.57522453233912e-06	2-hydroxybutyrate/2-hydroxyisobutyrate (interacts with) VAT
+2-isopropylmalate	VAT	-0.287461246238246	0.000314699036650268	0.00533529519636097	2-isopropylmalate (interacts with) VAT
+2-O-methylascorbic acid	VAT	0.227510280189795	0.00468024280208157	0.0443481143512867	2-O-methylascorbic acid (interacts with) VAT
+3-hydroxydecanoate	VAT	0.260165203138813	0.00116305287799734	0.0152843619474237	3-hydroxydecanoate (interacts with) VAT
+3-hydroxyhexanoate	VAT	0.238148369663978	0.00303326607036425	0.0320755512524481	3-hydroxyhexanoate (interacts with) VAT
+3-hydroxyhexanoylcarnitine (1)	VAT	0.23904151529518	0.00292228301376607	0.031187849201405	3-hydroxyhexanoylcarnitine (1) (interacts with) VAT
+3-hydroxyoctanoate	VAT	0.258808195324279	0.00123683709656497	0.0160607154928221	3-hydroxyoctanoate (interacts with) VAT
+3-hydroxyoleoylcarnitine	VAT	0.272162385388719	0.000665693121648436	0.00981375443414433	3-hydroxyoleoylcarnitine (interacts with) VAT
+3-methyl-2-oxobutyrate	VAT	0.360269726922938	4.77800418519081e-06	0.000145155433926123	3-methyl-2-oxobutyrate (interacts with) VAT
+3-methyl-2-oxovalerate	VAT	0.321118308467446	5.18436719831872e-05	0.00116766054644824	3-methyl-2-oxovalerate (interacts with) VAT
+4-cholesten-3-one	VAT	0.358823623033783	5.24814022817566e-06	0.000157739123035645	4-cholesten-3-one (interacts with) VAT
+4-hydroxyglutamate	VAT	0.409918423864655	1.42548661763442e-07	6.05882811040142e-06	4-hydroxyglutamate (interacts with) VAT
+4-methyl-2-oxopentanoate	VAT	0.34361113182292	1.370515246224e-05	0.00036883210724043	4-methyl-2-oxopentanoate (interacts with) VAT
+5-methylthioadenosine (MTA)	VAT	0.294397474956973	0.000220895812152122	0.00397716949904367	5-methylthioadenosine (MTA) (interacts with) VAT
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)	VAT	-0.31010077910949	9.58410913010077e-05	0.00196870938739568	5alpha-pregnan-3beta,20alpha-diol monosulfate (2) (interacts with) VAT
+5alpha-pregnan-3beta,20beta-diol monosulfate (1)	VAT	-0.234989250123583	0.00345702158891026	0.0354382451300048	5alpha-pregnan-3beta,20beta-diol monosulfate (1) (interacts with) VAT
+7-HOCA	VAT	0.26283358784336	0.00102958297201283	0.0138838758210173	7-HOCA (interacts with) VAT
+9,10-DiHOME	VAT	-0.244836990596193	0.00228694326376844	0.025818612819714	9,10-DiHOME (interacts with) VAT
+abacavir	VAT	-0.270729353544558	0.000712534203293202	0.0103559285265509	abacavir (interacts with) VAT
+acetylcarnitine (C2)	VAT	0.237067788462064	0.00317261986810591	0.0332237031862467	acetylcarnitine (C2) (interacts with) VAT
+alpha-hydroxyisocaproate	VAT	0.251911120941067	0.00168238068274218	0.0203566491442062	alpha-hydroxyisocaproate (interacts with) VAT
+alpha-hydroxymetoprolol	VAT	0.232709124344431	0.00379525565779781	0.0380187895445897	alpha-hydroxymetoprolol (interacts with) VAT
+alpha-ketobutyrate	VAT	0.322041408844987	4.9188369082076e-05	0.00111799069624432	alpha-ketobutyrate (interacts with) VAT
+alpha-ketoglutarate	VAT	0.326670313279009	3.76914797750594e-05	0.000890667091811907	alpha-ketoglutarate (interacts with) VAT
+arachidonoylcarnitine (C20:4)	VAT	0.274045903836873	0.000608435568231869	0.00913102854968645	arachidonoylcarnitine (C20:4) (interacts with) VAT
+asparagine	VAT	-0.229952445931096	0.00424375692496604	0.0412438679648912	asparagine (interacts with) VAT
+aspartate	VAT	0.322358314027083	4.83066071241822e-05	0.00110070616313245	aspartate (interacts with) VAT
+beta-citrylglutamate	VAT	0.395112070886364	4.31779513476727e-07	1.66516283294404e-05	beta-citrylglutamate (interacts with) VAT
+beta-cryptoxanthin	VAT	-0.370877247652865	2.36665563146943e-06	7.72825620760023e-05	beta-cryptoxanthin (interacts with) VAT
+butyrylcarnitine (C4)	VAT	0.387321159323713	7.57323809219557e-07	2.78136835012604e-05	butyrylcarnitine (C4) (interacts with) VAT
+carboxyibuprofen glucuronide*	VAT	0.256995265288043	0.00134209056895829	0.0171045651723491	carboxyibuprofen glucuronide* (interacts with) VAT
+carotene diol (1)	VAT	-0.338690722006517	1.84992159644182e-05	0.00048027767144547	carotene diol (1) (interacts with) VAT
+carotene diol (2)	VAT	-0.477313658381539	4.42772929432067e-10	2.83274241681838e-08	carotene diol (2) (interacts with) VAT
+carotene diol (3)	VAT	-0.384158344518249	9.47477548196574e-07	3.40540351304649e-05	carotene diol (3) (interacts with) VAT
+cholesterol	VAT	0.233753364254914	0.00363682178065039	0.0368221395994351	cholesterol (interacts with) VAT
+cis-4-decenoate (10:1n6)*	VAT	0.227783092281944	0.00462956291169392	0.0439917309327834	cis-4-decenoate (10:1n6)* (interacts with) VAT
+cortolone glucuronide (1)	VAT	0.410726835776471	1.33970250226767e-07	5.73462588843265e-06	cortolone glucuronide (1) (interacts with) VAT
+cysteine s-sulfate	VAT	0.281118644466908	0.000431567596616222	0.00691110120894058	cysteine s-sulfate (interacts with) VAT
+cysteine-glutathione disulfide	VAT	-0.225243593526675	0.00512092890835847	0.0473743019256864	cysteine-glutathione disulfide (interacts with) VAT
+cysteinylglycine disulfide*	VAT	0.303011722213592	0.000140541052389587	0.00272621548723441	cysteinylglycine disulfide* (interacts with) VAT
+cystine	VAT	0.306176076395136	0.000118608299993772	0.00236188235663645	cystine (interacts with) VAT
+decadienedioic acid (C10:2-DC)	VAT	0.227002657897636	0.00477586816080011	0.0449964779401655	decadienedioic acid (C10:2-DC) (interacts with) VAT
+deoxycholic acid 12-sulfate*	VAT	0.256615140610115	0.00136517140103987	0.0173247344528756	deoxycholic acid 12-sulfate* (interacts with) VAT
+deoxycholic acid glucuronide	VAT	0.234456352960349	0.00353354301927666	0.0360342343955384	deoxycholic acid glucuronide (interacts with) VAT
+dihomo-linolenoylcarnitine (C20:3n3 or 6)*	VAT	0.254080447111174	0.00152857568941789	0.0189119756615549	dihomo-linolenoylcarnitine (C20:3n3 or 6)* (interacts with) VAT
+ethylmalonate	VAT	0.306661339136763	0.000115542183507067	0.00231009534756979	ethylmalonate (interacts with) VAT
+etiocholanolone glucuronide	VAT	-0.232113972067772	0.00388830586286293	0.0386963641229998	etiocholanolone glucuronide (interacts with) VAT
+gamma-glutamylglutamate	VAT	0.440826501528825	1.17853944381352e-08	6.08520906842384e-07	gamma-glutamylglutamate (interacts with) VAT
+gamma-glutamylglutamine	VAT	-0.302248282794862	0.000146371353900721	0.00282130424832051	gamma-glutamylglutamine (interacts with) VAT
+gamma-glutamylisoleucine*	VAT	0.278560197958052	0.000489174626270295	0.00765734221194808	gamma-glutamylisoleucine* (interacts with) VAT
+gamma-glutamylphenylalanine	VAT	0.242993394215815	0.00247395628662295	0.0274501042632984	gamma-glutamylphenylalanine (interacts with) VAT
+gamma-glutamylvaline	VAT	0.287893637304954	0.000307912706419167	0.00524109322666407	gamma-glutamylvaline (interacts with) VAT
+glucuronide of piperine metabolite C17H21NO3 (3)*	VAT	0.327640892702154	3.56255954319096e-05	0.000848343146614823	glucuronide of piperine metabolite C17H21NO3 (3)* (interacts with) VAT
+glucuronide of piperine metabolite C17H21NO3 (4)*	VAT	0.312412924844776	8.44131628905398e-05	0.00176918816159119	glucuronide of piperine metabolite C17H21NO3 (4)* (interacts with) VAT
+glucuronide of piperine metabolite C17H21NO3 (5)*	VAT	0.296290941326719	0.000200237721353247	0.00366583233106255	glucuronide of piperine metabolite C17H21NO3 (5)* (interacts with) VAT
+glutamate	VAT	0.513275640960338	1.16804343974763e-11	9.30572921526883e-10	glutamate (interacts with) VAT
+glycine	VAT	-0.229208863782718	0.00437261829449564	0.0421628205369513	glycine (interacts with) VAT
+glycine conjugate of C10H12O2*	VAT	0.296704594664931	0.000195970668127821	0.00360268631489808	glycine conjugate of C10H12O2* (interacts with) VAT
+glycine conjugate of C10H14O2 (1)*	VAT	0.319890625712236	5.55838318205826e-05	0.00123915660279511	glycine conjugate of C10H14O2 (1)* (interacts with) VAT
+guanidinosuccinate	VAT	-0.253369315127268	0.00157752120836907	0.0193732590622954	guanidinosuccinate (interacts with) VAT
+hexadecasphingosine (d16:1)*	VAT	0.226729443383403	0.00482805737966707	0.0453387073529733	hexadecasphingosine (d16:1)* (interacts with) VAT
+hexanoylcarnitine (C6)	VAT	0.329669409166854	3.16466931706838e-05	0.000765969934414502	hexanoylcarnitine (C6) (interacts with) VAT
+hydroxyasparagine	VAT	0.37354383184585	1.97567164894608e-06	6.57472198441776e-05	hydroxyasparagine (interacts with) VAT
+isoleucine	VAT	0.23002622710984	0.00423115860581236	0.0411602011037803	isoleucine (interacts with) VAT
+isoursodeoxycholate	VAT	0.224563390381518	0.00526022927959557	0.0482824589645608	isoursodeoxycholate (interacts with) VAT
+leucine	VAT	0.230962923501173	0.00407410968327682	0.0400598646583499	leucine (interacts with) VAT
+linolenoylcarnitine (C18:3)*	VAT	0.2697164186371	0.000747452295138729	0.0107569530381772	linolenoylcarnitine (C18:3)* (interacts with) VAT
+malonylcarnitine	VAT	0.2424746185143	0.00252902182956394	0.0279110065123869	malonylcarnitine (interacts with) VAT
+metoprolol	VAT	0.254152386775768	0.00152370218673603	0.0188685837264565	metoprolol (interacts with) VAT
+myristoylcarnitine (C14)	VAT	0.236057372952214	0.00330812413239401	0.034296593782459	myristoylcarnitine (C14) (interacts with) VAT
+N,N,N-trimethyl-5-aminovalerate	VAT	0.225663887312563	0.0050365148090159	0.0467964163996599	N,N,N-trimethyl-5-aminovalerate (interacts with) VAT
+N,N,N-trimethyl-alanylproline betaine (TMAP)	VAT	0.251209793273495	0.00173504066424046	0.0208594878116365	N,N,N-trimethyl-alanylproline betaine (TMAP) (interacts with) VAT
+N-acetyl-beta-alanine	VAT	0.239829954766629	0.00282737415552248	0.0304157978469666	N-acetyl-beta-alanine (interacts with) VAT
+N-acetylglucosamine/N-acetylgalactosamine	VAT	0.294831383120898	0.000215993994570729	0.00390703578266301	N-acetylglucosamine/N-acetylgalactosamine (interacts with) VAT
+N-acetylglucosaminylasparagine	VAT	0.255640588578225	0.00142601074882731	0.0179143304270713	N-acetylglucosaminylasparagine (interacts with) VAT
+N-acetylglutamate	VAT	0.246508214931498	0.00212859453128789	0.024437817841092	N-acetylglutamate (interacts with) VAT
+N-acetylneuraminate	VAT	0.272433177724786	0.000657166792266572	0.00971509096562921	N-acetylneuraminate (interacts with) VAT
+N-formylanthranilic acid	VAT	-0.293023594809658	0.000237106759554795	0.004221736518631	N-formylanthranilic acid (interacts with) VAT
+N1-methylinosine	VAT	0.272862061172664	0.000643868201525066	0.00955126792585822	N1-methylinosine (interacts with) VAT
+N2,N2-dimethylguanosine	VAT	0.285996218794051	0.000338736618234581	0.00567120926629039	N2,N2-dimethylguanosine (interacts with) VAT
+N4-acetylcytidine	VAT	0.258302465569442	0.00126541228339816	0.016332796113353	N4-acetylcytidine (interacts with) VAT
+nicotinamide	VAT	0.251831363006285	0.00168829516162594	0.0204145570428688	nicotinamide (interacts with) VAT
+nisinate (24:6n3)	VAT	0.232168518727325	0.00387969306015545	0.0386326654300804	nisinate (24:6n3) (interacts with) VAT
+oleoylcarnitine (C18:1)	VAT	0.268849891104415	0.000778564703633133	0.0111135485936848	oleoylcarnitine (C18:1) (interacts with) VAT
+orotidine	VAT	0.383492083705616	9.92964058088575e-07	3.55163340813612e-05	orotidine (interacts with) VAT
+oxalate (ethanedioate)	VAT	-0.287082782573596	0.000320752476687947	0.00542104456364786	oxalate (ethanedioate) (interacts with) VAT
+palmitoleoylcarnitine (C16:1)*	VAT	0.240800602446227	0.00271436297814809	0.0294621857328874	palmitoleoylcarnitine (C16:1)* (interacts with) VAT
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)	VAT	-0.349670758076216	9.40606041721637e-06	0.000264463152951157	palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0) (interacts with) VAT
+palmitoylcarnitine (C16)	VAT	0.314159299450081	7.66407703323146e-05	0.0016280474605058	palmitoylcarnitine (C16) (interacts with) VAT
+pregnanediol-3-glucuronide	VAT	-0.302644840947324	0.000143315314634407	0.00277166530427995	pregnanediol-3-glucuronide (interacts with) VAT
+pregnenetriol disulfate*	VAT	0.293013168841985	0.000237233899217593	0.00422342484288234	pregnenetriol disulfate* (interacts with) VAT
+propionylglycine (C3)	VAT	-0.315182655767577	7.24029676117954e-05	0.00154944326752769	propionylglycine (C3) (interacts with) VAT
+retinol (Vitamin A)	VAT	0.318931447595277	5.8680507626363e-05	0.00129786015211771	retinol (Vitamin A) (interacts with) VAT
+S-adenosylhomocysteine (SAH)	VAT	0.327250248743658	3.64439437832154e-05	0.000865202706312276	S-adenosylhomocysteine (SAH) (interacts with) VAT
+S-methylmethionine	VAT	-0.256829910595884	0.00135208660448827	0.0171956275196885	S-methylmethionine (interacts with) VAT
+sphinganine	VAT	0.269944262115333	0.000739463631194592	0.0106627288609634	sphinganine (interacts with) VAT
+stearoylcarnitine (C18)	VAT	0.23089545987635	0.00408524325339821	0.0401421557739424	stearoylcarnitine (C18) (interacts with) VAT
+tartronate (hydroxymalonate)	VAT	-0.249196474120008	0.00189465729252447	0.0223259317575695	tartronate (hydroxymalonate) (interacts with) VAT
+thioproline	VAT	0.258558384989473	0.00125087753672037	0.0161888981251059	thioproline (interacts with) VAT
+threonate	VAT	-0.228151545943836	0.00456189685284025	0.0435318327089346	threonate (interacts with) VAT
+tryptophan betaine	VAT	-0.271636097414035	0.000682556085351615	0.0100025477864298	tryptophan betaine (interacts with) VAT
+undecenoylcarnitine (C11:1)	VAT	0.224745350980379	0.00522263696569492	0.0480329945179598	undecenoylcarnitine (C11:1) (interacts with) VAT
+urate	VAT	0.318772862862078	5.92078174110888e-05	0.00130716310617579	urate (interacts with) VAT
+valine	VAT	0.249753727592912	0.00184919230544556	0.0219126912778252	valine (interacts with) VAT
+10-heptadecenoate (17:1n7)	SAT	0.228194913069088	0.00455399115341137	0.0434722642724224	10-heptadecenoate (17:1n7) (interacts with) SAT
+11-ketoetiocholanolone glucuronide	SAT	-0.228357696187626	0.00452442576257917	0.0432732720230404	11-ketoetiocholanolone glucuronide (interacts with) SAT
+3-(3-hydroxyphenyl)propionate	SAT	-0.261446171320479	0.00109712048396493	0.0145973402630911	3-(3-hydroxyphenyl)propionate (interacts with) SAT
+3-(3-hydroxyphenyl)propionate sulfate	SAT	-0.240625551471853	0.00273443689399011	0.0296333081128757	3-(3-hydroxyphenyl)propionate sulfate (interacts with) SAT
+3-hydroxyhippurate	SAT	-0.244481078102072	0.002322015760444	0.0261250429010317	3-hydroxyhippurate (interacts with) SAT
+3-hydroxyhippurate sulfate	SAT	-0.226797904719626	0.00481493220459761	0.0452503443586333	3-hydroxyhippurate sulfate (interacts with) SAT
+4-hydroxyhippurate	SAT	-0.261971415695768	0.00107108909976161	0.0143165200085019	4-hydroxyhippurate (interacts with) SAT
+4-imidazoleacetate	SAT	-0.225187837857022	0.0051322217712686	0.047445923727701	4-imidazoleacetate (interacts with) SAT
+acetylcarnitine (C2)	SAT	0.268478132490044	0.000792273848657432	0.011268396125075	acetylcarnitine (C2) (interacts with) SAT
+arachidonate (20:4n6)	SAT	0.272988089325483	0.000640007757749084	0.0095069511404085	arachidonate (20:4n6) (interacts with) SAT
+caffeic acid sulfate	SAT	-0.224050421985357	0.00536751252146139	0.0490023472240741	caffeic acid sulfate (interacts with) SAT
+carboxyibuprofen	SAT	0.224502522818942	0.00527285817431222	0.0483717009399291	carboxyibuprofen (interacts with) SAT
+catechol sulfate	SAT	-0.25312551568471	0.00159462740263838	0.0195372082264072	catechol sulfate (interacts with) SAT
+creatine	SAT	0.274029529185291	0.000608913162540414	0.00913504886976073	creatine (interacts with) SAT
+cytosine	SAT	-0.255795933927616	0.00141614996037687	0.0178219996566994	cytosine (interacts with) SAT
+dihomolinoleate (20:2n6)	SAT	0.262897427049802	0.00102656904438758	0.0138548139032614	dihomolinoleate (20:2n6) (interacts with) SAT
+dihomolinolenate (20:3n3 or 3n6)	SAT	0.330203282952824	3.0671236465718e-05	0.000745304962817289	dihomolinolenate (20:3n3 or 3n6) (interacts with) SAT
+dimethyl sulfone	SAT	-0.262500900493685	0.0010454211747426	0.014049309560942	dimethyl sulfone (interacts with) SAT
+docosapentaenoate (n6 DPA; 22:5n6)	SAT	0.23049531622962	0.00415184298482485	0.0406336278421712	docosapentaenoate (n6 DPA; 22:5n6) (interacts with) SAT
+dodecadienoate (12:2)*	SAT	0.240022851342227	0.00280458250978866	0.0302238863856562	dodecadienoate (12:2)* (interacts with) SAT
+etiocholanolone glucuronide	SAT	-0.226933541607189	0.00478902271855741	0.0450770845068325	etiocholanolone glucuronide (interacts with) SAT
+gentisate	SAT	-0.306223310063573	0.000118306552188141	0.00235743017560443	gentisate (interacts with) SAT
+glycerol	SAT	0.311212412108977	9.01773483801271e-05	0.00187039995579695	glycerol (interacts with) SAT
+guaiacol sulfate	SAT	-0.229644062175649	0.00429677959382824	0.0416157842362495	guaiacol sulfate (interacts with) SAT
+hexanoylcarnitine (C6)	SAT	0.234279860245688	0.0035592208141868	0.0362237059104537	hexanoylcarnitine (C6) (interacts with) SAT
+indoleacetoylcarnitine*	SAT	0.273350187049827	0.000629034403804241	0.00937663302211566	indoleacetoylcarnitine* (interacts with) SAT
+linoleate (18:2n6)	SAT	0.241929363555722	0.00258809214755629	0.0284014244730976	linoleate (18:2n6) (interacts with) SAT
+N,N-dimethyl-5-aminovalerate	SAT	-0.253254126875736	0.00158558244140727	0.0194491068425332	N,N-dimethyl-5-aminovalerate (interacts with) SAT
+N-carbamoylalanine	SAT	-0.249767946464705	0.00184804531580207	0.0219024096189888	N-carbamoylalanine (interacts with) SAT
+N-methylpipecolate	SAT	-0.224854539395734	0.00520019461715671	0.0478996287912069	N-methylpipecolate (interacts with) SAT
+o-cresol sulfate	SAT	-0.234260345116435	0.00356207034956024	0.0362440727402907	o-cresol sulfate (interacts with) SAT
+oleoyl ethanolamide	SAT	0.225883164978519	0.00499297015567324	0.0464922318174558	oleoyl ethanolamide (interacts with) SAT
+palmitate (16:0)	SAT	0.231740271837699	0.00394777622183806	0.0391396295544274	palmitate (16:0) (interacts with) SAT
+pentadecanoate (15:0)	SAT	0.224787695112235	0.0052139233822186	0.0479787420201607	pentadecanoate (15:0) (interacts with) SAT
+phenylpyruvate	SAT	-0.224795695106991	0.00521227860300311	0.0479733502034245	phenylpyruvate (interacts with) SAT
+propionylglycine (C3)	SAT	-0.272530499145443	0.000654127111827663	0.0096771759317443	propionylglycine (C3) (interacts with) SAT
+pyroglutamine*	SAT	-0.326946740794949	3.70919155741056e-05	0.000878192932941291	pyroglutamine* (interacts with) SAT
+quinate	SAT	-0.24611598396128	0.0021648373994112	0.0247501165563793	quinate (interacts with) SAT
+testosterone sulfate	SAT	-0.266646403593907	0.000863117722928131	0.0120637394875987	testosterone sulfate (interacts with) SAT
+tetradecadienoate (14:2)*	SAT	0.226455934141214	0.00488081400955531	0.0457237222195505	tetradecadienoate (14:2)* (interacts with) SAT
+1,7-dimethylurate	CD4_CD8	-0.221245064574389	0.00535880782153786	0.0489523436054192	1,7-dimethylurate (interacts with) CD4_CD8
+hydroxy-N6,N6,N6-trimethyllysine*	CD4_CD8	-0.223394053379026	0.00491758703089351	0.0459693549886241	hydroxy-N6,N6,N6-trimethyllysine* (interacts with) CD4_CD8
+indoleacetate	CD4_CD8	-0.231552588940592	0.00352370096227261	0.0359591215930518	indoleacetate (interacts with) CD4_CD8
+kynurenine	CD4_CD8	-0.243440617470393	0.00212428252499164	0.0244003087065085	kynurenine (interacts with) CD4_CD8
+leucylglycine	CD4_CD8	-0.268304975556304	0.000680044590130269	0.00997653377816114	leucylglycine (interacts with) CD4_CD8
+orotidine	CD4_CD8	-0.261897341675315	0.00092179411604798	0.0127228357183228	orotidine (interacts with) CD4_CD8
+undecanedioate (C11-DC)	CD4_CD8	-0.23932072517033	0.00253853678000526	0.0279876535492521	undecanedioate (C11-DC) (interacts with) CD4_CD8

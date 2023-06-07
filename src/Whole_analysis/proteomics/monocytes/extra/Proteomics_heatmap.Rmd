@@ -1,0 +1,73 @@
+---
+title: "Proteomics heatmap"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+col <- c( "#005900", "#878782",	"#761212")
+```
+
+```{r}
+dge <- read.delim("results/LIMMA/LIMMA_monocytes_proteomics_frac_filt.csv", sep =  " ")
+dge <- dge[dge$logFC > 10, c(1,2, 4, 6)]
+data <- read.csv("processing/norm_data_with_conditions_frac.csv")
+condition <- data$condition
+sample <- data$replicate
+```
+
+```{r}
+data <- data.frame(t(data[,-c(1:5)]))
+data$BIOCHEMICAL <- rownames(data)
+
+data <- merge(dge, data, by = "BIOCHEMICAL")
+```
+
+
+```{r}
+data[,-c(1:4)] <- data.frame(t(scale(t(data[,-c(1:4)] ))))
+```
+
+```{r}
+library(circlize)
+library(ComplexHeatmap)
+col_fun1 = colorRamp2(c(-8,-4, -1.5, 0, 1.5, 4, 8), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+col_fun_2 = colorRamp2(c(-50, 0, 50), c("blue", "white", "red"))
+```
+
+
+
+```{r}
+pdf("results/figures/Heatmap_proteomics_monocytes_frac_top_500.pdf", width = 7, height = 9)
+ht = Heatmap(data[,-c(1:4)], 
+             #column_order = sort(colnames(t(data_prot_6[,-c(1:5)]))),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             column_split = condition, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = data$logFC,
+                                              col = list(LogFC = col_fun_2), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(cluster = condition,
+                                                rep = as.factor(sample),
+                                              col = list(cluster = c("Ctrl" = col[1], "A" = col[2], "B" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```

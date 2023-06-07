@@ -1,0 +1,70 @@
+Line	BIOCHEMICAL	SUPER.PATHWAY	SUB.PATHWAY	names_2	type	group	under_group
+302	butyrate/isobutyrate (4:0)	Lipid	Short Chain Fatty Acid	butyrate/isobutyrate (4:0)	MDM	produced_by_intestinal_bacteria	Short Chain Fatty Acid
+637	N-acetylputrescine	Amino Acid	Polyamine Metabolism	N-acetylputrescine	MDM	produced_by_intestinal_bacteria	Polyamines
+792	spermidine	Amino Acid	Polyamine Metabolism	spermidine	MDM	produced_by_intestinal_bacteria	Polyamines
+793	spermine	Amino Acid	Polyamine Metabolism	spermine	MDM	produced_by_intestinal_bacteria	Polyamines
+819	taurine	Amino Acid	Methionine, Cysteine, SAM and Taurine Metabolism	taurine	MDM	produced_by_host_modified_by_bacteria	Taurine
+363	deoxycholate	Lipid	Secondary Bile Acid Metabolism	deoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+364	deoxycholic acid 12-sulfate*	Lipid	Secondary Bile Acid Metabolism	deoxycholic acid 12-sulfate*	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+365	deoxycholic acid glucuronide	Lipid	Secondary Bile Acid Metabolism	deoxycholic acid glucuronide	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+483	glycocholenate sulfate*	Lipid	Secondary Bile Acid Metabolism	glycocholenate sulfate*	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+484	glycodeoxycholate	Lipid	Secondary Bile Acid Metabolism	glycodeoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+485	glycodeoxycholate 3-sulfate	Lipid	Secondary Bile Acid Metabolism	glycodeoxycholate 3-sulfate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+486	glycohyocholate	Lipid	Secondary Bile Acid Metabolism	glycohyocholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+487	glycolithocholate	Lipid	Secondary Bile Acid Metabolism	glycolithocholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+488	glycolithocholate sulfate*	Lipid	Secondary Bile Acid Metabolism	glycolithocholate sulfate*	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+489	glycoursodeoxycholate	Lipid	Secondary Bile Acid Metabolism	glycoursodeoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+490	glycoursodeoxycholic acid sulfate (1)	Lipid	Secondary Bile Acid Metabolism	glycoursodeoxycholic acid sulfate (1)	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+522	hyocholate	Lipid	Secondary Bile Acid Metabolism	hyocholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+543	isoursodeoxycholate	Lipid	Secondary Bile Acid Metabolism	isoursodeoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+567	lithocholate sulfate (1)	Lipid	Secondary Bile Acid Metabolism	lithocholate sulfate (1)	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+822	taurochenodeoxycholic acid 3-sulfate	Lipid	Secondary Bile Acid Metabolism	taurochenodeoxycholic acid 3-sulfate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+824	taurocholenate sulfate*	Lipid	Secondary Bile Acid Metabolism	taurocholenate sulfate*	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+825	taurodeoxycholate	Lipid	Secondary Bile Acid Metabolism	taurodeoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+826	taurodeoxycholic acid 3-sulfate	Lipid	Secondary Bile Acid Metabolism	taurodeoxycholic acid 3-sulfate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+827	taurohyocholate*	Lipid	Secondary Bile Acid Metabolism	taurohyocholate*	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+828	taurolithocholate 3-sulfate	Lipid	Secondary Bile Acid Metabolism	taurolithocholate 3-sulfate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+863	ursodeoxycholate	Lipid	Secondary Bile Acid Metabolism	ursodeoxycholate	MDM	produced_by_host_modified_by_bacteria	Secondary Bile Acid Metabolism
+23	1-methyl-4-imidazoleacetate	Amino Acid	Histidine Metabolism	1-methyl-4-imidazoleacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+24	1-methyl-5-imidazoleacetate	Amino Acid	Histidine Metabolism	1-methyl-5-imidazoleacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+31	1-ribosyl-imidazoleacetate*	Amino Acid	Histidine Metabolism	1-ribosyl-imidazoleacetate*	MDM	produced_by_intestinal_bacteria	Acetate derivates
+46	1H-indole-7-acetic acid	Xenobiotics	Bacterial/Fungal	1H-indole-7-acetic acid	MDM	produced_by_intestinal_bacteria	Indole derivatives
+50	2,3-dihydroxy-2-methylbutyrate	Amino Acid	Leucine, Isoleucine and Valine Metabolism	2,3-dihydroxy-2-methylbutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+57	2-aminobutyrate	Amino Acid	Glutathione Metabolism	2-aminobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+66	2-hydroxybutyrate/2-hydroxyisobutyrate	Amino Acid	Glutathione Metabolism	2-hydroxybutyrate/2-hydroxyisobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+74	2-hydroxyphenylacetate	Amino Acid	Phenylalanine Metabolism	2-hydroxyphenylacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+90	2-oxindole-3-acetate	Xenobiotics	Food Component/Plant	2-oxindole-3-acetate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+94	2R,3R-dihydroxybutyrate	Lipid	Fatty Acid, Dihydroxy	2R,3R-dihydroxybutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+95	2S,3R-dihydroxybutyrate	Lipid	Fatty Acid, Dihydroxy	2S,3R-dihydroxybutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+96	3,4-dihydroxybutyrate	Lipid	Fatty Acid, Dihydroxy	3,4-dihydroxybutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+100	3-(3-hydroxyphenyl)propionate	Xenobiotics	Benzoate Metabolism	3-(3-hydroxyphenyl)propionate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+101	3-(3-hydroxyphenyl)propionate sulfate	Xenobiotics	Benzoate Metabolism	3-(3-hydroxyphenyl)propionate sulfate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+108	3-aminoisobutyrate	Nucleotide	Pyrimidine Metabolism, Thymine containing	3-aminoisobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+110	3-carboxy-4-methyl-5-pentyl-2-furanpropionate (3-CMPFP)	Lipid	Fatty Acid, Dicarboxylate	3-carboxy-4-methyl-5-pentyl-2-furanpropionate (3-CMPFP)	MDM	produced_by_intestinal_bacteria	Propionate derivates
+115	3-formylindole	Xenobiotics	Food Component/Plant	3-formylindole	MDM	produced_by_intestinal_bacteria	Indole derivatives
+116	3-hydroxy-2-ethylpropionate	Amino Acid	Leucine, Isoleucine and Valine Metabolism	3-hydroxy-2-ethylpropionate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+120	3-hydroxybutyrate (BHBA)	Lipid	Ketone Bodies	3-hydroxybutyrate (BHBA)	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+130	3-hydroxyisobutyrate	Amino Acid	Leucine, Isoleucine and Valine Metabolism	3-hydroxyisobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+140	3-indoleglyoxylic acid	Xenobiotics	Food Component/Plant	3-indoleglyoxylic acid	MDM	produced_by_intestinal_bacteria	Indole derivatives
+148	3-methyl-2-oxobutyrate	Amino Acid	Leucine, Isoleucine and Valine Metabolism	3-methyl-2-oxobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+157	3-phenylpropionate (hydrocinnamate)	Xenobiotics	Benzoate Metabolism	3-phenylpropionate (hydrocinnamate)	MDM	produced_by_intestinal_bacteria	Propionate derivates
+159	3-ureidopropionate	Nucleotide	Pyrimidine Metabolism, Uracil containing	3-ureidopropionate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+183	4-imidazoleacetate	Amino Acid	Histidine Metabolism	4-imidazoleacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+221	6-hydroxyindole sulfate	Xenobiotics	Chemical	6-hydroxyindole sulfate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+225	7-hydroxyindole sulfate	Amino Acid	Tryptophan Metabolism	7-hydroxyindole sulfate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+234	acetoacetate	Lipid	Ketone Bodies	acetoacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+253	alpha-ketobutyrate	Amino Acid	Methionine, Cysteine, SAM and Taurine Metabolism	alpha-ketobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+333	citalopram propionate*	Xenobiotics	Drug - Psychoactive	citalopram propionate*	MDM	produced_by_intestinal_bacteria	Propionate derivates
+430	gamma-glutamyl-2-aminobutyrate	Peptide	Gamma-glutamyl Amino Acid	gamma-glutamyl-2-aminobutyrate	MDM	produced_by_intestinal_bacteria	Butyrate derivates
+494	guanidinoacetate	Amino Acid	Creatine Metabolism	guanidinoacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates
+515	hydantoin-5-propionate	Amino Acid	Histidine Metabolism	hydantoin-5-propionate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+528	imidazole propionate	Amino Acid	Histidine Metabolism	imidazole propionate	MDM	produced_by_intestinal_bacteria	Propionate derivates
+529	iminodiacetate (IDA)	Xenobiotics	Chemical	iminodiacetate (IDA)	MDM	produced_by_intestinal_bacteria	Acetate derivates
+530	indole-3-carboxylate	Amino Acid	Tryptophan Metabolism	indole-3-carboxylate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+531	indoleacetate	Amino Acid	Tryptophan Metabolism	indoleacetate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+532	indoleacetoylcarnitine*	Amino Acid	Tryptophan Metabolism	indoleacetoylcarnitine*	MDM	produced_by_intestinal_bacteria	Indole derivatives
+533	indoleacetylglutamine	Amino Acid	Tryptophan Metabolism	indoleacetylglutamine	MDM	produced_by_intestinal_bacteria	Indole derivatives
+534	indolelactate	Amino Acid	Tryptophan Metabolism	indolelactate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+535	indolepropionate	Amino Acid	Tryptophan Metabolism	indolepropionate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+591	methyl indole-3-acetate	Xenobiotics	Food Component/Plant	methyl indole-3-acetate	MDM	produced_by_intestinal_bacteria	Indole derivatives
+730	phenylacetate	Amino Acid	Phenylalanine Metabolism	phenylacetate	MDM	produced_by_intestinal_bacteria	Acetate derivates

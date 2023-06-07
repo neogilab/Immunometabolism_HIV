@@ -1,0 +1,682 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+model 1 = condition (Ctrl, C1, C2)
+model 2 = condition (C1, C2)
+model 2 = condition (C1, C2) + co-factors
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(DESeq2)
+library(dplyr)
+library(SNFtool)
+library(xlsx)
+library(ggplot2)
+library(corrr)
+library(mygene)
+library(edgeR)
+library(piano)
+library(org.Hs.eg.db)
+library(scales)
+library(ggpubr)
+```
+
+```{r}
+#' Save figure as PDF in results
+#'
+#' @param file 
+#' @param name_ana name comparison
+#' @param indice_Gene
+#' @param indice_LogFC 
+#' @param indice_FDR 
+#' @param width width of the figure
+pretty_volcano <- function(file, name_ana, indice_Gene, indice_LogFC, indice_FDR){
+  tt <- file
+  tt$color <- NA
+  print(ncol(tt))
+  for (i in 1:nrow(tt)){
+    if(tt[i, indice_LogFC] > 1 & tt[i, indice_FDR] < 0.05){
+      print(tt[i, indice_Gene])
+      tt[i, ncol(tt)] <- "up_regulated"
+    }
+    if(tt[i, indice_LogFC] < -1 & tt[i, indice_FDR] < 0.05){
+      print(tt[i, indice_Gene])
+      tt[i, ncol(tt)] <- "down_regulated"
+    }
+    if(tt[i, indice_FDR] > 0.05){
+      tt[i, ncol(tt)] <- "NS"
+      tt[i, indice_Gene] <- NA
+    }
+  }
+  tt$color[is.na(tt$color)] <- "significant"
+  tt$Gene_name[tt$color == "significant"] <- NA
+  cols <- c("up_regulated" = "#cc0000", "down_regulated" = "#1b3651", "NS" = "darkgrey", "significant" = "#ffff99")
+  vol <- ggplot(tt, aes(x = logFC, y = -log10(adj.P.Val), colour = logFC))+ 
+  geom_point(size=2, alpha = 1, na.rm = T, aes(colour=logFC, fill=logFC), 
+  shape = 21,size = 12,colour = "black")+
+  scale_fill_gradientn(colours=c("#1b3651","#527190","white","#ff6666","#cc0000"),
+                         values=rescale(c(min(tt$logFC),min(tt$logFC)/4, 0,max(tt$logFC)/4, max(tt$logFC))), 
+                         space = "Lab")+ 
+  theme(legend.title=element_text(size=2),legend.text=element_text(size=2),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=25),axis.title.x=element_text(size=25),
+        axis.text.y=element_text(size=25),axis.text.x=element_text(size=25)) +
+  labs(x="Log2 Fold Change",y="-log10 (adj.P.Val)")+
+  geom_text_repel(aes(label = Gene_name),size=2,label.size = 0.1, color = "black", xlim = c(NA, Inf),
+    # Do not repel from top or bottom edges.
+    ylim = c(-Inf, Inf))+ theme_classic()
+
+  print(vol)
+  path_fig <- paste0("results/figures/volcano_plots/", name_ana, "_volcano_plot.pdf")
+  ggsave(path_fig, width = 4, height = 3)
+  return(tt)
+
+}
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean.csv")
+names(clinical)
+clinical <- clinical[,c(2, 3, 4, 5, 6, 7, 13)]
+```
+
+```{r}
+data <- read.delim("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/salmon.merged.gene_counts.tsv", row.names = 1)
+clinical <- read.csv("processing/clinical_data_clean.csv")
+y <- read.csv("processing/factor_differing_groups_3.csv")
+x <- read.csv("processing/numeric_differing_groups_3.csv")
+
+#gset=loadGSC("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/c2.cp.kegg.v7.5.1.symbols.gmt")
+gset <- loadGSC("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/GSEA/c5.go.bp.v7.5.symbols.gmt")
+clinical_diff <- c(x$x, y$x)
+```
+
+```{r}
+names(clinical)
+```
+
+
+```{r}
+data <- data[,colnames(data) != "P20109_402_R1"]
+rownames(data) <- gsub("\\..*", "", rownames(data))
+data <- data.frame(t(data))
+data$User <- rownames(data)
+clinical$X.2 <- NULL
+clinical$Negin_ID <- NULL
+clinical$NGI.ID <- NULL
+clinical$X.1 <- NULL
+clinical$HIV_Status <- NULL
+data_2 <- merge(clinical, data, by = "User")
+#data_2$User.ID <- NULL
+```
+
+```{r}
+clinical$organism <- "human"
+clinical$tissue <- "PBMCs"
+
+write.csv(clinical, "manuscript/info_transcriptomics.csv")
+```
+
+```{r}
+table_export <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/manuscript/transcriptomics_submission.csv")
+print(colnames(table_export))
+```
+
+```{r}
+data_2$BMI <- scale(data_2$BMI)
+data_2$AGE <- scale(data_2$AGE)
+data_2$SAT <- scale(data_2$SAT)
+data_2$CD4_nadir <- scale(data_2$CD4_nadir)
+data_2$Duration <- scale(data_2$Duration)
+```
+
+
+## MODEL 1
+## Create Deseq2 object
+```{r}
+data_2$cluster[is.na(data_2$cluster)] <- "Ctrl"
+coldata <- data.frame(samples = data_2$User, condition = as.factor(data_2$cluster))
+
+coldata$condition <- relevel(coldata$condition, ref = "Ctrl")
+
+dds <- DESeqDataSetFromMatrix(countData = round(t(data_2[,-c(1:47)])), colData = coldata, design = ~ condition)
+```
+
+```{r}
+dds$genes$Symbol <- mapIds(org.Hs.eg.db, rownames(dds), keytype="ENSEMBL", column="SYMBOL")
+```
+
+```{r}
+dim(dds)
+dds <- dds[!is.na(dds$genes$Symbol), ]
+dim(dds)
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep,]
+dim(dds)
+```
+```{r}
+dds <- DESeq(dds)
+```
+
+```{r}
+list_comp <- c("Ctrl", 1:2)
+list_pair <- t(combn(list_comp, 2))
+```
+
+```{r}
+unique_genes <- unique(dds$genes)
+```
+
+```{r}
+total_res <- data.frame(Gene_name = unique_genes[[1]][!is.na(unique_genes[[1]]) & !duplicated(unique_genes[[1]])])
+
+for (i in 1:nrow(list_pair)) {
+  c2 <- list_pair[i,1]
+  c1 <- list_pair[i,2]
+  print(c(c1, c2))
+  res <- results(dds, contrast=c("condition", c1, c2), cooksCutoff=FALSE, independentFiltering=FALSE)
+  res <- as.data.frame(res)
+  res$Ensembl_ID <- rownames(res)
+  res <- res[rowSums(is.na(res)) != ncol(res), ]
+  res <- res[!duplicated(res$Ensembl_ID),]
+  write.csv(res, file=paste0("results/Deseq2/model1_results_DGE_", c1, "_", c2,".csv"))
+  res <- res[res$padj < 0.1,]
+  #res <- res[res$log2FoldChange < -1 | res$log2FoldChange > 1,]
+  print(paste0("There is ", nrow(res), " differentially expressed genes in ", c2, " vs ", c1))
+  res$Gene_name <- mapIds(org.Hs.eg.db, rownames(res), keytype="ENSEMBL", column="SYMBOL")
+  #res <- merge(res, AnnotationInfo, by = "Ensembl_ID", all.x = TRUE)
+  res <- res[!is.na(res$Gene_name),]
+  res <- res[!duplicated(res$Gene_name),]
+  DESeqout <- res[,c(8, 2, 5, 6)]
+  DESeqout = DESeqout[order(DESeqout$padj),]
+  DESeqout = DESeqout[!duplicated(DESeqout$Gene_name),]
+  rownames(DESeqout) <- DESeqout$Gene_name
+  DESeqout$Gene_name <- NULL
+  DESeqout=DESeqout[ ,c('log2FoldChange','pvalue')] #Piano only needs LFC and pvalue from DESeq
+  
+  pval= as.matrix(DESeqout[ ,2]) 
+  fc= as.matrix(DESeqout[ ,1]) 
+
+  row.names(pval)=row.names(DESeqout)
+  row.names(fc)=row.names(DESeqout)
+  
+  #Main function in PIANO. Uses the pvalues, fold-changes, and gene sets. 
+  gsaRes <- runGSA(geneLevelStats=pval,
+                   directions= fc,
+                   geneSetStat="mean",
+                   signifMethod="geneSampling", 
+                   adjMethod="fdr",
+                   gsc=gset,
+                   gsSizeLim=c(10,800),
+                   nPerm = 1000)
+
+  #Writes the output from PIANO to a file "piano.txt". Setting "save=FALSE" simply shows the result from PIANO
+  GSAsummaryTable(gsaRes, save=TRUE, file=paste0("results/GSEA/model1_gsea_results", c1, " vs ", c2 , ".txt"))
+
+  write.csv(DESeqout, paste0("results/GSEA/model1_gsea_input_", c1, "_", c2 , ".csv"))
+  names(res)[c(2,6)] <- c(paste0("LFC_", c1, "_", c2), paste0("FDR_", c1, "_", c2))
+  write.csv(res, file=paste0("results/Deseq2/model1_results_DGE_", c1, "_", c2,"_filt.csv"))
+  print(nrow(res))
+  res <- res[,c(8, 2, 6)]
+  total_res <- merge(total_res, res, by = "Gene_name", all.x = TRUE, all.y = TRUE)
+}
+
+rownames(total_res) <- total_res$Gene_name
+write.csv(total_res,"processing/model1_results_DGE_Deseq2.csv")
+```
+
+```{r}
+data_3 <- data_2[data_2$cluster != "Ctrl",]
+```
+
+## Create Deseq2 object
+```{r}
+coldata <- data.frame(samples = data_3$User, condition = as.factor(data_3$cluster))
+
+coldata$condition <- relevel(coldata$condition, ref = 1)
+
+dds <- DESeqDataSetFromMatrix(countData = round(t(data_3[,-c(1:47)])), colData = coldata, design = ~ condition)
+```
+
+```{r}
+dds$genes$Symbol <- mapIds(org.Hs.eg.db, rownames(dds), keytype="ENSEMBL", column="SYMBOL")
+```
+
+```{r}
+dim(dds)
+dds <- dds[!is.na(dds$genes$Symbol), ]
+dim(dds)
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep,]
+dim(dds)
+```
+
+```{r}
+dds <- DESeq(dds)
+```
+
+```{r}
+list_comp <- c(1:2)
+list_pair <- t(combn(list_comp,2))
+```
+
+```{r}
+unique_genes <- unique(dds$genes)
+```
+
+```{r}
+total_res <- data.frame(Gene_name = unique_genes[[1]][!is.na(unique_genes[[1]]) & !duplicated(unique_genes[[1]])])
+
+
+for (i in 1:nrow(list_pair)) {
+  c2 <- list_pair[i,1]
+  c1 <- list_pair[i,2]
+  print(c(c1, c2))
+  res <- results(dds, contrast=c("condition", c1, c2), cooksCutoff=FALSE, independentFiltering=FALSE)
+  res <- as.data.frame(res)
+  res$Ensembl_ID <- rownames(res)
+  res <- res[rowSums(is.na(res)) != ncol(res), ]
+  res <- res[!duplicated(res$Ensembl_ID),]
+  write.csv(res, file=paste0("results/Deseq2/model2_results_DGE_", c1, "_", c2,".csv"))
+  res <- res[res$padj < 0.1,]
+  #res <- res[res$log2FoldChange < -1 | res$log2FoldChange > 1,]
+  print(paste0("There is ", nrow(res), " differentially expressed genes in ", c2, " vs ", c1))
+  res$Gene_name <- mapIds(org.Hs.eg.db, rownames(res), keytype="ENSEMBL", column="SYMBOL")
+  #res <- merge(res, AnnotationInfo, by = "Ensembl_ID", all.x = TRUE)
+  res <- res[!is.na(res$Gene_name),]
+  res <- res[!duplicated(res$Gene_name),]
+  DESeqout <- res[,c(8, 2, 5, 6)]
+  DESeqout = DESeqout[order(DESeqout$padj),]
+  DESeqout = DESeqout[!duplicated(DESeqout$Gene_name),]
+  rownames(DESeqout) <- DESeqout$Gene_name
+  DESeqout$Gene_name <- NULL
+  DESeqout=DESeqout[ ,c('log2FoldChange','pvalue')] #Piano only needs LFC and pvalue from DESeq
+  
+  pval= as.matrix(DESeqout[ ,2]) 
+  fc= as.matrix(DESeqout[ ,1]) 
+
+  row.names(pval)=row.names(DESeqout)
+  row.names(fc)=row.names(DESeqout)
+  
+  #Main function in PIANO. Uses the pvalues, fold-changes, and gene sets. 
+  gsaRes <- runGSA(pval,fc,gsc=gset, nPerm = 1000, adjMethod = "fdr", gsSizeLim=c(10,800))
+
+  #Writes the output from PIANO to a file "piano.txt". Setting "save=FALSE" simply shows the result from PIANO
+  GSAsummaryTable(gsaRes, save=TRUE, file=paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/model2_gsea_results", c1, " vs ", c2 , ".txt"))
+
+  write.csv(DESeqout, paste0("results/GSEA/model2_gsea_input_", c1, "_", c2 , ".csv"))
+  names(res)[c(2,6)] <- c(paste0("LFC_", c1, "_", c2), paste0("FDR_", c1, "_", c2))
+  write.csv(res, file=paste0("results/Deseq2/model2_results_DGE_", c1, "_", c2,"_filt.csv"))
+  print(nrow(res))
+  res <- res[,c(8, 2, 6)]
+  total_res <- merge(total_res, res, by = "Gene_name", all.x = TRUE, all.y = TRUE)
+}
+
+rownames(total_res) <- total_res$Gene_name
+write.csv(total_res,"processing/model2_results_DGE_Deseq2.csv")
+```
+
+
+
+```{r}
+data_3 <- data_2[data_2$cluster != "Ctrl",]
+```
+
+```{r}
+x
+```
+```{r}
+y
+```
+
+
+## Create Deseq2 object
+```{r}
+x <- which(!is.na(data_3$CD8) & !is.na(data_3$VAT))
+#x <- which(!is.na(data_3$CD8) & !is.na(data_3$VAT) & !is.na(data_3$H2_53a))
+
+data_3 <- data_3[x, ]
+
+coldata <- data.frame(samples = data_3$User, condition = as.factor(data_3$cluster), ethn = data_3$Ethnic, meat = data_3$H2_56, fruit = data_3$H2_56, met = as.factor(data_3$METS), vat = data_3$VAT, cd4_cd8 = data_3$CDA_CD8)
+
+coldata$condition <- relevel(coldata$condition, ref = 1)
+coldata$vat <- scale(coldata$vat)
+coldata$cd4_cd8 <- scale(coldata$cd4_cd8)
+coldata$ethn[is.na(coldata$ethn)] <- 0
+coldata$fruit[is.na(coldata$fruit)] <- 0
+coldata$fruit <- as.factor(coldata$fruit)
+coldata$ethn <- as.factor(coldata$ethn)
+coldata$meat <- as.factor(coldata$meat)
+
+dds <- DESeqDataSetFromMatrix(countData = round(t(data_3[,-c(1:47)])), colData = coldata, design = ~ ethn + met + vat + condition)
+```
+
+```{r}
+library(org.Hs.eg.db)
+dds$genes$Symbol <- mapIds(org.Hs.eg.db, rownames(dds), keytype="ENSEMBL", column="SYMBOL")
+```
+filter <- rowSums(nc >= 10) >= 2
+
+```{r}
+dim(dds)
+dds <- dds[!is.na(dds$genes$Symbol), ]
+dim(dds)
+keep <- rowSums(counts(dds) >= 10) >= 2
+dds <- dds[keep,]
+dim(dds)
+```
+```{r}
+dds <- estimateSizeFactors(dds)
+dds <- estimateDispersions(dds)
+dds <- nbinomWaldTest(dds, maxit=500)
+```
+```{r}
+unique_genes <- unique(dds$genes)
+```
+
+```{r}
+total_res <- data.frame(Gene_name = unique_genes[[1]][!is.na(unique_genes[[1]]) & !duplicated(unique_genes[[1]])])
+
+
+for (i in 1:nrow(list_pair)) {
+  c2 <- list_pair[i,1]
+  c1 <- list_pair[i,2]
+  print(c(c1, c2))
+  res <- results(dds, contrast=c("condition", c1, c2), cooksCutoff=FALSE, independentFiltering=FALSE)
+  res <- as.data.frame(res)
+  res$Ensembl_ID <- rownames(res)
+  res <- res[rowSums(is.na(res)) != ncol(res), ]
+  res <- res[!duplicated(res$Ensembl_ID),]
+  write.csv(res, file=paste0("results/Deseq2/model3_results_DGE_", c1, "_", c2,".csv"))
+  res <- res[res$padj < 0.1,]
+  #res <- res[res$log2FoldChange < -1 | res$log2FoldChange > 1,]
+  print(paste0("There is ", nrow(res), " differentially expressed genes in ", c2, " vs ", c1))
+  res$Gene_name <- mapIds(org.Hs.eg.db, rownames(res), keytype="ENSEMBL", column="SYMBOL")
+  #res <- merge(res, AnnotationInfo, by = "Ensembl_ID", all.x = TRUE)
+  res <- res[!is.na(res$Gene_name),]
+  res <- res[!duplicated(res$Gene_name),]
+  DESeqout <- res[,c(8, 2, 5, 6)]
+  DESeqout = DESeqout[order(DESeqout$padj),]
+  DESeqout = DESeqout[!duplicated(DESeqout$Gene_name),]
+  rownames(DESeqout) <- DESeqout$Gene_name
+  DESeqout$Gene_name <- NULL
+  DESeqout=DESeqout[ ,c('log2FoldChange','pvalue')] #Piano only needs LFC and pvalue from DESeq
+  
+  pval= as.matrix(DESeqout[ ,2]) 
+  fc= as.matrix(DESeqout[ ,1]) 
+
+  row.names(pval)=row.names(DESeqout)
+  row.names(fc)=row.names(DESeqout)
+  
+  #Main function in PIANO. Uses the pvalues, fold-changes, and gene sets. 
+  gsaRes <- runGSA(pval,fc,gsc=gset, nPerm = 1000, adjMethod = "fdr", gsSizeLim=c(10,800))
+
+  #Writes the output from PIANO to a file "piano.txt". Setting "save=FALSE" simply shows the result from PIANO
+  GSAsummaryTable(gsaRes, save=TRUE, file=paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/model3_gsea_results", c1, " vs ", c2 , ".txt"))
+
+  write.csv(DESeqout, paste0("results/GSEA/model3_gsea_input_", c1, "_", c2 , ".csv"))
+  names(res)[c(2,6)] <- c(paste0("LFC_", c1, "_", c2), paste0("FDR_", c1, "_", c2))
+  write.csv(res, file=paste0("results/Deseq2/model3_results_DGE_", c1, "_", c2,"_filt.csv"))
+  print(nrow(res))
+  res <- res[,c(8, 2, 6)]
+  total_res <- merge(total_res, res, by = "Gene_name", all.x = TRUE, all.y = TRUE)
+}
+
+rownames(total_res) <- total_res$Gene_name
+write.csv(total_res,"processing/model3_results_DGE_Deseq2.csv")
+```
+
+```{r}
+total_res <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/Deseq2/model3_results_DGE_2_1.csv")
+colnames(total_res)[c(3, 7)] <- c("logFC", "adj.P.Val")
+total_res$Gene_name <- mapIds(org.Hs.eg.db, as.vector(total_res$Ensembl_ID), keytype="ENSEMBL", column="SYMBOL")
+```
+## spermine/ spermidine enzymes
+```{r}
+top_table <- total_res
+```
+
+
+```{r}
+sperm <- read.csv("manuscript/proteins_spermine_list.csv")
+x <- as.vector(dge$Gene_name[dge$Gene_name %in% sperm$name_2 & !is.na(dge$Gene_name)])
+sperm_2 <- top_table[top_table$Gene_name %in% sperm$name_2 & !is.na(top_table$Gene_name),]
+write.csv(sperm_2, "manuscript/proteins_spermine_pathways_detected_transcriptomics_patients.csv")
+```
+
+```{r}
+pca_data <- pca_data[,colnames(pca_data) %in% c("cluster", sperm_2$Gene_name, x)]
+```
+
+```{r}
+pca_data$cluster <- ifelse(pca_data$cluster == 1, "HC-like", "At-risk")
+```
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+my_comparisons <- list( c("HC-like", "At-risk"))
+```
+
+```{r}
+pca_data$cluster <- factor(pca_data$cluster, levels = c("HC-like", "At-risk"))
+```
+
+## boxplots spermine/spermdine enzymes
+```{r}
+list_x <- list()
+x = 1
+
+for (i in 2:ncol(pca_data)) {
+  table_1 <- pca_data[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = colnames(pca_data)[i])+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/enzymes_spermidine_", colnames(pca_data)[i], "_proteomcis.pdf"), height = 4, width = 3)
+  print(i)
+  list_x[[x]] <- a
+  x <- x + 1
+}
+```
+
+```{r}
+total_res
+```
+
+
+```{r}
+library(ggpubr)
+library(geneplotter)
+```
+
+```{r}
+res <- results(dds, contrast=c("condition", c1, c2), cooksCutoff=FALSE, independentFiltering=FALSE)
+```
+```{r}
+res$genes <- mapIds(org.Hs.eg.db, rownames(res), keytype="ENSEMBL", column="SYMBOL")
+```
+```{r}
+res_2 <- data.frame(res)
+```
+
+```{r}
+res_2$sign <- ifelse(res_2$padj < 0.1, TRUE, FALSE)
+res_3 <- res_2[, c(1, 2, 8)]
+geneplotter::plotMA(res_3)
+```
+
+
+```{r}
+g <- ggplot(res_2, aes(x=baseMean, y=log2FoldChange))+geom_point()+ylim(c(-1, 1))+xlim(c(0.1, 10000))
+g
+```
+
+```{r}
+DESeq2::plotMA(res)
+```
+
+```{r}
+ggmaplot(res, main = expression("c1" %->% "c2"),
+         fdr = 0.1, fc = 0.1, size = 1,
+         genenames = as.vector(res$genes),
+         ggtheme = ggplot2::theme_classic(),
+         top = 0, label.select = res$genes[res$padj < 0.05])
+
+ggsave("results/figures/MA_plot_transcriptomics.pdf", width = 5, height = 5)
+```
+
+# Select specific genes to show
+# set top = 0, then specify genes using label.select argument
+
+         
+```{r}
+library(ggrepel)
+library(scales)
+```
+
+  tt <- file
+  tt$color <- NA
+  print(ncol(tt))
+  for (i in 1:nrow(tt)){
+    if(tt[i, indice_LogFC] > 1 & tt[i, indice_FDR] < 0.05){
+      print(tt[i, indice_Gene])
+      tt[i, ncol(tt)] <- "up_regulated"
+    }
+    if(tt[i, indice_LogFC] < -1 & tt[i, indice_FDR] < 0.05){
+      print(tt[i, indice_Gene])
+      tt[i, ncol(tt)] <- "down_regulated"
+    }
+    if(tt[i, indice_FDR] > 0.05){
+      tt[i, ncol(tt)] <- "NS"
+      tt[i, indice_Gene] <- NA
+    }
+  }
+  tt$color[is.na(tt$color)] <- "significant"
+  tt$Gene_name[tt$color == "significant"] <- NA
+  cols <- c("up_regulated" = "#cc0000", "down_regulated" = "#1b3651", "NS" = "darkgrey", "significant" = "#ffff99")
+  vol <- ggplot(tt, aes(x = logFC, y = -log10(adj.P.Val), colour = logFC))+ 
+  geom_point(size=2, alpha = 1, na.rm = T, aes(colour=logFC, fill=logFC), 
+  shape = 21,size = 12,colour = "black")+
+  scale_fill_gradientn(colours=c("#1b3651","#527190","white","#ff6666","#cc0000"),
+                         values=rescale(c(min(tt$logFC),min(tt$logFC)/4, 0,max(tt$logFC)/4, max(tt$logFC))), 
+                         space = "Lab")+ 
+  theme(legend.title=element_text(size=2),legend.text=element_text(size=2),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=25),axis.title.x=element_text(size=25),
+        axis.text.y=element_text(size=25),axis.text.x=element_text(size=25)) +
+  labs(x="Log2 Fold Change",y="-log10 (adj.P.Val)")+
+  geom_text_repel(aes(label = Gene_name),size=2,label.size = 0.1, color = "black", xlim = c(NA, Inf),
+    # Do not repel from top or bottom edges.
+    ylim = c(-Inf, Inf))+ theme_classic()
+
+  print(vol)
+  path_fig <- paste0("results/figures/volcano_plots/", name_ana, "_volcano_plot.pdf")
+  ggsave(path_fig, width = 4, height = 3)
+  
+```{r}
+tt <- total_res
+name_ana <- unique(tt$Comp)
+tt$color <- NA
+
+for (i in 1:nrow(tt)){
+  if(tt[i, 3] > 1.5 & tt[i, 3] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_>1.5"
+  }
+  if(tt[i, 3] > 1 & tt[i, 3] < 1.5 & tt[i, 7] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_1>x>1.5"
+  }
+  if(tt[i, 3] > 0 & tt[i, 3] < 1 & tt[i, 7] < 0.05){
+    tt[i, ncol(tt)] <- "up_regulated_0>x>1"
+  }
+  if(tt[i, 3] < 0 & tt[i, 7] < 0.05){
+    tt[i, ncol(tt)] <- "down_regulated"
+  }
+  if(tt[i, 7] > 0.05){
+    tt[i, ncol(tt)] <- "NS"
+    #tt[i, 1] <- NA
+  }
+}
+
+tt$BIOCHEMICAL <- ifelse(abs(tt$logFC) > 2 & tt$adj.P.Val < 0.001, as.vector(tt$Gene_name), NA)
+length(tt$BIOCHEMICAL[!is.na(tt$BIOCHEMICAL)])
+
+
+tt$color[is.na(tt$color)] <- "up_regulated_>1.5"
+#tt$Gene_name[tt$color == "significant"] <- NA
+cols <- c("up_regulated_>1.5" = "#cb4818",
+          "up_regulated_1>x>1.5" = "#d27f28", 
+          "up_regulated_0>x>1" = "#f1c232", 
+          "down_regulated" = "#86b7e8", 
+          "NS" = "grey", 
+          "significant" = "#586c6e")
+
+vol <- ggplot(tt, aes(x = logFC, y = -log10(adj.P.Val), colour = color, size = abs(logFC)))+ 
+  geom_point(alpha = 1, na.rm = T)+ 
+  theme(legend.title=element_text(size=2),legend.text=element_text(size=2),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=25),axis.title.x=element_text(size=25),
+        axis.text.y=element_text(size=25),axis.text.x=element_text(size=25)) +
+  labs(x="Log2 Fold Change",y="-log10 (adj.P.Val)")+
+  geom_text_repel(aes(label = BIOCHEMICAL),size=2,label.size = 0.1, color = "black", xlim = c(NA, Inf),
+    # Do not repel from top or bottom edges.
+    ylim = c(-Inf, Inf))+ theme_classic()+ 
+  geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "black")+scale_color_manual(values = cols)
+
+print(vol)
+path_fig <- paste0("results/figures/volcano_plots/", name_ana, "_volcano_plot_3_colors_transcriptomics.pdf")
+ggsave(path_fig, width = 10, height = 6)
+```
+
+```{r}
+tt <- pretty_volcano(total_res, "COCOMO_3_Layers_txn_deseq2_corrected", 9, 3, 7)
+```
+
+```{r}
+fitmodel <- function(n, k) {
+  # n: sample size
+  # k: number of predictors
+  # return linear model fit for given sample size and k predictors
+  x <- data.frame(matrix( rnorm(n*k), nrow=n))
+  names(x) <- paste("x", seq(k), sep="")
+  x$y <- rnorm(n)  
+  lm(y~., data=x)
+}
+```
+
+```{r}
+summary(fitmodel(170, 10))
+```
+
+
+

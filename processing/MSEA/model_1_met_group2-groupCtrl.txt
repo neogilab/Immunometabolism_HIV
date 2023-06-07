@@ -1,0 +1,312 @@
+x
+iminodiacetate (IDA)
+metoprolol
+1,3,7-trimethylurate
+caffeine
+3-acetylphenol sulfate
+sarcosine
+metoprolol acid metabolite*
+N2,N2-dimethylguanosine
+N-acetylneuraminate
+alpha-ketoglutarate
+alpha-hydroxymetoprolol
+N1-methylinosine
+glucuronate
+citraconate/glutaconate
+maleate
+3-hydroxy-2-methylpyridine sulfate
+guaiacol sulfate
+glutamate
+1,2,3-benzenetriol sulfate (2)
+1,7-dimethylurate
+N-acetylalanine
+N-acetylserine
+3-methyl catechol sulfate (2)
+1-methyladenosine
+5-hydroxy-2-methylpyridine sulfate
+3-hydroxypyridine glucuronide
+carotene diol (2)
+cortolone glucuronide (1)
+3-methylxanthine
+gulonate*
+3-hydroxypyridine sulfate
+cysteine-glutathione disulfide
+3-hydroxyoctanoate
+3-methyl catechol sulfate (1)
+N-carbamoylalanine
+2-methoxyresorcinol sulfate
+theophylline
+erythronate*
+N-acetylglucosamine/N-acetylgalactosamine
+N-(2-furoyl)glycine
+orotate
+indoleacetylglutamine
+paraxanthine
+N-acetylleucine
+N6-carbamoylthreonyladenosine
+aconitate [cis or trans]
+5-hydroxymethyl-2-furoylcarnitine*
+glutamine conjugate of C6H10O2 (1)*
+3-hydroxyhippurate sulfate
+lamivudine
+theobromine
+N-acetylthreonine
+N-acetylglutamine
+cysteinylglycine
+3-(3-hydroxyphenyl)propionate sulfate
+(S)-a-amino-omega-caprolactam
+isovalerate (C5)
+3-hydroxyadipate*
+ergothioneine
+1-carboxyethylisoleucine
+N-acetyl-beta-alanine
+N-acetylputrescine
+1-methylurate
+phenol sulfate
+orotidine
+4-acetylcatechol sulfate (1)
+1-carboxyethylvaline
+tartronate (hydroxymalonate)
+pyruvate
+beta-cryptoxanthin
+carotene diol (1)
+gamma-glutamylisoleucine*
+3-hydroxyhippurate
+3-ethylcatechol sulfate (2)
+16a-hydroxy DHEA 3-sulfate
+N-acetylisoleucine
+1-carboxyethylleucine
+3,4-dihydroxybutyrate
+N-acetylphenylalanine
+N-acetylvaline
+kynurenine
+1-carboxyethylphenylalanine
+glutamine conjugate of C6H10O2 (2)*
+phenol glucuronide
+4-hydroxyphenylacetylglutamine
+catechol glucuronide
+succinoyltaurine
+hexanoylcarnitine (C6)
+3-(3-hydroxyphenyl)propionate
+1-carboxyethyltyrosine
+3,7-dimethylurate
+trigonelline (N'-methylnicotinate)
+catechol sulfate
+pantoate
+indolelactate
+andro steroid monosulfate C19H28O6S (1)*
+3-hydroxydecanoate
+dihydrocaffeate sulfate (2)
+5-acetylamino-6-formylamino-3-methyluracil
+hypoxanthine
+lactate
+methyl indole-3-acetate
+carotene diol (3)
+3-ethylcatechol sulfate (1)
+aspartate
+3-(3-amino-3-carboxypropyl)uridine*
+2,3-dihydroxy-5-methylthio-4-pentenoate (DMTPA)*
+2,3-dihydroxypyridine
+hippurate
+N-acetyltaurine
+gamma-glutamylphenylalanine
+2-hydroxyphenylacetate
+glycine conjugate of C10H12O2*
+N4-acetylcytidine
+11beta-hydroxyandrosterone glucuronide
+gamma-glutamylvaline
+pseudouridine
+cysteine s-sulfate
+4-acetamidobutanoate
+N-acetylcarnosine
+heptenedioate (C7:1-DC)*
+caffeic acid sulfate
+myristoylcarnitine (C14)
+3-hydroxy-3-methylglutarate
+N-acetylglutamate
+4-ethylcatechol sulfate
+N-acetyltyrosine
+3-methyl-2-oxovalerate
+oxalate (ethanedioate)
+levulinoylcarnitine
+methionine sulfone
+xanthine
+3-hydroxysebacate
+1,3-dimethylurate
+creatinine
+linolenate (18:3n3 or 3n6)
+vanillactate
+3-hydroxyhexanoylcarnitine (1)
+histidine betaine (hercynine)*
+C-glycosyltryptophan
+gamma-glutamylglutamine
+suberate (C8-DC)
+palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)
+glutamine conjugate of C7H12O2*
+methyl-4-hydroxybenzoate sulfate
+kynurenate
+N-acetylhistidine
+3-aminoisobutyrate
+dihydroferulic acid sulfate
+glycerol
+5-(galactosylhydroxy)-L-lysine
+N-acetylproline
+phenylacetylglutamate
+palmitoleoylcarnitine (C16:1)*
+2-oxindole-3-acetate
+serine
+docosatrienoate (22:3n6)*
+emtricitabine
+N-acetylasparagine
+xanthosine
+N-acetylkynurenine (2)
+2-methoxyhydroquinone sulfate (2)
+efavirenz
+beta-hydroxyisovalerate
+cis-4-decenoate (10:1n6)*
+dimethylarginine (ADMA + SDMA)
+linoleoylcholine*
+ritonavir
+5-acetylamino-6-amino-3-methyluracil
+glutarate (C5-DC)
+7-methylguanine
+5alpha-pregnan-3beta,20alpha-diol monosulfate (2)
+N-acetyl-2-aminooctanoate*
+benzoylcarnitine*
+glycerate
+hydroxy-CMPF*
+(S)-3-hydroxybutyrylcarnitine
+3-hydroxyoleoylcarnitine
+glycochenodeoxycholate glucuronide (1)
+undecenoylcarnitine (C11:1)
+adipoylcarnitine (C6-DC)
+3-amino-2-piperidone
+cis-4-decenoylcarnitine (C10:1)
+linolenoylcarnitine (C18:3)*
+4-acetylphenyl sulfate
+o-cresol sulfate
+glycine conjugate of C10H14O2 (1)*
+N-acetylcitrulline
+oleate/vaccenate (18:1)
+2-hydroxy-4-(methylthio)butanoic acid
+pregnen-diol disulfate*
+10-heptadecenoate (17:1n7)
+5-methylthioadenosine (MTA)
+citrulline
+sucrose
+3-methoxycatechol sulfate (1)
+abacavir
+propionylcarnitine (C3)
+2R,3R-dihydroxybutyrate
+1-methylxanthine
+indoleacetate
+quinolinate
+2-hydroxyoctanoate
+glycodeoxycholate 3-sulfate
+7-methylxanthine
+hexanoylglutamine
+5,6-dihydrouridine
+5-hydroxyhexanoate
+pregnenetriol disulfate*
+margaroylcarnitine (C17)*
+adenosine 3',5'-cyclic monophosphate (cAMP)
+laurylcarnitine (C12)
+gamma-glutamylglutamate
+6-oxopiperidine-2-carboxylate
+palmitoylcholine
+hexadecadienoate (16:2n6)
+gamma-glutamyltyrosine
+17alpha-hydroxypregnanolone glucuronide
+3-ureidopropionate
+ribitol
+phenylacetylglutamine
+ribonate
+tryptophan betaine
+4-hydroxyhippurate
+palmitoleate (16:1n7)
+2-hydroxyhippurate (salicylurate)
+methylmalonate (MMA)
+N-acetylglycine
+N-carbamoylaspartate
+nisinate (24:6n3)
+quinate
+N-acetylaspartate (NAA)
+N-formylmethionine
+N-acetyltryptophan
+myristoleoylcarnitine (C14:1)*
+myristate (14:0)
+phenylpyruvate
+5alpha-androstan-3alpha,17beta-diol disulfate
+glycocholenate sulfate*
+2-O-methylascorbic acid
+phenylalanylglycine
+gamma-glutamylthreonine
+suberoylcarnitine (C8-DC)
+gamma-glutamylleucine
+glycodeoxycholate
+1,5-anhydroglucitol (1,5-AG)
+10-nonadecenoate (19:1n9)
+hydroxyasparagine
+indole-3-carboxylate
+2-aminobutyrate
+beta-citrylglutamate
+N6-succinyladenosine
+perfluorooctanesulfonate (PFOS)
+4-methylhexanoylglutamine
+dihydroorotate
+2-methylbutyrylcarnitine (C5)
+docosahexaenoylcholine
+N,N,N-trimethyl-alanylproline betaine (TMAP)
+darunavir
+hydantoin-5-propionate
+3-hydroxy-2-ethylpropionate
+2-oxoarginine*
+myristoleate (14:1n5)
+eicosapentaenoylcholine
+2-hydroxyglutarate
+phenylacetylglycine
+decanoylcarnitine (C10)
+3-methoxytyramine sulfate
+(14 or 15)-methylpalmitate (a17:0 or i17:0)
+N-stearoylserine*
+adipate
+arachidonoylcholine
+N,N-dimethylalanine
+docosadienoate (22:2n6)
+cerotoylcarnitine (C26)*
+laurate (12:0)
+eicosenoate (20:1n9 or 1n11)
+nonanoylcarnitine (C9)
+3-hydroxyhexanoate
+palmitoylcarnitine (C16)
+citramalate
+4-vinylguaiacol sulfate
+taurodeoxycholate
+methylsuccinoylcarnitine
+2-aminophenol sulfate
+ximenoylcarnitine (C26:1)*
+S-adenosylhomocysteine (SAH)
+gamma-glutamylhistidine
+N-acetylalliin
+formiminoglutamate
+stearoylcholine*
+hydroquinone sulfate
+N2,N5-diacetylornithine
+isocitric lactone
+N6-methyladenosine
+butyrylcarnitine (C4)
+oleoylcarnitine (C18:1)
+acesulfame
+betaine
+3-decenoylcarnitine
+4-methylguaiacol sulfate
+alpha-ketobutyrate
+4-methyl-2-oxopentanoate
+erythritol
+maltol sulfate
+threonate
+lactobacillic acid
+pentadecanoate (15:0)
+guanidinosuccinate
+oleoylcholine
+N6-methyllysine

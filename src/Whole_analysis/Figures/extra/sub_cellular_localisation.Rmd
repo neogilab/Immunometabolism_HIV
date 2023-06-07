@@ -1,0 +1,317 @@
+---
+title: "Subcellular localisation"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+```{r}
+library(xlsx)
+```
+
+
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt", stringsAsFactors = FALSE)
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv", stringsAsFactors = FALSE)
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";", stringsAsFactors = FALSE)
+```
+
+```{r}
+sen <- c(sen_3$gene_symbol, sen_1$gene_symbol, sen_2$Gene_name)
+sen <- unique(sen)
+```
+
+## load data
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+```
+
+### olink
+```{r}
+data <- read.csv("processing/olink_data_new_ids.csv", row.names = 1)
+data$Condition <- NULL
+```
+
+```{r}
+library(org.Hs.eg.db)
+library(mygene)
+
+dge <- read.csv("results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+dge <- dge[dge$BIOCHEMICAL %in% sen,]
+prot <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Olink/Preliminary Olink Explore 3072 Assay List_2021-06-16.xlsx", 1)
+prot <- prot[-1, c(1, 3)]
+names(prot) <- c("Accession", "BIOCHEMICAL")
+dge <- merge(dge, prot, by = "BIOCHEMICAL")
+```
+
+```{r}
+localisation <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/uniprot/uniprot-compressed_true_download_true_fields_accession_2Creviewed_2C-2023.01.12-13.19.37.62.tsv")
+localisation  <- localisation[localisation$From %in% dge$Accession,]
+```
+
+### merge data and clinical
+```{r}
+data$COCOMO_ID <- rownames(data)
+pca_data <- merge(clinical, data, by = "COCOMO_ID")
+data_prot <- data.frame(cluster = pca_data$cluster, pca_data[,-c(1:47)])
+rownames(data_prot) <- pca_data$COCOMO_ID
+pca_data <- pca_data[pca_data$cluster != "Ctrl",]
+```
+
+
+
+### Load results
+```{r}
+types <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/uniprot/uniprot-compressed_true_download_true_fields_id_2Cname_2Ccategory_2C-2023.01.11-14.33.10.25.tsv")
+
+table_genes_location <- data.frame(Location = unique(types$Name))
+
+for (i in 1:nrow(localisation)) {
+  gene <- as.vector(localisation[i,1])
+  table_genes_location[,i+1] <- NA
+  colnames(table_genes_location)[i + 1] <- gene
+  for (j in 1:nrow(table_genes_location)) {
+    table_genes_location[j, i + 1] <- ifelse(grepl(table_genes_location[j, 1], localisation[i,8]), 1, 0)
+  }
+}
+
+table_genes_location <- table_genes_location[rowSums(table_genes_location[,-1]) > 5,]
+#table_genes_location[,-1] <- table_genes_location[,colSums(table_genes_location[,-1]) > 0]
+
+table_genes_location$Location <- as.vector(table_genes_location$Location)
+
+table_genes_location$Location[grep("Mito", table_genes_location$Location)] <- "Mitochondria"
+table_genes_location$Location[grep("Cyto", table_genes_location$Location)] <- "Cytoplasm"
+table_genes_location$Location[grep("Golgi", table_genes_location$Location)] <- "Golgi"
+
+table_genes_location$Location[grep("dosome", table_genes_location$Location)] <- "Endosome"
+table_genes_location$Location[grep("reticulum", table_genes_location$Location)] <- "Endoplasmic reticulum"
+table_genes_location$Location[grep("GPI-anchor", table_genes_location$Location)] <- "Lipid-anchor"
+table_genes_location$Location[grep("Nucle", table_genes_location$Location)] <- "Nucleus"
+table_genes_location$Location[grep("embrane", table_genes_location$Location)] <- "Membrane"
+table_genes_location$Location[grep("Endosome", table_genes_location$Location)] <- "Secretory Pathways"
+table_genes_location$Location[grep("Lysosome", table_genes_location$Location)] <- "Secretory Pathways"
+table_genes_location$Location[grep("Secreted", table_genes_location$Location)] <- "Secretory Pathways"
+
+table_genes_location$sum <- rowSums(table_genes_location[,-1])
+
+table_results <- data.frame(Area = table_genes_location$Location, Nb = table_genes_location$sum)
+
+write.csv(table_genes_location, "results/localisation_olink_proteins_all.csv")
+write.csv(table_results, "results/localisation_olink_proteins_number_per_localisation.csv")
+```
+
+```{r}
+table(table_genes_location$Location)
+```
+```{r}
+table_genes <- data.frame(Gene = NA, Location = NA)
+a = 1
+
+for (i in 2:ncol(table_genes_location)) {
+  for (j in 1:nrow(table_genes_location)) {
+    if(table_genes_location[j,i] == 1){
+      table_genes[a, 1] <- table_genes_location[j,1]
+      table_genes[a, 2] <- colnames(table_genes_location)[i]
+      a = a + 1
+    }
+  }
+}
+
+table_genes <- table_genes[!duplicated(table_genes),]
+table(table_genes$Gene)
+```
+
+```{r}
+pca_data <- data_prot[, colnames(data_prot) %in% c("cluster", as.vector(dge$BIOCHEMICAL))]
+pca_data <- data.frame(t(pca_data[,-1]))
+pca_data$BIOCHEMICAL <- rownames(pca_data)
+pca_data <- merge(dge, pca_data, by = "BIOCHEMICAL")
+names(table_genes) <- c("location", "Accession")
+pca_data <- merge(table_genes, pca_data, by = "Accession")
+```
+
+```{r}
+library(umap)
+```
+
+
+```{r}
+pca_data <- pca_data[order(pca_data$location),]
+met.umap = umap(pca_data[,-c(1:7)])
+met.umap
+  
+  
+  
+for (loc in unique(table_genes$location)){
+  print(loc)
+  data <- pca_data
+  data$location[data$location != loc] <- "X"
+  #data <- data[!duplicated(data$BIOCHEMICAL),]
+  
+  met.labels <- data$location
+  data_2 <- met.umap$data
+  layout <- met.umap$layout
+  data_umap <- cbind(data_2, layout)
+  x <- ncol(data_umap)
+  y <- x -1
+  colnames(data_umap)[y:x] <- c("UMAP1", "UMAP2")
+  data_umap <- data.frame(data_umap)
+
+  ## to save as pdf
+#extrafont::loadfonts()
+  data_umap %>% 
+    mutate(Condition = met.labels) %>%
+      ggplot(aes(UMAP1, UMAP2))+ 
+    geom_point(size = 3, shape = 21, aes(alpha = factor(met.labels), size = factor(met.labels), fill = factor(met.labels), color = factor(met.labels)))+
+   scale_alpha_manual(values=c(1, 0.1))+scale_size_manual(values = c(3, 1))
+
+  path_fig <- paste0("results/figures/UMAP/UMAP_olink_", loc, "_sublocalisation_proteins.pdf")
+  ggsave(path_fig, height = 4, width = 5)
+}
+```
+
+```{r}
+for (loc in unique(table_genes$location)){
+  print(loc)
+  data <- pca_data
+  data$location[data$location != loc] <- "X"
+  data <- data[order(data$location),]
+  data <- data[!duplicated(data$BIOCHEMICAL),]
+  pca <- prcomp(data[,-c(1:8)], scale. = F)
+  df_out <- as.data.frame(pca$x)
+  df_out$group <- data$location
+  x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+  a1 <- x[1]
+  a2 <- x[2]
+  x <- ggplot(df_out)+
+    geom_point(aes(x=PC1,y=PC2, color=group, fill = group, alpha = group, size = group), size=3) +
+    theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+      xlab(paste0("PC1: ",round(a1,0),"% variance"))+
+      ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))+
+   scale_alpha_manual(values=c(1,0.1))+scale_size_manual(values = c(3, 1))
+  x
+  path_fig <- paste0("results/figures/PCA/PCA_olink_", loc, "_sublocalisation_proteins.pdf")
+  ggsave(path_fig, height = 4, width = 5)
+}
+```
+
+### PCA all genes
+```{r}
+df_out <- as.data.frame(pca$x)
+#df_out$group <- as.factor(pca_data$cluster)
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+```
+
+```{r}
+ggplot(df_out)+
+    geom_point(aes(x=PC1,y=PC2), size=3) +
+    theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+      xlab(paste0("PC1: ",round(a1,0),"% variance"))+
+      ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))
+
+
+path_fig <- paste0("results/figures/PCA_olink_macrophages_filtered_29_style_4_density.pdf")
+ggsave(path_fig, height = 4, width = 5)
+```
+
+```{r}
+ggplot(df_out)+
+    geom_point(aes(x=PC1,y=PC2,color=group, fill = group), size=3) +
+    theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+      xlab(paste0("PC1: ",round(a1,0),"% variance"))+
+      ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))+ scale_color_manual(values = col)+ scale_fill_manual(values = col)+ scale_fill_manual(values = col)+ geom_density_2d(aes(x=PC1,y=PC2,color=group, fill = group))
+
+
+path_fig <- paste0("results/figures/PCA_olink_macrophages_filtered_29_style_4_density.pdf")
+ggsave(path_fig, height = 4, width = 5)
+```
+
+
+
+
+
+```{r}
+table_genes_location <- data.frame(Location = unique(types$Gene.Ontologies))
+table_genes_location$Location <- gsub(".*\\:", "", table_genes_location$Location)
+
+for (i in 1:nrow(localisation)) {
+  gene <- as.vector(localisation[i,1])
+  table_genes_location[,i+1] <- NA
+  colnames(table_genes_location)[i + 1] <- gene
+  for (j in 1:nrow(table_genes_location)) {
+    table_genes_location[j, i + 1] <- ifelse(grepl(table_genes_location[j, 1], localisation[i,10]), 1, 0)
+  }
+}
+
+table_genes_location <- table_genes_location[rowSums(table_genes_location[,-1]) > 0,]
+#table_genes_location[,-1] <- table_genes_location[,colSums(table_genes_location[,-1]) > 0]
+
+table_genes_location$Location <- as.vector(table_genes_location$Location)
+table_genes_location$sum <- rowSums(table_genes_location[,-1])
+
+table_results <- data.frame(Area = table_genes_location$Location, Nb = table_genes_location$sum)
+colSums(table_genes_location[,-c(1, 142)])
+
+write.csv(table_genes_location, "results/localisation_proteins_senescence_GO.csv")
+write.csv(table_results, "results/localisation_proteins_senescence_GO_number_per_localisation.csv")
+```

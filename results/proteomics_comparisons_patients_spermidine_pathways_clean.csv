@@ -1,0 +1,46 @@
+"","Term","Overlap","Adjusted.P.value","Combined.Score","Comp","sub_2","Nb"
+"200","cytokine-cytokine receptor interaction","7/295",0.0175342161383592,24.8576590105097,"overlap_2_comp","yes",7
+"25","mapk signaling pathway","7/294",0.012656059628748,28.588366545544,"up_spermidine_patients","yes",7
+"26","cytokine-cytokine receptor interaction","7/295",0.012656059628748,28.4023709960205,"up_spermidine_patients","yes",7
+"171","gnrh signaling pathway","12/93",0.00480668335445316,19.5675619554051,"spermidine_both","yes",12
+"192","mapk signaling pathway","8/294",0.00472849608794213,36.4738944190269,"overlap_2_comp","yes",8
+"170","natural killer cell mediated cytotoxicity","15/131",0.00461690064123628,17.2372625798659,"spermidine_both","yes",15
+"169","c-type lectin receptor signaling pathway","13/104",0.00427430380399063,19.2829194725352,"spermidine_both","yes",13
+"167","synaptic vesicle cycle","11/78",0.00375267318090689,22.6496991585233,"spermidine_both","yes",11
+"166","vasopressin-regulated water reabsorption","8/44",0.00334374981290321,31.1793398053838,"spermidine_both","yes",8
+"185","chemokine signaling pathway","7/192",0.00290200156603102,55.1324267314253,"overlap_2_comp","yes",7
+"12","chemokine signaling pathway","7/192",0.00213490406842353,62.1306793270717,"up_spermidine_patients","yes",7
+"161","cholesterol metabolism","9/50",0.00185876656972714,33.6678243100484,"spermidine_both","yes",9
+"162","growth hormone synthesis, secretion and action","15/119",0.00185876656972714,22.1726958872702,"spermidine_both","yes",15
+"159","rap1 signaling pathway","22/210",0.00163078493056046,18.4455830281842,"spermidine_both","yes",22
+"158","vegf signaling pathway","10/59",0.00159432533738293,32.1374583601268,"spermidine_both","yes",10
+"157","nod-like receptor signaling pathway","20/181",0.00150889798379037,19.8276579558631,"spermidine_both","yes",20
+"156","mtor signaling pathway","18/154",0.00148913586621105,21.1783209705515,"spermidine_both","yes",18
+"155","cgmp-pkg signaling pathway","19/167",0.00148454176196909,20.5940021163442,"spermidine_both","yes",19
+"154","pyruvate metabolism","9/47",0.00126491522207552,38.6391890157734,"spermidine_both","yes",9
+"151","collecting duct acid secretion","7/27",0.000856132008304437,60.0855309234058,"spermidine_both","yes",7
+"149","fatty acid degradation","9/43",0.000657338867692891,47.0079759280504,"spermidine_both","yes",9
+"144","fc epsilon ri signaling pathway","12/68",0.000353208998845237,41.2103505046827,"spermidine_both","yes",12
+"141","glutathione metabolism","11/57",0.00030903781887232,46.76462672866,"spermidine_both","yes",11
+"139","glyoxylate and dicarboxylate metabolism","8/30",0.000285138937369867,71.8094416991196,"spermidine_both","yes",8
+"140","thyroid hormone signaling pathway","17/121",0.000285138937369867,32.4507661732791,"spermidine_both","yes",17
+"176","cell adhesion molecules","8/148",0.000161382977411855,122.565089014078,"overlap_2_comp","yes",8
+"137","insulin signaling pathway","19/137",0.000135227947920404,34.6241037317259,"spermidine_both","yes",19
+"5","cell adhesion molecules","8/148",9.38161746290071e-05,137.105414795518,"up_spermidine_patients","yes",8
+"134","hif-1 signaling pathway","17/109",7.97663623425625e-05,41.8911133069437,"spermidine_both","yes",17
+"133","glycolysis / gluconeogenesis","13/67",7.48988315918923e-05,54.8517552572517,"spermidine_both","yes",13
+"174","platelet activation","8/124",7.14149479061776e-05,163.874547218516,"overlap_2_comp","yes",8
+"131","complement and coagulation cascades","15/85",5.81394003623494e-05,50.1579812668082,"spermidine_both","yes",15
+"129","osteoclast differentiation","19/127",5.22712055531456e-05,41.7980244157438,"spermidine_both","yes",19
+"128","citrate cycle (tca cycle)","9/30",4.22877234370501e-05,103.22102976516,"spermidine_both","yes",9
+"3","platelet activation","8/124",4.09703216056814e-05,182.738550584286,"up_spermidine_patients","yes",8
+"124","hematopoietic cell lineage","17/99",2.58455626384108e-05,52.6439597985263,"spermidine_both","yes",17
+"122","antigen processing and presentation","15/78",2.33795804818651e-05,61.1009686969949,"spermidine_both","yes",15
+"121","fc gamma r-mediated phagocytosis","17/97",2.07593467072144e-05,55.2190956965057,"spermidine_both","yes",17
+"120","chemokine signaling pathway","26/192",1.06683569519356e-05,43.1231829417665,"spermidine_both","yes",26
+"110","retrograde endocannabinoid signaling","25/148",3.00527826754551e-07,72.0867713429303,"spermidine_both","yes",25
+"107","ecm-receptor interaction","20/88",4.18333297717012e-08,116.319173462114,"spermidine_both","yes",20
+"103","leukocyte transendothelial migration","25/114",1.33984542303073e-09,132.539337532992,"spermidine_both","yes",25
+"93","thermogenesis","50/232",2.29957349679543e-18,252.246809887853,"spermidine_both","yes",50
+"90","platelet activation","40/124",1.8389229462168e-21,508.127761235777,"spermidine_both","yes",40
+"87","oxidative phosphorylation","45/133",5.15360528001484e-25,640.131195420627,"spermidine_both","yes",45

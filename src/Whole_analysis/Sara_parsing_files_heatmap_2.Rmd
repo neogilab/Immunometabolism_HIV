@@ -1,0 +1,133 @@
+---
+title: "Parsing Sara file"
+output: html_notebook
+---
+
+```{r}
+library(xlsx)
+```
+
+## CD4 cells
+```{r}
+d1 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 1)
+x <- d1[,-c(1:4)] < 1
+x1 <- colnames(x)[colSums(x) == 9]
+
+d2 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 2)
+d2 <- d2[complete.cases(d2),]
+x <- d2[,-c(1:4)] < 1
+x2 <- colnames(x)[colSums(x) == 9]
+
+d3 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 3)
+x <- d3[,-c(1:4)] < 1
+x3 <- colnames(x)[colSums(x) == 9]
+
+d4 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 4)
+x <- d4[,-c(1:4)] < 1
+x4 <- colnames(x)[colSums(x) == 9]
+
+d5 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 5)
+x <- d5[,-c(1:4)] < 1
+x5 <- colnames(x)[colSums(x) == 9]
+
+d6 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 6)
+x <- d6[,-c(1:4)] < 1
+x6 <- colnames(x)[colSums(x) == 9]
+
+x <- unique(c(x1, x2, x3, x4, x5, x6))
+
+all <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD4 T cells (%).xls", 7)
+all <- all[all$Condition != "HC",]
+
+cd4 <- all[,!colnames(all) %in% x]
+cd4$Stimuli <- NULL
+cd4$c..HC.D1_B1_B01.fcs....HC.like.D1_B7_B07.fcs....Risk.D1_E1_E01.fcs... <- NULL 
+cd4$name <- paste0(cd4$Donor, "_", cd4$Condition)
+```
+
+
+## CD8 cells
+```{r}
+d1 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 1)
+x <- d1[,-c(1:4)] < 1
+x1 <- colnames(x)[colSums(x) == 9]
+
+d2 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 2)
+d2 <- d2[complete.cases(d2),]
+x <- d2[,-c(1:4)] < 1
+x2 <- colnames(x)[colSums(x) == 9]
+
+d3 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 3)
+x <- d3[,-c(1:4)] < 1
+x3 <- colnames(x)[colSums(x) == 9]
+
+d4 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 4)
+x <- d4[,-c(1:4)] < 1
+x4 <- colnames(x)[colSums(x) == 9]
+
+d5 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 5)
+x <- d5[,-c(1:4)] < 1
+x5 <- colnames(x)[colSums(x) == 9]
+
+d6 <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 6)
+x <- d6[,-c(1:4)] < 1
+x6 <- colnames(x)[colSums(x) == 9]
+
+x <- unique(c(x1, x2, x3, x4, x5, x6))
+x <- gsub("CD4", "CD8", x)
+
+all <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/Sara/CD8 T cells (%).xls", 7)
+all <- all[all$Condition != "HC",]
+
+cd8 <- all[,!colnames(all) %in% x]
+cd8$name <- paste0(cd8$Donor, "_", cd8$Condition)
+```
+
+```{r}
+data <- merge(cd8, cd4, by = "name")
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+data_2 <- data[,-c(1:5)]
+data_2$Donor.y <- NULL
+data_2$Condition.y <- NULL
+```
+
+```{r}
+cell_types <- colnames(data_2)
+cell_types <- gsub("CD8Naive.*", "CD8Naive", cell_types)
+cell_types <- gsub("CD4Naive.*", "CD4Naive", cell_types)
+```
+
+```{r}
+y <- c(90, 131, 170, 212)
+x <- seq(1:50)
+x <- log10(x)
+
+library(circlize)
+library(ComplexHeatmap)
+colfunc <- colorRampPalette(c("white", "black"))
+col_fun1 = colorRamp2(x, colfunc(50))
+```
+
+```{r}
+pdf("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/Heatmap_Sara_T_cells.pdf", width = 10, height = 5)
+ht = Heatmap(data_2, 
+             col = col_fun1, 
+             show_column_names = TRUE, 
+             show_row_names = FALSE,
+             column_split = cell_types,
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(cluster = data$Condition.x,
+                                              col = list(cluster = c("AtRisk" = col[2], "HCLike" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```

@@ -1,0 +1,3 @@
+"","Gene_set","Term","Overlap","P.value","Adjusted.P.value","Odds.Ratio","Genes"
+"4","CUSTOM140613145548480","glycogen metabolism","1/1",0.0250855188141588,0.150513112884953,40.7674418604651,"maltose"
+"5","CUSTOM140613145548480","lipid","11/285",0.0642820307707409,0.192846092312223,2.07530647985989,"sphingosine;1-stearoyl-2-arachidonoyl-GPS (18:0/20:4);sphingadienine;1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*;sphinganine;sphingosine 1-phosphate;glycerophosphoethanolamine;phosphoethanolamine (PE);sphinganine-1-phosphate;phosphocholine;hexadecasphingosine (d16:1)*"

@@ -1,0 +1,157 @@
+Name,Parameter,Category,Dictionary
+Age ,AGE_cat,cat,"<55, 55<x<65, >65"
+Gender ,GENDER,cat,"0:female, 1:male"
+Grandparents origin ,ob2,cat,"0:non european, 1:european"
+Body mass index ,BMI_cat,cat,"underweight(<18.5), normal(18.5>x>25), overweight(25<x<30), obese (30<x<35), extremely obese (>35)"
+Central_obesity ,central_obesity,cat,"0:no, 1:yes"
+Ethnicity ,Ethnic,cat,"0:non-caucasian, 1:caucasian"
+Origin defined as in the Danish HIV cohort ,Origin,cat,"0:non european, 1:european"
+CD4/CD8 ratio ,CDA_CD8_cat,cat,"<1, >1"
+Mode of HIV transmission ,Transm_mode,cat,"0:other, 1:MSM, 6:heterosexual"
+Viral load ,VL_cat,cat,"<50, >50"
+Duration ART ,Duration_cat,cat,"<5, 5<x<10,10<x<15, >15"
+First ART drug ,first_drug,cat,"ABC, TDF-TAF, other"
+Previous AIDS defining condition ,CDCAIDS,cat,"0:no, 1:yes"
+Previous ddi/AZT/d4t ART exposure,ddiAZTd4t,cat,"0:no, 1:yes"
+Candy intake ,H2_57,cat,"0:never, 1:1-3 per month, 2:1-2 per week, 3:3-4 per week, 4:1 per day, 5:> 1 per day"
+Chocolate intake ,H2_58a,cat,"0:never, 1:1-3 per month, 2:1-2 per week, 3:3-4 per week, 4:1 per day, 5:> 1 per day"
+Choice of fat for preparing warm dishes ,H2_54,cat,"0:none, 1:butter, 4:margarine, 5:olive oil, 6:other"
+Fruit intake ,H2_56,cat,"1:x<3 per month, 2:>1 per week, 5:>1 per day"
+Liquer ,H2_46_5a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Liquor ,H2_46_6a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Vegetable intake ,H2_55,cat,"1:x<3 per month, 2:>1 per week, 5:>1 per day"
+Current smoker ,H2_32a,cat,"0:no, 1:yes"
+E-cigarettes ,H2_40a,cat,"0:no, 1:yes with nicotine, 2:yes without nicotine"
+All alcoholic drinks ,H2_46_1a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Beer ,H2_46_2a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Frequency of consumption of > 5 drinks in one occasion during the past year ,H2_47,cat,"1:<1 per month, 2:1-3 per month, 3:>1 per week"
+White wine ,H2_46_3a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Other alcohlic drinks,H2_46_7a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Ankle brachial index ,ob14,cat,"> 0.9, < 0.9"
+Metabolic Syndrome ,METS,cat,"0:no, 1:yes"
+Anti dyslipedemics ,m2_05,cat,"0:no, 1:yes"
+Anti-coagulative therapy ,m2_17,cat,"0:no, 1:yes"
+Antihypertensives ,m2_02a,cat,"0:no, 1:yes"
+Anxiolytics/antidepressant ,m2_08,cat,"0:no, 1:yes"
+Arthritis medication ,m2_06,cat,"0:no, 1:yes"
+Aspirin ,m2_01,cat,"0:no, 1:yes"
+Birth control pills ,m2_13,cat,"0:no, 1:yes"
+Drugs to treat heart conditions ,m2_03a,cat,"0:no, 1:yes"
+D-vitamin ,m2_23,cat,"0:no, 1:yes"
+Medication for eye conditons ,m2_15,cat,"0:no, 1:yes"
+Medication for weight loss ,m2_16,cat,"0:no, 1:yes"
+Menopausal medication ,m2_14,cat,"0:no, 1:yes"
+Insuline ,m2_11,cat,"0:no, 1:yes"
+Current/previous marihuana use ,H2_44a,cat,"0:no, 1:yes"
+Diabetes ,diabetes,cat,"0:no, 1:yes"
+Diuretics ,m2_04,cat,"0:no, 1:yes"
+CMV IgG ,CMV_igg,cat,"0:no, 1:yes"
+Hypertension ,hypertension,cat,"0:no, 1:yes"
+Hypnotica ,m2_07,cat,"0:no, 1:yes"
+Duration since last meal ,ob3,cat,"1:0-1, 2:1-2, 3:2-3, 4:3-4, 5:4-5, 6:5-6, 7:6-7, 8:7-8, 9:>8"
+Motion habits changed ,H2_75b,cat,"more, less"
+Motion habits changed markedly past 1 year ,H2_75a,cat,"0:no, 1:yes"
+Natural remedies ,m2_25a,cat,"0:no, 1:yes"
+Nicotine substitution,H2_39a,cat,"0:no, 1:yes"
+Other alcohlic drinks,H2_46_7a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Other antidiabetic medication ,m2_12,cat,"0:no, 1:yes"
+Other medication ,m2_22,cat,"0:no, 1:yes"
+Other natural remedies ,m2_25b,cat,"0:no, 1:yes"
+Other pain relief medication ,m2_21,cat,"0:no, 1:yes"
+Other vitamin ,m2_24,cat,"0:no, 1:yes"
+Paracetamol ,m2_20,cat,"0:no, 1:yes"
+Physical activity in spare time ,H2_74a,cat,"1:inactive, 2:slightly active, 3:moderated active, 4:very active"
+Positive ab anti-Hbe ,Anti_hbe,cat,"0:no, 1:yes"
+Positive ab anti-HBs ,Anti_hbs,cat,"0:no, 1:yes"
+Positive HbeAg ,HbEAg,cat,"0:no, 1:yes"
+Positive HBsAg ,HbSag,cat,"0:no, 1:yes"
+Positive HCV antibodies ,HCV_anti,cat,"0:no, 1:yes"
+Positive HCV RNA ,HCV_rna,cat,"0:no, 1:yes"
+Positive IgM anti-HB ,Anti_hbcigm,cat,"0:no, 1:yes"
+Previous smoker ,H2_32b,cat,"0:no, 1:yes"
+Red wine ,H2_46_4a,cat,"0:never, 1:monthly, 2:weekly, 3:daily"
+Smoking status ,status_smoking,cat,"0:never, 1:Current, 2:Ex-smoker, 9:Unknown"
+Syphilis infection ,Syph,cat,"0:no, 1:yes"
+Third ART drug ,X3rd_Drug,cat,"PI, INSTI, NNRTI"
+Transmission origin ,Transm_origin,cat,"1:non-european, 2:european"
+Treatment for hyperthyroidism ,m2_18,cat,"0:no, 1:yes"
+Tx for asthma/bronchitis/COPD ,m2_10,cat,"0:no, 1:yes"
+Tx for gastric acidity ,m2_09,cat,"0:no, 1:yes"
+Type of butter on bread ,H2_51,cat,"0:None, 1:Butter, 2:Spreadable, 3:Margarine, 4:Other"
+Type of chocolate ,H2_58b,cat,"1:Dark chocolate, 2:Other"
+VAT ,VAT_cat,cat,"low(male < 40 and female < 35), high (male > 40 and female > 35)"
+Age ,AGE,num,years
+Height ,height,num,m
+Hip circumference ,ob7,num,cm
+Weight of participant ,ob5,num,kg
+Waist circumference ,ob6,num,cm
+Waist hip ratio ,WHR,num,ratio
+Viceral adipose tissue,VAT,num,Viceral adipose tissue
+Body mass index ,BMI,num,kg/m2
+CD4 at ART initiation,CD4_ART,num,CD4 at ART initiation
+CD4/CD8 ratio,CDA_CD8,num,CD4/CD8 ratio
+Current CD4 count,CD4,num,Current CD4 count
+Current CD8 count,CD8,num,Current CD8 count
+Log10 VL at ART initiation,log10VL_ART,num,Log10 VL at ART initiation
+Duration ART,duration_years,num,years
+Lowest recorded CD4,CD4_nadir,num,Lowest recorded CD4
+Beef intake ,H2_53a,num,Times per week in average
+"Bread, pieces per day ",H2_50,num,Number per day
+Coffe consumption ,H2_45a4,num,cup per week
+Coke consumption ,H2_45a6,num,bottles of 0.5 L per week
+Coke light consumption ,H2_45a7,num,bottles of 0.5 L per week
+Cheese Cold cut ,H2_52d,num,Times per week in average
+Deli meats Cold cut ,H2_52a,num,Times per week in average
+Fish Cold cut ,H2_52c,num,Times per week in average
+Fish intake ,H2_53d,num,Times per week in average
+Ecological food and drinks ,H2_59,num,%
+Fastfood intake ,H2_53e,num,Times per week in average
+Juice consumption ,H2_45a10,num,glass per week
+Lamb intake ,H2_53f,num,Times per week in average
+Limonade consumption ,H2_45a11,num,glass per week
+Water consumption ,H2_45a12,num,bottles of 0.5 L per week
+Whole milk consumption ,H2_45a1,num,glass per week
+Adulthood ,H2_43,num,Years
+Childhood ,H2_42,num,Years
+Alcohol ,alcohol,num,Unit:gram / per week
+Weekly consumption ,H2_46_2b,num,Number of 33 cl
+Weekly consumption ,H2_46_6b,num,Number of 33 cl
+Weekly consumption ,H2_46_4b,num,Number of 33 cl
+Weekly consumption ,H2_46_3b,num,Number of 33 cl
+Alaninaminotransferase,alat,num,Alaninaminotransferase
+"Bloodpressure, left leg ",ob13,num,mm mercury
+"Bloodpressure, right leg ",ob12,num,mm mercury
+"Diastolic blood pressure, left arm ",ob9,num,mm mercury
+"Diastolic blood pressure, right arm ",ob11,num,mm mercury
+eGFR,eGFR,num,mL/min/1.73m2
+Daily use of Computer ,H2_70b,num,Minutes
+Daily use of Computer games ,H2_70c,num,Minutes
+Daily use of mobile phone ,H2_70d,num,Minutes
+Daily use of television ,H2_70a,num,Minutes
+Days per month with nightly work ,H2_72,num,Days
+Hours outdoor ,H2_74c,num,Hours
+Number of years with Daily use of Computer ,H2_71b,num,Years
+Number of years with Daily use of Computer games ,H2_71c,num,Years
+Number of years with Daily use of mobile phone ,H2_71d,num,Years
+Number of years with Daily use of television ,H2_71a,num,Years
+Liver stiffness measurement ,ob15,num,kpa
+Low fat milk consumption ,H2_45a2,num,glass per week
+Main courses ,H2_49,num,Number per day
+Passive smoking exposure ,H2_41,num,Hours per day
+Pate Cold cut ,H2_52b,num,Times per week in average
+"P-Cholesterol+ester, i HDL ",Hdl,num,mmol/L
+P-Creatininium ,creatini,num,µmol/L
+P-Kolesterol LDL ,Ldl,num,mmol/L
+Pork intake ,H2_53b,num,Times per week in average
+Poultry intake ,H2_53c,num,Times per week in average
+P-Triglycerid ,Tgl,num,mmol/L
+Pulse ,ob19,num,beats per minute
+Saturation ,ob18,num,%
+Skim milk consumption ,H2_45a3,num,glass per week
+Soda consumption ,H2_45a8,num,bottles of 0.5 L per week
+Soda light consumption ,H2_45a9,num,bottles of 0.5 L per week
+subcutaneous adipose tissue,SAT,num,subcutaneous adipose tissue
+"Systolic blood pressure, left arm ",ob8,num,mm mercury
+"Systolic blood pressure, right arm ",ob10,num,mm mercury
+Tea consumption ,H2_45a5,num,cup per week
+time from awakening to first cup of coffee ,H2_45b,num,Hours

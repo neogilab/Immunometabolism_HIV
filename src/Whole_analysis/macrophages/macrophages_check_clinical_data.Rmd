@@ -1,0 +1,202 @@
+---
+title: "Processing data macrophages"
+output: html_notebook
+---
+
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(mygene)
+library(org.Hs.eg.db)
+library(ggplot2)
+library(dplyr)
+source("src/usefull_functions.R")
+```
+
+```{r}
+# Function returning compact column classes
+col_classes <- function(df) {
+    t(as.data.frame(lapply(df, function(x) paste(class(x), collapse = ','))))
+}
+
+# Return example data's column classes
+
+```
+
+```{r}
+id_Anoop <- read.xlsx("data/macrophages/Macrophage_Flora.xlsx", 1)
+names(id_Anoop)[2] <- "COCOMO_ID"
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical <- clinical
+id_Anoop <- merge(clinical, id_Anoop, by = "COCOMO_ID", all.y = TRUE)
+table(id_Anoop$cluster)
+id_Anoop$cluster[grep("HC", id_Anoop$PID)] <- "Ctrl"
+id_Anoop$cluster[is.na(id_Anoop$cluster)] <- "HIV"
+#id_Anoop <- id_Anoop[!is.na(id_Anoop$cluster),]
+
+clinical <- id_Anoop
+clinical$X <- NULL
+clinical$Olink.ID <- NULL
+clinical$Proteomics.ID <- NULL
+clinical$Transcriptomics.ID <- NULL
+clinical$PID <- NULL
+clinical$User <- NULL
+
+clinical <- clinical[clinical$cluster != "Ctrl",]
+clinical <- clinical[!is.na(clinical$cluster),]
+
+clinical$Ethnic[is.na(clinical$Ethnic)] <- 0
+clinical$Transm_mode[clinical$Transm_mode == 6] <- 0
+clinical$H2_54[is.na(clinical$H2_54)] <- 2
+```
+
+```{r}
+data <- clinical
+```
+
+```{r}
+data$H2_55 <- as.factor(data$H2_55)
+data$H2_56 <- as.factor(data$H2_56)
+data$H2_74a <- as.factor(data$H2_74a)
+data$m2_02a <- as.factor(data$m2_02a)
+data$first_drug <- as.factor(data$first_drug)
+data$METS <- as.factor(data$METS)
+data$central_obesity <- as.factor(data$central_obesity)
+data$Ethnic <- as.factor(data$Ethnic)
+data$Origin <- as.factor(data$Origin)
+data$Transm_mode <- as.factor(data$Transm_mode)
+data$hypertension <- as.factor(data$hypertension)
+data$cluster <- as.factor(data$cluster)
+data$diabetes <- NULL
+data$X3rd_Drug <- as.factor(data$X3rd_Drug)
+data$GENDER <- as.factor(data$GENDER)
+```
+
+```{r}
+data$COCOMO_ID <- NULL
+data_factor <- data[, c(which(col_classes(data) == "factor"))]
+data_numeric <- data[, c(1, which(col_classes(data) != "factor"))]
+```
+
+```{r}
+medIQR <- function(x, na.rm = TRUE, ...) {
+  qq <- stats::quantile(x, c(0.50, 0.25, 0.75), na.rm = na.rm, ...)
+  structure(qq, 
+            names = c("Median", "Q1", "Q3"),
+            class = "medIQR") # how about EstInterval? smry?
+}
+
+medIQR.formula <- function(formula,
+                           data = NULL, ...,
+                           subset, na.action = NULL,
+                           overall = FALSE,
+                           overall.label = "Overall") {
+  if (missing(formula) || (length(formula) != 3)) 
+    stop("'formula' missing or incorrect")
+  m <- match.call(expand.dots = FALSE)
+  if (is.matrix(eval(m$data, parent.frame()))) 
+    m$data <- as.data.frame(data)
+  m$... <- m$overall <- m$overall.label <- NULL
+  m$na.action <- na.action
+  require(stats, quietly = TRUE)
+  m[[1L]] <- as.name("model.frame")
+  mf <- eval(m, parent.frame())
+  response <- attr(attr(mf, "terms"), "response")
+  s <- split(mf[[response]], mf[-response])
+  
+  if(overall) {
+    if(any(names(s) == overall.label))
+    stop(sQuote(overall.label), " is an existing level")
+    s <- c(Overall = list(unlist(s)), s)
+  }
+  structure(sapply(s, FUN = medIQR, ...),
+            class = "medIQR")
+}
+```
+
+```{r}
+table_numeric <- data.frame(parameter = rep(names(data_numeric)[2:ncol(data_numeric)], each = 2), cluster = rep(c(1, 2), length(names(data_numeric)[2:ncol(data_numeric)])), Med_IQR = NA, pval_WT = NA)
+j = 1
+
+for (i in 2:ncol(data_numeric)){
+  c1 <- data_numeric[data_numeric$cluster == 1,i]
+  c2 <- data_numeric[data_numeric$cluster == 2,i]
+  #c3 <- data_numeric[data_numeric$cluster == 3,i]
+  #c4 <- data_numeric[data_numeric$cluster == 4,i]
+  #c5 <- data_numeric[data_numeric$cluster == 5,i]
+  x <- paste0(round(medIQR(c1)[[1]], 2), "(", round(medIQR(c1)[[2]], 2), "-", round(medIQR(c1)[[3]], 2), ")")
+  y <- paste0(round(medIQR(c2)[[1]], 2), "(", round(medIQR(c2)[[2]], 2), "-", round(medIQR(c2)[[3]], 2), ")")
+  #z <- paste0("Mean =",round(mean(c3, na.rm=TRUE), 2), ", SD =", round(sd(c3, na.rm = TRUE), 2))
+  #a <- paste0("Mean =",round(mean(c4, na.rm=TRUE), 2), ", SD =", round(sd(c4, na.rm = TRUE), 2))
+  #b <- paste0("Mean =",round(mean(c5, na.rm=TRUE), 2), ", SD =", round(sd(c5, na.rm = TRUE), 2))
+  table_numeric[c(j, j+1), 3] <- c(x, y)
+  test <- wilcox.test(c1, c2)
+  print(test)
+  table_numeric[j, 4] <- test$p.value
+  j = j + 2
+}
+
+
+
+
+table_numeric$X <- paste0("C", table_numeric$cluster, "_", table_numeric$parameter)
+
+#table_numeric <-  merge(table_numeric, reg, by = "X")
+
+table_numeric$X <- NULL
+
+write.xlsx(table_numeric, "results/clinical/COCOMO_3_layers_non_norm_numeric_values_kruskal_3_macrophages.xlsx")
+```
+
+
+```{r}
+data_factor$cluster <- as.factor(as.vector(data_factor$cluster))
+```
+
+```{r}
+table_factor <- data.frame(Var1 = NA, Var2 = NA, Level = NA, Freq= NA, Freq2 = NA, Parameter = NA, test = NA, pval = NA)
+j = 1
+
+for (i in 2:ncol(data_factor)) {
+  print(names(data_factor)[i])
+  x <- data.frame(t(table(data_factor$cluster, data_factor[,i])))
+  x$Level <- x$Var1
+  x$Var1 <- paste0(names(data_factor)[i], "_", x$Var1, "_", x$Var2)
+  x$Freq2 <- ""
+  x$Freq2[x$Var2 == 1] <- paste0(x$Freq[x$Var2 == 1], "(", round(x$Freq[x$Var2 == 1]/sum(x$Freq[x$Var2 == 1])*100, 2), "%)")
+  x$Freq2[x$Var2 == 2] <- paste0(x$Freq[x$Var2 == 2], "(", round(x$Freq[x$Var2 == 2]/sum(x$Freq[x$Var2 == 2])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 3] <- paste0(x$Freq[x$Var2 == 3], "(", round(x$Freq[x$Var2 == 3]/sum(x$Freq[x$Var2 == 3])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 4] <- paste0(x$Freq[x$Var2 == 4], "(", round(x$Freq[x$Var2 == 4]/sum(x$Freq[x$Var2 == 4])*100, 2), "%)")
+  #x$Freq2[x$Var2 == 5] <- paste0(x$Freq[x$Var2 == 5], "(", round(x$Freq[x$Var2 == 5]/sum(x$Freq[x$Var2 == 5])*100, 2), "%)")
+  x$Parameter <- names(data_factor)[i]
+  m1 <- rbind(table(data_factor$cluster, data_factor[,i]))
+  f <- chisq.test(m1)
+  print(f$expected)
+  if(sum(as.vector(f$expected > 5), na.rm = TRUE) == length(as.vector(f$expected))){
+    x[1, 7] <- "Chi-Square Test"
+    print(x[1, 7])
+    x[1, 8] <- f$p.value
+    }else{
+      x[1, 7] <- "Fisher's Exact Test"
+      print(x[1, 7])
+      x[1, 8] <- fisher.test(m1, simulate.p.value=TRUE)$p.value
+    }
+  names(x)[7:8] <- c("test", "pval")
+  table_factor <- rbind(x,table_factor)
+}
+
+table_factor <- table_factor[,colnames(table_factor) %in% c("Var2", "Parameter", "Level", "Freq2", "test", "pval")]
+names(table_factor)[1] <- "cluster"
+write.xlsx(table_factor, "results/clinical/X2_results_results_cocomo_3_groups_3_macrophages.xlsx")
+```

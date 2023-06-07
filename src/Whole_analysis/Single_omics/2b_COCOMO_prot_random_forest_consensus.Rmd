@@ -1,0 +1,300 @@
+---
+title: "Structural causal modeling"
+output: html_notebook
+---
+
+
+
+# Plan
+
+Take transcriptomics data --> 2 groups 
+
+6 classifiers --> 100 partitioning / train and test sets (80/20) --> Feature selection (600) 
+
+Feature ranking --> score between different classifiers 
+
+Bayesian belief networks (BBNs) based on the 600 genes (bnlearn package) 
+
+Boxplot of the driver genes 
+
+# Analysis
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+source("src/ML.R")
+library(stringi)
+library(randomForest)
+library(caret)
+library(mygene)
+library(org.Hs.eg.db)
+```
+
+## load transcriptomics data
+### clinical paraolinkers
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+
+data_olink <- data.frame(t(data_olink))
+
+data <- data_olink
+data <- data[apply(data, 1, var) >= 0.1, ]
+data <- data.frame(t(data))
+
+
+data$COCOMO_ID <- gsub("X", "", rownames(data))
+pca_data <- merge(clinical, data, by = "COCOMO_ID")
+data_txn <- data.frame(cluster = pca_data$cluster, pca_data[,-c(1:47)])
+data_txn <- data_txn[data_txn$cluster != "Ctrl",]
+data_txn$cluster <- as.factor(as.vector(data_txn$cluster))
+```
+
+## run null model
+```{r}
+rf <- randomForest(cluster~., data=data_txn, importance = TRUE)
+print(rf)
+```
+
+```{r}
+name_ana <- "Proteomics_clusters"
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+table_markers <- data.frame(marker = NA, slice =  NA)
+table_genes <- data.frame(marker = NA, slice =  NA)
+
+for (i in 1:1000) {
+  print(i)
+  condition <- data_txn$cluster
+  data_txn_2 <- data_txn
+  data_txn_2$cluster <- NULL 
+  sample_data = data_txn_2[, sample(ncol(data_txn_2), 1000, replace = FALSE)]
+  data_txn_3 <- data.frame(cluster = condition, sample_data)
+  title <- paste0(name_ana, "_", "slice", i)
+  table_cond <- data_txn_3
+  names(table_cond)[1] <- "Condition"
+  table_cond$Condition <- as.factor(as.vector(paste0("C",table_cond$Condition)))
+  
+  table_genes_2 <- data.frame(marker = colnames(table_cond)[-1], slice = i)
+  table_genes <- rbind(table_genes, table_genes_2)
+  
+  table_cond <- feature_select_Boruta_2(table_cond, title)
+  table_markers_2 <- data.frame(marker = colnames(table_cond), slice = i)
+  table_markers <- rbind(table_markers, table_markers_2)
+}
+```
+
+```{r}
+write.csv(table_markers, "processing/proteins_markers_slices.csv")
+write.csv(table_genes, "processing/total_proteins_slices.csv")
+```
+
+```{r}
+table_1 <- read.csv("processing/proteins_markers_slices.csv")
+table_2 <- read.csv("processing/total_proteins_slices.csv")
+```
+
+```{r}
+names(table_1)
+```
+
+```{r}
+table_1$slice
+table_1$incidence <- 1
+table_2$incidence <- 1
+```
+
+```{r}
+unique(table_1$marker)
+```
+```{r}
+table_1 <- aggregate(incidence ~ marker, table_1, sum)
+```
+
+```{r}
+table_2 <- aggregate(incidence ~ marker, table_2, sum)
+```
+
+```{r}
+table_3 <- merge(table_1, table_2, by = "marker")
+table_3$importance <- table_3$incidence.x/ table_3$incidence.y *100
+```
+
+```{r}
+write.csv(table_3, "processing/total_proportions_proteins_importance.csv")
+```
+
+```{r}
+table_3 <- table_3[table_3$importance > 70,]
+```
+
+```{r}
+table_cond <- data_txn[,colnames(data_txn) %in% c("cluster", table_3$marker)]
+colnames(table_cond)[1] <- "Condition"
+table_cond$Condition <- paste0("C", table_cond$Condition)
+```
+
+```{r}
+write.csv(table_cond, "/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/table_condition_biormarkers_proteomics.csv")
+```
+
+```{r}
+# cross-validation
+# mtry tunning
+# number of trees tunning
+
+# tune mtry parameter : check results for value of mtry between 1 and 15
+set.seed(1)
+tunegrid <- expand.grid(.mtry = (1:15)) 
+
+# 10 -Fold cross validation
+control <- trainControl(method='repeatedcv', 
+                        number=10, 
+                        repeats=3,
+                        savePredictions = TRUE,
+                        ## Estimate class probabilities
+                        classProbs = TRUE,
+                        ## Evaluate performance using 
+                        ## the following function)
+                        summaryFunction = twoClassSummary)
+
+set.seed(123)
+#Number randomely variable selected is mtry
+
+rf_default <- train(as.factor(Condition)~., 
+                    data=table_cond, 
+                    method='rf', 
+                    metric = 'Accuracy',
+                    tuneGrid=tunegrid, 
+                    trControl=control, importance = TRUE, ntree = 700,
+                    )
+
+# keep final model
+rf <- rf_default$finalModel
+
+rf
+
+saveRDS(rf, 'processing/random_forest_proteins_consensus.rda')
+
+```
+
+```{r}
+rf <- readRDS('processing/random_forest_proteins_consensus.rda')
+rf$mtry
+rf$forest
+rf
+```
+
+
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt")
+sen_2 <- read.delim("data/senescence/REACTOME_CELLULAR_SENESCENCE.v7.5.1.tsv")
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";")
+```
+
+```{r}
+sen <- c(sen_3$gene_symbol, sen_1$gene_symbol)
+sen <- unique(sen)
+```
+
+```{r}
+dge <- read.csv("results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+names(dge)[1] <- "variable"
+```
+
+```{r}
+dge_2 <- dge[dge$logFC > 1.5,]
+dge_2$marker_senescence <- ifelse(dge_2$variable %in% sen_1$GeneSymb, "yes", "no")
+table(dge_2$marker_senescence)
+```
+```{r}
+var_importance <- randomForest::importance(rf)
+names <- rownames(var_importance)
+var_importance <- data.frame(MeanDecreaseAccuracy = var_importance[,4], variable = names)
+var_importance <- arrange(var_importance, MeanDecreaseAccuracy)
+var_importance$variable
+```
+
+```{r}
+var_importance_2 <- merge(dge, var_importance, by = "variable", all.y = TRUE)
+var_importance_2$marker_senescence <- ifelse(var_importance_2$variable %in% sen_1$GeneSymb, "yes", "no")
+var_importance_2 <- var_importance_2[order(var_importance_2$MeanDecreaseAccuracy, decreasing = TRUE),]
+var_importance_2$rank_imp <- 1:187
+var_importance_2 <- var_importance_2[order(abs(var_importance_2$logFC), decreasing = TRUE),]
+var_importance_2$rank_LFC <- 1:187
+
+var_importance_2$rank <- var_importance_2$rank_imp + var_importance_2$rank_LFC
+
+var_importance_3 <- var_importance_2[var_importance_2$rank < 120, ]
+```
+
+```{r}
+var_importance <- arrange(var_importance_2, MeanDecreaseAccuracy)
+var_importance <- var_importance[var_importance$MeanDecreaseAccuracy > 0.67,]
+```
+
+```{r}
+position <- var_importance$variable
+```
+
+
+
+```{r}
+theme_set(theme_classic())
+
+ a<- ggplot(var_importance, aes(x=variable, y=MeanDecreaseAccuracy, color = logFC)) + 
+  geom_point(size = 3, alpha = 0.9, shape = 19) +
+  scale_x_discrete(limits = position) + coord_flip()+ theme(axis.text.x =element_text(colour="black", size = 12), axis.text.y = element_text(colour="black", size = 12))+
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(colour = "black", size=1))+xlab("")+theme_minimal() +
+  scale_color_gradient(low = "#ff8d66", high = "#7f4633", na.value = "grey")+
+  theme(axis.text.y= element_text(face=ifelse(var_importance$marker_senescence == "yes","bold","plain")))
+ 
+a
+
+ggsave("results/figures/importance_plot_RF_proteomics_consensus.pdf" , height = 5, width = 4)
+```
+
+
+## export confusion matrix
+```{r}
+write.table(rf$confusion, file = "results/ML/confusion_proteomics_consensus.txt", sep = "\t")
+```
+
+```{r}
+library(caret)
+```
+
+```{r}
+data01 <- factor(c(rep("A", 83), rep("B", 5), rep("A", 9), rep("B", 61)))
+ref01 <- factor(c(rep("A", 88), rep("B", 70)))
+
+table(data01, ref01)
+sensitivity(data01, ref01)
+specificity(data01, ref01)
+```
+
+```{r}
+confusion <- read.delim("results/ML/confusion_proteomics_consensus.txt")
+confusion$class.error <- NULL
+confusion <- as.matrix(confusion)
+```
+

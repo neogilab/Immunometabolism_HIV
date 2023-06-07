@@ -1,0 +1,57 @@
+Aerobic rephosphorylation of ATP from glucose,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Aerobic rephosphorylation of GTP,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Aerobic rephosphorylation of CTP,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Aerobic rephosphorylation of UTP,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ATP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+CTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+GTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+UTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+dATP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+dCTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+dGTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+dTTP de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Histidine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Isoleucine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Leucine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Lysine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Methionine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phenylalanine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Threonine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Tryptophan uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Valine uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Glycerate 3-phosphate  de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mitochondrial acetyl-CoA de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mitochondrial AKG de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Erythrose 4-phosphate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Fructose 6-phosphate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Glyceraldehyde 3-phosphate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Glucose 6-phosphate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mitochondrial oxaloacetate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phosphoenolpyruvate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Pyruvate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Ribose 5-phosphate de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Mitochondrial succinyl-CoA de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Cholesterol de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Protein synthesis from AAs,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Oxidative phosphorylation,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Oxidative decarboxylation,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Krebs cycle NADH,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Ubiquinol-to-proton,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Ubiquinol-to-ATP,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Beta oxidation of saturated FA,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Beta oxidation of long-chain FA,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Beta oxidation of odd-chain FA,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Beta oxidation of unsaturated fatty acid (n-9) ,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Beta oxidation of unsaturated fatty acid (n-6) ,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Uptake and beta oxidation of all NEFAs,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Choline uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Inositol uptake,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phosphatidylcholine de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phosphatidylethanolamine de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phosphatidylserine de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Phosphatidylinositol de novo synthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Thiamin phosphorylation to TPP,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Coenzyme A synthesis from pantothenate,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+FAD synthesis from riboflavin,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Heme biosynthesis,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Growth on Ham's media (biomass production),1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

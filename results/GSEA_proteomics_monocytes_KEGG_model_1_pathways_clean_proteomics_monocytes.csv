@@ -1,0 +1,5 @@
+"","X","Name","Stat..dist.dir.up.","p.adj..dist.dir.up.","Genes..up.","Stat..dist.dir.dn.","p.adj..dist.dir.dn.","Genes..down.","comp","sign","pvalue","Nb"
+"2",13,"KEGG_FOCAL_ADHESION",9.4287e-18,0.087662,34,1,1,0,"proteomics_monocytes_CB","up",0.087662,34
+"4",20,"KEGG_LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION",2.186e-18,0.017982,21,1,1,0,"proteomics_monocytes_CB","up",0.017982,21
+"3",14,"KEGG_ECM_RECEPTOR_INTERACTION",3.1065e-19,0.017982,12,1,1,0,"proteomics_monocytes_CB","up",0.017982,12
+"1",5,"KEGG_ARRHYTHMOGENIC_RIGHT_VENTRICULAR_CARDIOMYOPATHY_ARVC",2.744e-19,0.017982,10,1,1,0,"proteomics_monocytes_CB","up",0.017982,10

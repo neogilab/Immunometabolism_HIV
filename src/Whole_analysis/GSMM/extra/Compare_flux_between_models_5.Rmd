@@ -1,0 +1,1375 @@
+---
+title: "Compare flux between models"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(dplyr)
+
+```
+
+```{r}
+cutoff <- 0.00001
+diff <- 150
+```
+
+## load reactions
+```{r}
+model <- read.csv("data/GEM/all_reactions_model_human_GEM.csv")
+
+model
+```
+
+## load fluxs
+```{r}
+ct <- read.delim("results/MATLAB/GEM-Groups/Ctrl/Ctrl_FBA_flux_1.txt", header = FALSE)
+ct_names <- read.delim("results/MATLAB/GEM-Groups/Ctrl/Ctrl_FBA_flux_reactions_1.txt", header = FALSE)
+```
+
+```{r}
+c1 <- read.delim("results/MATLAB/GEM-Groups/C1/C1_FBA_flux_1.txt", header = FALSE)
+c1_names <- read.delim("results/MATLAB/GEM-Groups/C1/C1_FBA_flux_reactions_1.txt", header = FALSE)
+```
+
+
+```{r}
+c2 <- read.delim("results/MATLAB/GEM-Groups/C2/C2_FBA_flux_1.txt", header = FALSE)
+c2_names <- read.delim("results/MATLAB/GEM-Groups/C2/C2_FBA_flux_reactions_1.txt", header = FALSE)
+```
+
+
+```{r}
+flux_c1 <- cbind(c1_names, c1)
+flux_c1 <- flux_c1[abs(flux_c1[,2]) > cutoff,]
+names(flux_c1) <- c("ID", "flux")
+flux_c1 <- merge(model, flux_c1, by = "ID")
+print(nrow(flux_c1))
+```
+
+```{r}
+flux_c2 <- cbind(c2_names, c2)
+flux_c2 <- flux_c2[abs(flux_c2[,2]) > cutoff,]
+names(flux_c2) <- c("ID", "flux")
+flux_c2 <- merge(model, flux_c2, by = "ID")
+print(nrow(flux_c2))
+```
+
+```{r}
+flux_ct <- cbind(ct_names, ct)
+flux_ct <- flux_ct[abs(flux_ct[,2]) > cutoff,]
+names(flux_ct) <- c("ID", "flux")
+flux_ct <- merge(model, flux_ct, by = "ID")
+print(nrow(flux_ct))
+```
+```{r}
+length(model$SUBSYSTEM[!duplicated(model$SUBSYSTEM)])
+```
+## ven flux
+```{r}
+x <- list(
+  CT = flux_ct$ID, 
+  C1 = flux_c1$ID, 
+  C2 = flux_c2$ID
+  )
+
+library(ggvenn)
+pdf("results/figures/overlap_all_flux.pdf")
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
+  stroke_size = 0.5, set_name_size = 3
+  )
+
+dev.off()
+```
+
+
+
+```{r}
+reactions <- read.csv("data/GEM/reactions_summary_human_GEM.csv")
+reactions <- reactions[,c(2, 3, 4, 6, 12)]
+```
+
+```{r}
+flux_c1 <- flux_c1[,c(1,6)]
+names(flux_c1)[2] <- "Flux_C1"
+flux_c2 <- flux_c2[,c(1,6)]
+names(flux_c2)[2] <- "Flux_C2"
+flux_ct <- flux_ct[,c(1,6)]
+names(flux_ct)[2] <- "Flux_CT"
+```
+
+```{r}
+reactions <- merge(reactions, flux_c1, by = "ID", all.x = TRUE)
+reactions <- merge(reactions, flux_c2, by = "ID", all.x = TRUE)
+reactions <- merge(reactions, flux_ct, by = "ID")
+```
+
+```{r}
+x <- names(table(reactions$SUBSYSTEM))[table(reactions$SUBSYSTEM) < 10]
+```
+
+```{r}
+reactions$SUBSYSTEM <- as.vector(reactions$SUBSYSTEM)
+```
+
+```{r}
+reactions$SUBSYSTEM[reactions$SUBSYSTEM %in% x] <- "Other"
+```
+
+```{r}
+write.csv(reactions, "results/all_flux_filtered_group_models.csv")
+```
+
+```{r}
+#reactions <- reactions[reactions$GENE.ASSOCIATION != "",]
+```
+
+```{r}
+reactions_2 <- reactions[abs(reactions$Flux_C1) > 250 | abs(reactions$Flux_C2) > 250 | abs(reactions$Flux_CT) >250, ]
+reactions_2 <- reactions_2[!is.na(reactions_2$ID),]
+```
+
+```{r}
+unique(reactions$SUBSYSTEM)
+```
+```{r}
+reactions_2 <- reactions_2[,c(1, 2, 3, 4, 5, 8, 6, 7)]
+```
+
+```{r}
+reactions_2$SUBSYSTEM[reactions_2$SUBSYSTEM == "Miscellaneous"] <- "Other"
+reactions_2$Group <- NA
+reactions_2$Group[reactions_2$SUBSYSTEM == "Transport reactions"] <- "Transport reactions"
+reactions_2$Group[reactions_2$SUBSYSTEM == "Exchange/demand reactions"] <- "Exchange/demand reactions"
+reactions_2$Group[is.na(reactions_2$Group)] <- "Other"
+```
+
+```{r}
+table(reactions_2$Group)
+```
+
+
+```{r}
+library(ComplexHeatmap)
+```
+
+
+```{r}
+library(circlize)
+col_fun1 = colorRamp2(c(-1000,-500, -250, 0,250, 500,1000), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+```
+pdf("results/figures/overlapping_flux_differences_subsystems.pdf")
+Heatmap(reactions_2[,c(5, 6, 7)],
+        col = col_fun1,
+        column_order = colnames(reactions_2[,c(5, 6, 7)]), 
+                                show_row_names = FALSE,
+        right_annotation = rowAnnotation(subsystems = reactions_2$Group,
+                                              col = list(subsystems = c("Transport reactions" = "red", "Exchange/demand reactions" = "green", "Other" = "blue")), show_legend = TRUE))
+
+        dev.off()
+
+## extract C2 specific fluxs
+```{r}
+reactions_3 <- reactions_2[!is.na(reactions_2$Flux_C2),]
+
+reactions_3_a <- reactions_3[reactions_3$Flux_C2 > 0,]
+reactions_3_b <- reactions_3[reactions_3$Flux_C2 < 0,]
+
+reactions_3_a <- reactions_3_a[reactions_3_a$Flux_C1 < 0 & reactions_3_a$Flux_CT < 0,]
+reactions_3_b <- reactions_3_b[reactions_3_b$Flux_C1 > 0 & reactions_3_b$Flux_CT > 0,]
+
+reactions_3 <- rbind(reactions_3_a, reactions_3_b)
+
+reactions_3 <- reactions_3[!is.na(reactions_3$Flux_C2),]
+
+
+reactions_2$C2_spe <- ifelse(reactions_2$ID %in% reactions_3$ID, "yes", "no")
+
+table(reactions_2$C2_spe)
+```
+```{r}
+col_fun1 = colorRamp2(c(-1000,-500, -250, 0,250, 500, 1000), rev(c("#B2182B", "#D6604D","#F4A582","white","#92C5DE","#4393C3","#2166AC")))
+```
+
+
+```{r}
+pdf("results/figures/overlapping_flux_differences_subsystems.pdf", height = 5, width = 3)
+Heatmap(reactions_2[,c(6:8)],
+        col = col_fun1,
+        column_order = colnames(reactions_2[,c(6:8)]), 
+                                show_row_names = FALSE,
+       right_annotation = rowAnnotation(C2_spe = reactions_2$C2_spe, col = list(C2_spe = c("yes" = "#d8ae2d", "no" = "white")))
+        )
+
+
+dev.off()
+```
+```{r}
+reactions_3 <- reactions_3[order(reactions_3$SUBSYSTEM),]
+reactions_3$ID <- factor(as.vector(reactions_3$ID), levels = as.vector(reactions_3$ID))
+
+reactions_3$label <- reactions_3$NAME
+```
+
+
+
+```{r}
+col_flux <- c("#8b0000","#eb8c00","#f9d62e","#c9df8a", "#77ab59","#71c7ec","#ff7f50","#eec1ad","grey","#189ad3", "#1ebbd7","#e0301e")
+```
+
+```{r}
+reactions_3$SUBSYSTEM <- factor(reactions_3$SUBSYSTEM,
+                                levels = c("Transport reactions", "Exchange/demand reactions",
+                                           "Fatty acid oxidation",
+                                           unique(reactions_3$SUBSYSTEM[!reactions_3$SUBSYSTEM %in% c("Transport reactions", "Exchange/demand reactions", "Fatty acid oxidation", "Other")]), "Other"))
+```
+
+```{r}
+reactions_3$EQUATION <- factor(reactions_3$EQUATION, levels = reactions_3$EQUATION)
+```
+
+```{r}
+table(reactions_3$SUBSYSTEM)
+```
+
+## C2 specific
+```{r}
+p<-ggplot(data=reactions_3, aes(y=ID, x=Flux_C2, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")+ theme(axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank())+xlab("flux variability (mmol gDCW-1 h-1)")+ylab("Reactions")+ scale_fill_manual(values = col_flux)
+p
+ggsave("results/figures/flux_specific_C2_subsystems.pdf")
+```
+
+## C1 specific
+```{r}
+p<-ggplot(data=reactions_3, aes(y=ID, x=Flux_C1, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")+ theme(axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank())+xlab("flux variability (mmol gDCW-1 h-1)")+ylab("Reactions")+ scale_fill_manual(values = col_flux)
+p
+ggsave("results/figures/flux_specific_C1_subsystems.pdf")
+```
+
+## CT specific
+```{r}
+p<-ggplot(data=reactions_3, aes(y=ID, x=Flux_CT, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")+ theme(axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank())+xlab("flux variability (mmol gDCW-1 h-1)")+ylab("Reactions")+ scale_fill_manual(values = col_flux)
+p
+ggsave("results/figures/flux_specific_CT_subsystems.pdf")
+```
+
+```{r}
+col_tr <- "#531f1f"
+```
+
+## C2 specific transport
+```{r}
+reactions_4 <- reactions_3[reactions_3$SUBSYSTEM == "Transport reactions",]
+
+p<-ggplot(data=reactions_4, aes(y=EQUATION, x=Flux_C2, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")+scale_fill_manual(values = col_tr)
+p
+ggsave("results/figures/flux_specific_C2_transports_all.pdf", width = 10)
+```
+## transport from extracellular to cytosol
+```{r}
+reactions_4 <- reactions_4[grep("\\[c]", reactions_4$EQUATION),]
+reactions_4 <- reactions_4[grep("\\[e]", reactions_4$EQUATION),]
+```
+
+```{r}
+reactions_4$EQUATION <- factor(reactions_4$EQUATION, levels = reactions_4$EQUATION)
+```
+
+```{r}
+reactions_4$sign <- ifelse(reactions_4$Flux_C2 > 0 , 1, -1)
+reactions_4$Flux_C2 <- log2(abs(reactions_4$Flux_C2))
+reactions_4$Flux_C2 <- reactions_4$Flux_C2*reactions_4$sign
+```
+
+```{r}
+p<-ggplot(data=reactions_4, aes(y=EQUATION, x=Flux_C2, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")+scale_fill_manual(values = col_tr)
+p
+ggsave("results/figures/flux_specific_C2_transports_metabolites_found.pdf", width = 10)
+```
+```{r}
+write.table(reactions_4$ID, "results/GSMM/reactions_to_destroy.csv", quote = FALSE, row.names = FALSE)
+```
+
+
+## load metabolites levels
+```{r}
+met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", check.names = FALSE)
+colnames(met)[1] <- "COCOMO_ID"
+```
+
+```{r}
+reactions_4$metabolite_1 <- reactions_4$EQUATION
+reactions_4$metabolite_2 <- reactions_4$EQUATION
+```
+
+```{r}
+reactions_4$metabolite_1 <- gsub("\\[.*", "", reactions_4$metabolite_1)
+reactions_4$metabolite_2 <- gsub(".*\\+", "", reactions_4$metabolite_2)
+reactions_4$metabolite_2 <- gsub("\\[.*", "", reactions_4$metabolite_2)
+
+reactions_4$metabolite_1 <- as.vector(reactions_4$metabolite_1)
+reactions_4$metabolite_2 <- as.vector(reactions_4$metabolite_2)
+```
+
+```{r}
+list_met <- unique(c(reactions_4$metabolite_1, reactions_4$metabolite_2))
+list_met <- gsub(" ", "", list_met)
+```
+
+```{r}
+table_transport <- data.frame(met_GEM = as.vector(list_met), met_metabolomics = NA)
+table_transport$met_GEM <- as.vector(table_transport$met_GEM)
+```
+
+```{r}
+list_met_found <- list_met[list_met %in% colnames(met)]
+list_met_not_found <- list_met[!list_met %in% colnames(met)]
+list_met_not_found 
+```
+
+```{r}
+table_transport$met_metabolomics[table_transport$met_GEM %in% list_met_found] <- table_transport$met_GEM[table_transport$met_GEM %in% list_met_found]
+```
+
+Na+
+AKG
+
+```{r}
+colnames(met)[grep("ketoglutarate", colnames(met))]
+```
+
+```{r}
+for (i in list_met_not_found) {
+  if(length(colnames(met)[grep(i, colnames(met))]) == 1){
+    print(i)
+    table_transport$met_metabolomics[table_transport$met_GEM == i] <- colnames(met)[grep(i, colnames(met))]
+  }
+}
+```
+
+```{r}
+table_transport$met_metabolomics[table_transport$met_GEM == "L-lactate"] <- "lactate"
+table_transport$met_metabolomics[table_transport$met_GEM == "butyrate"] <- "butyrate/isobutyrate (4:0)"
+table_transport$met_metabolomics[table_transport$met_GEM == "(R)-3-hydroxybutanoate"] <- "2-hydroxy-4-(methylthio)butanoic acid"
+table_transport$met_metabolomics[table_transport$met_GEM == "L-carnitine"] <- "carnitine"
+table_transport$met_metabolomics[table_transport$met_GEM == "O-acetylcarnitine"] <- "acetylcarnitine (C2)"
+table_transport$met_metabolomics[table_transport$met_GEM == "AKG"] <- "alpha-ketoglutarate"
+```
+
+```{r}
+x <- data.frame(met_GEM = "3-hydroxy-L-kynurenine", met_metabolomics = "kynurenine")
+table_transport <- rbind(x, table_transport)
+table_transport <- table_transport[complete.cases(table_transport),]
+
+write.csv(table_transport, "processing/table_transport_amino_acids.csv")
+```
+
+```{r}
+names(reactions_4)
+```
+
+```{r}
+reactions_4$NAME <- NULL
+reactions_4$label <- NULL
+reactions_4$metabolite_2[reactions_4$metabolite_2 == reactions_4$metabolite_1] <- NA
+reactions_4$metabolite_2[reactions_4$metabolite_2 %in% c("Na+", "formate")] <- NA
+reactions_4$metabolite_1[reactions_4$metabolite_1 %in% c("Na+", "formate")] <- NA
+reactions_4$metabolite_2[10] <- "3-hydroxy-L-kynurenine"
+```
+
+```{r}
+names(table_transport) <- c("metabolite_1", "metabolite_1_met")
+reactions_5 <- merge(reactions_4, table_transport, by = "metabolite_1", all.x = TRUE)
+reactions_5$metabolite_1
+reactions_5$metabolite_1_met
+```
+acetylcarnitine (C2)
+
+```{r}
+reactions_5$metabolite_2 <- gsub(" ", "", reactions_5$metabolite_2)
+```
+
+```{r}
+names(table_transport) <- c("metabolite_2", "metabolite_2_met")
+reactions_6 <- merge(reactions_5, table_transport, by = "metabolite_2", all.x = TRUE)
+```
+
+```{r}
+reactions_6 <- reactions_6[,c(3:10, 2, 11, 1, 12)]
+```
+
+```{r}
+dge <- read.csv("results/LIMMA/model_2_LIMMA_results_metabolites_with_HC.csv", sep = ",")
+dge <- dge[,c(2, 3, 5)]
+names(dge) <- c("metabolite_1_met", "LFC_1_met", "FDR_1_met")
+reactions_7 <- merge(reactions_6, dge, by = "metabolite_1_met", all.x = TRUE)
+
+names(dge) <- c("metabolite_2_met", "LFC_2_met", "FDR_2_met")
+reactions_8 <- merge(reactions_7, dge, by = "metabolite_2_met", all.x = TRUE)
+```
+```{r}
+dge
+```
+
+```{r}
+reactions_8$LFC_2_met[reactions_8$FDR_2_met > 0.2] <- NA
+reactions_8$LFC_1_met[reactions_8$FDR_1_met > 0.2] <- NA
+reactions_8$FDR_2_met <- NULL
+reactions_8$FDR_1_met <- NULL
+```
+
+```{r}
+library(mygene)
+library(org.Hs.eg.db)
+```
+
+```{r}
+whole_genes_table <- data.frame(reaction = NA, genes = NA)
+for (i in 1:nrow(reactions_8)) {
+  reaction <- as.vector(reactions_8[i, 3])
+  genes <- as.vector(reactions_8[i, 5])
+  genes <- as.list(strsplit(genes, ' or ')[[1]])
+  genes <- unlist(genes)
+  table_genes <- data.frame(reaction = rep(reaction, length(genes)), genes = genes)
+  whole_genes_table <- rbind(whole_genes_table, table_genes)
+  
+}
+
+whole_genes_table <- whole_genes_table[complete.cases(whole_genes_table),]
+whole_genes_table$gene_2 <- mapIds(org.Hs.eg.db, whole_genes_table$genes, keytype="ENSEMBL", column="SYMBOL")
+```
+
+```{r}
+dge <- read.csv("results/Deseq2/model2_results_DGE_2_1.csv")
+dge <- dge[,c(1, 3, 7)]
+names(dge)[1] <- "genes"
+whole_genes_table_2 <- merge(dge, whole_genes_table, by = "genes")
+```
+
+```{r}
+whole_genes_table <- whole_genes_table[whole_genes_table$gene_2 != "",]
+whole_genes_table$genes <- NULL
+whole_genes_table <- whole_genes_table[!duplicated(whole_genes_table),]
+```
+
+## make boxplots significant items
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical <- clinical[,c(2,3)]
+met_2 <- merge(clinical, met, by = "COCOMO_ID")
+```
+
+```{r}
+met_2$cluster <- factor(met_2$cluster, levels = c("Ctrl", 1, 2))
+```
+
+```{r}
+reactions_8$metabolite_1_met <- as.vector(reactions_8$metabolite_1_met)
+reactions_8$metabolite_2_met <- as.vector(reactions_8$metabolite_2_met)
+```
+
+```{r}
+reactions_8 <- reactions_8[!duplicated(reactions_8$ID),]
+```
+
+```{r}
+reactions_8 <- reactions_8[order(reactions_8$EQUATION, reactions_4$EQUATION),]
+```
+
+```{r}
+reactions_8$EQUATION <- factor(reactions_8$EQUATION, levels = rev(reactions_8$EQUATION))
+reactions_8 <- reactions_8[order(reactions_8$EQUATION),]
+```
+
+```{r}
+reactions_4$EQUATION
+```
+
+```{r}
+reactions_8$EQUATION
+```
+
+```{r}
+x <- data.frame(x = 1:19)
+rownames(x) <- reactions_8$ID
+x$gene <- NA
+x$gene[rownames(x) == "MAR05580"] <- -0.12877492
+rownames(x) <- reactions_8$EQUATION
+```
+
+
+```{r}
+col_fun = colorRamp2(c(-1,-0.5, -0.1, 0,0.1, 0.5,1), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+```
+
+```{r}
+pdf("results/figures/bar_figure_transports.pdf", width = 10)
+Heatmap(x, row_order = rownames(x),right_annotation =  rowAnnotation(LFC_m1 = reactions_8$LFC_1_met, LFC_m2 = reactions_8$LFC_2_met, LFC_gene = x$gene,
+    col = list(LFC_m1 = col_fun,
+               LFC_m2 = col_fun,
+               LFC_gene = col_fun)))
+
+dev.off()
+```
+
+```{r}
+pdf("results/figures/bar_transport_reactions.pdf")
+ha = HeatmapAnnotation(bar = sample(letters[1:3], 10, replace = TRUE),
+    col = list(bar = c("a" = "red", "b" = "green", "c" = "blue")))
+
+dev.off()
+```
+
+```{r}
+met_2 <- met_2[,colnames(met_2) %in% c("cluster", 
+                                       reactions_8$metabolite_1_met[!is.na(reactions_8$LFC_1_met)],
+                                       reactions_8$metabolite_2_met[!is.na(reactions_8$LFC_2_met)])]
+```
+
+```{r}
+met_2 <- met_2[order(met_2$cluster),]
+met_2$cluster <- factor(met_2$cluster, levels = c("Ctrl", 1, 2))
+```
+
+```{r}
+met_2[,-1] <- t(scale(t(met_2[,-1])))
+```
+
+
+```{r}
+pdf("results/figures/metabolite_significant_C1_C2_transport.pdf")
+Heatmap(t(met_2[,-c(1)]), column_order = colnames(t(met_2[,-c(1)])),top_annotation = HeatmapAnnotation(cluster = met_2$cluster)
+        )
+dev.off()
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+my_comparisons <- list( c("Ctrl", "1"), c("1", "2"), c("Ctrl", "2") )
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+for (i in 2:ncol(met_2)) {
+  table_1 <- met_2[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="bottom",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=2, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+a
+ggsave(paste0("results/figures/boxplots/metabolites_transport_C2_", gsub("[[:punct:]]+", ".", names(table_1)[1]), "_by_cluster.pdf"), height = 4, width = 3)
+  print(i)
+}
+```
+```{r}
+p<-ggplot(data=reactions_8, aes(y=EQUATION, x=Flux_C2, fill = SUBSYSTEM))+theme_classic() +
+  geom_bar(stat="identity")
+p
+ggsave("results/figures/flux_specific_C2_transports_metabolites_found.pdf", width = 10)
+```
+## boxplot gene
+## load data
+
+```{r}
+library(piano)
+```
+
+```{r}
+data <- read.delim("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/salmon.merged.gene_counts.tsv", row.names = 1)
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+y <- read.csv("processing/factor_differing_groups_3.csv")
+x <- read.csv("processing/numeric_differing_groups_3.csv")
+
+#gset=loadGSC("data/c2.cp.kegg.v7.5.1.symbols.gmt")
+gset <- loadGSC("data/GSEA/c5.go.bp.v7.5.symbols.gmt")
+clinical_diff <- c(x$x, y$x)
+```
+
+```{r}
+names(clinical)
+```
+
+
+```{r}
+data <- data[,colnames(data) != "P20109_402_R1"]
+rownames(data) <- gsub("\\..*", "", rownames(data))
+data <- data.frame(t(data))
+data$User <- rownames(data)
+clinical$X.2 <- NULL
+clinical$Negin_ID <- NULL
+clinical$NGI.ID <- NULL
+clinical$X.1 <- NULL
+clinical$HIV_Status <- NULL
+data_2 <- merge(clinical, data, by = "User")
+#data_2$User.ID <- NULL
+```
+
+```{r}
+data_2$BMI <- scale(data_2$BMI)
+data_2$AGE <- scale(data_2$AGE)
+data_2$SAT <- scale(data_2$SAT)
+data_2$CD4_nadir <- scale(data_2$CD4_nadir)
+data_2$Duration <- scale(data_2$Duration)
+```
+
+```{r}
+x <- as.vector(whole_genes_table_2$genes[whole_genes_table_2$padj < 0.3])
+```
+
+```{r}
+data_3 <- data_2[,colnames(data_2) %in% c("cluster", x)]
+```
+
+```{r}
+for (i in 2:ncol(data_3)) {
+  table_1 <- data_3[,c(i, 1)]
+  a <- ggplot(table_1, aes(x = cluster, y = table_1[,1], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.5, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = paste0(names(table_1)[1], ""))+ 
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="bottom",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=2, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+a
+ggsave(paste0("results/figures/boxplots/genes_transport_C2_", gsub("[[:punct:]]+", ".", names(table_1)[1]), "_by_cluster.pdf"), height = 4, width = 3)
+  print(i)
+}
+```
+
+## test fluxs significant between two groups (individual models)
+1) Extract flux
+2) Remove not significant
+3) Find condition patient
+4) Fisher test
+
+```{r}
+table_flux <- data.frame(flux = model$ID)
+
+x <- list.files("results/MATLAB/GEM-personalized/")
+x <- x[!x %in% c("P20109_190_R1", "P20109_237_R1", "P20109_281_R1", "P20109_291_R1")]
+x <- x[-c(166:168)]
+for (i in x) {
+  print(i)
+  flux <- read.delim(paste0("results/MATLAB/GEM-personalized/", i, "/", i , "_FBA_flux.txt"), header = FALSE)
+  name_flux <- read.delim(paste0("results/MATLAB/GEM-personalized/", i, "/", i , "_FBA_flux_reactions.txt"), header = FALSE)
+  flux <- cbind(name_flux, flux)
+  colnames(flux) <- c("flux", i)
+  table_flux <- merge(table_flux, flux, all.x = TRUE)
+}
+
+rownames(table_flux) <- table_flux$flux
+table_flux$flux <- NULL
+table_flux[table_flux < cutoff] <- NA
+
+patients <- data.frame(User = colnames(table_flux))
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+patients <- merge(patients, clinical, by = "User")
+
+patients <- patients[order(match(patients$User, colnames(table_flux))),]
+```
+
+```{r}
+emptycols <- sapply(df, function (k) all(is.na(k)))
+```
+
+```{r}
+table_flux_2 <- data.frame(table_flux)
+#table_flux_2 <- table_flux_2[rowSums(is.na(table_flux_2)) != ncol(table_flux_2),]
+table_flux_2 <- table_flux_2[rowSums(is.na(table_flux_2)) < 75,]
+table_flux_2 <- data.frame(t(table_flux_2))
+table_flux_2[abs(table_flux_2) < cutoff & !is.na(table_flux_2)] <- 0
+
+table_flux_2[table_flux_2 > 0 & !is.na(table_flux_2)] <- 1
+table_flux_2[table_flux_2 < 0 & !is.na(table_flux_2)] <- -1
+
+table_flux_3 <- data.frame(condition = patients$cluster, table_flux_2)
+table_flux_3 <- table_flux_3[table_flux_3$condition != "Ctrl",]
+table_flux_4 <- table_flux_3[!emptycols]
+table_flux_4[is.na(table_flux_4)] <- 0
+```
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+pca <- prcomp(table_flux_4[,-1], scale. = FALSE)
+df_out <- as.data.frame(pca$x)
+df_out$group <- table_flux_4$condition
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+ 
+gg <- data.frame(cluster=factor(df_out$group), x=df_out$PC1, y=df_out$PC2)
+centroids <- aggregate(cbind(x,y)~cluster,data=gg,mean)
+gg <- merge(gg,centroids,by="cluster",suffixes=c("",".centroid"))
+
+ggplot(gg)+
+      geom_point(aes(x=x,y=y,color=cluster, fill = cluster), size=3)+
+      stat_ellipse(geom = "polygon", aes(x=x,y=y,color=cluster, fill = cluster), alpha = 0.3) +
+      geom_point(data=centroids, aes(x=x, y=y, color=cluster, fill = cluster), size = 5, alpha = 0.9, shape = 19)+ 
+      geom_segment(aes(x=x.centroid, y=y.centroid, xend=x, yend=y, color=cluster))+
+      theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+      xlab(paste0("PC1: ",round(a1,0),"% variance"))+
+      ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))+ scale_color_manual(values = col)+ scale_fill_manual(values = col)
+
+path_fig <- paste0("results/figures/PCA/PCA_GSM_individual_models_reactions_binary.pdf")
+ggsave(path_fig)
+```
+```{r}
+patients_g1 <- rownames(df_out)[df_out$PC2 > 0]
+patients_g2 <- rownames(df_out)[df_out$PC2 < 0]
+
+g1 <- data.frame(ID = patients_g1, group = "G1")
+g2 <- data.frame(ID = patients_g2, group = "G2")
+
+g <- rbind(g1, g2)
+
+write.csv(g, "processing/subgroups_GSSM.csv")
+```
+
+```{r}
+table_flux_2 <- table_flux
+table_flux_2[!is.na(table_flux_2)] <- 1
+
+table_flux_2 <- data.frame(condition = patients$cluster, t(table_flux_2))
+table_flux_2 <- table_flux_2[table_flux_2$condition != "Ctrl",]
+
+condition <- table_flux_2$condition
+patients <- rownames(table_flux_2)
+
+table_flux_2 <- table_flux_2[,colSums(is.na(table_flux_2))<nrow(table_flux_2)]
+table_flux_2[is.na(table_flux_2)] <- 0
+table_flux_3 <- aggregate(. ~ condition, data = table_flux_2, FUN=sum)
+
+table_fisher <- data.frame(reaction = NA, pval = NA)
+
+for (i in 2:ncol(table_flux_3)){
+  reaction <- names(table_flux_3)[i]
+  x <- table_flux_3[,c(1, i)]
+  x$c2 <- NA
+  x$c2[1] <- 82 - x[1, 2]
+  x$c2[2] <- 70 - x[2, 2]
+  x <- as.matrix(x[2:3])
+  y <- fisher.test(x)
+  table_test <- data.frame(reaction = names(table_flux_3)[i], pval = y$p.value)
+  table_fisher <- rbind(table_fisher, table_test)
+}
+
+table_fisher <- table_fisher[complete.cases(table_fisher),]
+
+table_fisher$fdr <- p.adjust(table_fisher$pval, method = "fdr")
+write.csv(table_fisher, "results/GSMM/fisher_test_individual_models.csv")
+table_fisher_filt <- table_fisher[table_fisher$fdr < 0.001,]
+write.csv(table_fisher_filt, "results/GSMM/fisher_test_individual_models_filt.csv")
+names(table_fisher_filt)[1] <- "ID"
+```
+
+```{r}
+reactions_6 <- merge(table_fisher_filt, reactions, by = "ID")
+```
+
+```{r}
+table_flux_3[, c(1, which(colnames(table_flux_3) == "MAR09310"))]
+```
+```{r}
+table_flux_4 <- table_flux[rownames(table_flux) %in% table_fisher_filt$ID,]
+table_flux_4$ID <- rownames(table_flux_4)
+table_flux_4 <- merge(reactions, table_flux_4, by = "ID")
+table_flux_4$NAME <- as.vector(table_flux_4$NAME)
+table_flux_4$NAME[table_flux_4$NAME == ""] <- paste0(gsub("\\[.*", "", table_flux_4$EQUATION[table_flux_4$NAME == ""]), " ", table_flux_4$SUBSYSTEM[table_flux_4$NAME == ""])
+```
+
+```{r}
+rownames(table_flux_4) <- table_flux_4$EQUATION
+```
+
+       
+
+
+```{r}
+table_flux_4 <- table_flux_4[, colnames(table_flux_4) %in% c("SUBSYSTEM", "EQUATION", patients)]
+```
+
+```{r}
+condition <- as.vector(condition)
+```
+
+```{r}
+x <-  RColorBrewer::brewer.pal(9, "RdBu")
+```
+
+```{r}
+col_fun1 = colorRamp2(c(-1000,-500, -150, 0,150, 500, 1000), rev(c("#B2182B", "#D6604D","#F4A582","white","#92C5DE","#4393C3","#2166AC")))
+```
+
+```{r}
+unique(table_flux_4$SUBSYSTEM)
+```
+```{r}
+col <- c("#6b8ea7",	"#a7846b")
+```
+
+```{r}
+col_flux <- c("#8b0000","#eb8c00","#f9d62e","#c9df8a", "#77ab59","#71c7ec","#ff7f50","#eec1ad","grey","#189ad3", "#1ebbd7","#e0301e")
+```
+
+
+```{r}
+pdf("results/figures/fisher_test_results_reactions_per_cluster.pdf", width = 10, height = 4)
+
+Heatmap(table_flux_4[,-c(1, 2)],
+        column_order = colnames(table_flux_4[,-c(1, 2)]), 
+        top_annotation = HeatmapAnnotation(cluster = condition, col = list(cluster = c("1" = col[1], "2" = col[2]))),
+        column_split = condition,
+        right_annotation = rowAnnotation(sub = table_flux_4$SUBSYSTEM, col = list(sub = c("Transport reactions" = "#8b0000",
+                                                                                  "Pentose phosphate pathway" = "#ff7f50",
+                                                                                  "Glycolysis / Gluconeogenesis" = "#f1c232",
+                                                                                  "Nucleotide metabolism" = "#71c7ec",
+                                                                                  "Exchange/demand reactions" = "#eb8c00"))),
+        col = col_fun1, show_column_names = FALSE, row_names_gp = grid::gpar(fontsize = 8))
+
+
+dev.off()
+```
+
+```{r}
+commun_flux <- flux_ct$ID[flux_ct$ID %in% flux_c2$ID & flux_ct$ID %in% flux_c2$ID]
+ct_spe <- flux_ct$ID[!flux_ct$ID %in% flux_c2$ID & !flux_ct$ID %in% flux_c2$ID]
+c1_spe <- flux_c1$ID[!flux_c1$ID %in% flux_c2$ID & !flux_c1$ID %in% flux_ct$ID]
+c2_spe <- flux_c2$ID[!flux_c2$ID %in% flux_c1$ID & !flux_c2$ID %in% flux_ct$ID]
+```
+
+## CT specific
+```{r}
+y <- flux_ct[flux_ct$ID %in% ct_spe,]
+out <- names(table(y$SUBSYSTEM)[table(y$SUBSYSTEM) < 3])
+y$SUBSYSTEM[y$SUBSYSTEM %in% out] <- "Other"
+p<-ggplot(data=y, aes(y=ID, x=flux, fill = SUBSYSTEM)) +
+  geom_bar(stat="identity")+ theme(axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank())
+p
+ggsave("results/figures/flux_specific_controls_subsystems.pdf")
+```
+
+## C2 specific
+```{r}
+y <- flux_c2[flux_c2$ID %in% c2_spe,]
+out <- names(table(y$SUBSYSTEM)[table(y$SUBSYSTEM) < 3])
+y$SUBSYSTEM[y$SUBSYSTEM %in% out] <- "Other"
+p<-ggplot(data=y, aes(y=ID, x=flux, fill = SUBSYSTEM)) +
+  geom_bar(stat="identity")+ theme(axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank())
+p
+ggsave("results/figures/flux_specific_cluster_2_subsystems.pdf")
+```
+
+```{r}
+a <- flux_ct[flux_ct$ID %in% commun_flux,]
+a <- a[,c(1,5,6)]
+names(a)[3] <- "flux_ct"
+
+b <- flux_c1[flux_c1$ID %in% commun_flux,]
+b <- b[,c(1, 6)]
+names(b)[2] <- "flux_c1"
+
+c <- flux_c2[flux_c2$ID %in% commun_flux,]
+c <- c[,c(1, 6)]
+names(c)[2] <- "flux_c2"
+
+flux <- merge(a, b, by = "ID")
+flux <- merge(flux, c, by = "ID")
+
+flux$C1_CT <- flux$flux_c1 - flux$flux_ct
+flux$C2_CT <- flux$flux_c2 - flux$flux_ct 
+
+flux$keep <- NA
+
+flux$keep[flux$flux_ct < 0 & flux$flux_c1 > 0] <- "opposite"
+flux$keep[flux$flux_ct > 0 & flux$flux_c1 < 0] <- "opposite"
+
+flux$keep[flux$flux_ct < 0 & flux$flux_c2 > 0] <- "opposite"
+flux$keep[flux$flux_ct > 0 & flux$flux_c2 < 0] <- "opposite"
+
+flux$keep[is.na(flux$keep) & abs(flux$C1_CT) > 50] <- "same_sign_diff_10"
+flux$keep[is.na(flux$keep) & abs(flux$C2_CT) > 50] <- "same_sign_diff_10"
+
+
+flux <- flux[!is.na(flux$keep),]
+```
+
+```{r}
+n <- length(unique(flux$SUBSYSTEM))
+```
+
+
+```{r}
+x <- names(table(flux$SUBSYSTEM))[table(flux$SUBSYSTEM ) < 10]
+```
+
+```{r}
+g <- n-length(x)
+g <- g + 1
+```
+
+```{r}
+flux$SUBSYSTEM[flux$SUBSYSTEM %in% x] <- "Other"
+```
+
+
+
+```{r}
+table_sub <- data.frame(SUBSYSTEM = unique(flux$SUBSYSTEM), num = 1:g)
+heatmap_data <- merge(table_sub, flux, by = "SUBSYSTEM")
+```
+
+
+```{r}
+reactions <- read.csv("data/GEM/reactions_summary_human_GEM.csv")
+reactions <- reactions[,c(2, 3, 6, 12)]
+```
+
+```{r}
+flux_c1 <- flux_c1[,c(1,6)]
+names(flux_c1)[2] <- "Flux_C1"
+flux_c2 <- flux_c2[,c(1,6)]
+names(flux_c2)[2] <- "Flux_C2"
+flux_ct <- flux_ct[,c(1,6)]
+names(flux_ct)[2] <- "Flux_CT"
+```
+
+```{r}
+reactions <- merge(reactions, flux_c1, by = "ID", all.x = TRUE)
+reactions <- merge(reactions, flux_c2, by = "ID", all.x = TRUE)
+reactions <- merge(reactions, flux_ct, by = "ID")
+```
+
+```{r}
+x <- names(table(reactions$SUBSYSTEM))[table(reactions$SUBSYSTEM) < 10]
+```
+
+```{r}
+reactions$SUBSYSTEM <- as.vector(reactions$SUBSYSTEM)
+```
+
+```{r}
+reactions$SUBSYSTEM[reactions$SUBSYSTEM %in% x] <- "Other"
+```
+
+```{r}
+#reactions <- reactions[reactions$GENE.ASSOCIATION != "",]
+```
+
+```{r}
+reactions_2 <- reactions[abs(reactions$Flux_C1) > 250 | abs(reactions$Flux_C2) > 250 | abs(reactions$Flux_CT) >250, ]
+reactions_2 <- reactions_2[!is.na(reactions_2$ID),]
+```
+
+```{r}
+unique(reactions$SUBSYSTEM)
+```
+```{r}
+reactions_2 <- reactions_2[,c(1, 2, 3, 4, 7, 5, 6)]
+```
+
+```{r}
+reactions_2$SUBSYSTEM[reactions_2$SUBSYSTEM == "Miscellaneous"] <- "Other"
+reactions_2$Group <- NA
+reactions_2$Group[reactions_2$SUBSYSTEM == "Transport reactions"] <- "Transport reactions"
+reactions_2$Group[reactions_2$SUBSYSTEM == "Exchange/demand reactions"] <- "Exchange/demand reactions"
+reactions_2$Group[is.na(reactions_2$Group)] <- "Other"
+```
+
+```{r}
+table(reactions_2$Group)
+```
+
+
+```{r}
+library(ComplexHeatmap)
+```
+
+```{r}
+library(circlize)
+col_fun1 = colorRamp2(c(-1000,-500, -250, 0,250, 500,1000), c("#7F7F00","#B2B200" ,"#E5E500","white","#BF7FBF","#993299","#590059"))
+```
+
+```{r}
+pdf("results/figures/overlapping_flux_differences_subsystems.pdf")
+Heatmap(reactions_2[,c(5, 6, 7)],
+        col = col_fun1,
+        column_order = colnames(reactions_2[,c(5, 6, 7)]), 
+                                show_row_names = FALSE,
+        right_annotation = rowAnnotation(subsystems = reactions_2$Group,
+                                              col = list(subsystems = c("Transport reactions" = "red", "Exchange/demand reactions" = "green", "Other" = "blue")), show_legend = TRUE))
+
+        dev.off()
+```
+
+```{r}
+
+```
+
+
+```{r}
+heatmap_data_2 <- heatmap_data[,c(2, 3,  4, 5, 6)]
+rownames(heatmap_data_2) <- heatmap_data_2$ID
+
+```
+
+
+```{r}
+pdf("results/figures/overlapping_flux_differences_subsystems.pdf")
+Heatmap(heatmap_data_2[,-c(1,2)],
+        column_order = colnames(heatmap_data_2[,-c(1,2)]),
+        row_split = heatmap_data_2$num
+      )
+
+        dev.off()
+```
+
+```{r}
+flux_c1_1 <- flux_c1[!flux_c1$ID %in% flux_c2$ID,] # keep
+flux_c1_2 <- flux_c1[flux_c1$ID %in% flux_c2$ID,]
+
+flux_c2_1 <- flux_c2[!flux_c2$ID %in% flux_c1$ID,] # keep
+flux_c2_2 <- flux_c2[flux_c2$ID %in% flux_c1$ID,]
+
+
+flux_c1_3 <- flux_c1_2[flux_c1_2$flux > 0,]
+flux_c2_3 <- flux_c2_2[flux_c2_2$flux > 0,]
+
+flux_c1_3_1 <- flux_c1_3[!flux_c1_3$ID %in% flux_c2_3$ID,] # keep
+flux_c1_3_2 <- flux_c1_3[flux_c1_3$ID %in% flux_c2_3$ID,]
+
+flux_c2_3_1 <- flux_c2_3[!flux_c2_3$ID %in% flux_c1_3$ID,] # keep
+flux_c2_3_2 <- flux_c2_3[flux_c2_3$ID %in% flux_c1_3$ID,]
+
+diff_pos <- abs(flux_c1_3_2$flux- flux_c2_3_2$flux)
+flux_c1_3_2 <- flux_c1_3_2[diff_pos > diff,] # keep
+flux_c2_3_2 <- flux_c2_3_2[diff_pos > diff,] # keep
+
+flux_c1_4 <- flux_c1_2[flux_c1_2$flux < 0,]
+flux_c2_4 <- flux_c2_2[flux_c2_2$flux < 0,]
+
+
+flux_c1_4_1 <- flux_c1_4[!flux_c1_4$ID %in% flux_c2_4$ID,] # keep
+flux_c1_4_2 <- flux_c1_4[flux_c1_4$ID %in% flux_c2_4$ID,]
+
+flux_c2_4_1 <- flux_c2_4[!flux_c2_4$ID %in% flux_c1_4$ID,] # keep
+flux_c2_4_2 <- flux_c2_4[flux_c2_4$ID %in% flux_c1_4$ID,]
+
+diff_pos <- abs(flux_c1_4_2$flux- flux_c2_4_2$flux)
+flux_c1_4_2 <- flux_c1_4_2[diff_pos > diff,] # keep
+flux_c2_4_2 <- flux_c2_4_2[diff_pos > diff,] # keep
+
+flux_c1 <- rbind(flux_c1_1, flux_c1_3_1, flux_c1_3_2)
+flux_c2 <- rbind(flux_c2_1, flux_c2_3_1, flux_c2_3_2)
+```
+
+```{r}
+write.csv(flux_c1, "results/MATLAB/flux_C1_specific.csv")
+write.csv(flux_c2, "results/MATLAB/flux_C2_specific.csv")
+```
+
+```{r}
+c2_ready <- flux_c2
+```
+
+
+```{r}
+flux_ct <- cbind(ct_names, ct)
+flux_ct <- flux_ct[abs(flux_ct[,2]) > cutoff,]
+names(flux_ct) <- c("ID", "flux")
+flux_ct <- merge(model, flux_ct, by = "ID")
+```
+
+```{r}
+flux_c2 <- flux_ct
+```
+
+## remove ctrl flux from c2
+```{r}
+flux_c1_1 <- flux_c1[!flux_c1$ID %in% flux_c2$ID,] # keep
+flux_c1_2 <- flux_c1[flux_c1$ID %in% flux_c2$ID,]
+
+flux_c2_1 <- flux_c2[!flux_c2$ID %in% flux_c1$ID,] # keep
+flux_c2_2 <- flux_c2[flux_c2$ID %in% flux_c1$ID,]
+
+
+flux_c1_3 <- flux_c1_2[flux_c1_2$flux > 0,]
+flux_c2_3 <- flux_c2_2[flux_c2_2$flux > 0,]
+
+flux_c1_3_1 <- flux_c1_3[!flux_c1_3$ID %in% flux_c2_3$ID,] # keep
+flux_c1_3_2 <- flux_c1_3[flux_c1_3$ID %in% flux_c2_3$ID,]
+
+flux_c2_3_1 <- flux_c2_3[!flux_c2_3$ID %in% flux_c1_3$ID,] # keep
+flux_c2_3_2 <- flux_c2_3[flux_c2_3$ID %in% flux_c1_3$ID,]
+
+diff_pos <- abs(flux_c1_3_2$flux- flux_c2_3_2$flux)
+flux_c1_3_2 <- flux_c1_3_2[diff_pos > diff,] # keep
+flux_c2_3_2 <- flux_c2_3_2[diff_pos > diff,] # keep
+
+
+flux_c1_4 <- flux_c1_2[flux_c1_2$flux < 0,]
+flux_c2_4 <- flux_c2_2[flux_c2_2$flux < 0,]
+
+
+flux_c1_4_1 <- flux_c1_4[!flux_c1_4$ID %in% flux_c2_4$ID,] # keep
+flux_c1_4_2 <- flux_c1_4[flux_c1_4$ID %in% flux_c2_4$ID,]
+
+flux_c2_4_1 <- flux_c2_4[!flux_c2_4$ID %in% flux_c1_4$ID,] # keep
+flux_c2_4_2 <- flux_c2_4[flux_c2_4$ID %in% flux_c1_4$ID,]
+
+diff_pos <- abs(flux_c1_4_2$flux- flux_c2_4_2$flux)
+flux_c1_4_2 <- flux_c1_4_2[diff_pos > diff,] # keep
+flux_c2_4_2 <- flux_c2_4_2[diff_pos > diff,] # keep
+
+flux_c1 <- rbind(flux_c1_1, flux_c1_3_1, flux_c1_3_2)
+flux_c2 <- rbind(flux_c2_1, flux_c2_3_1, flux_c2_3_2)
+```
+
+```{r}
+c1_ready <- flux_c1
+```
+
+```{r}
+flux_c1 <- flux_ct
+flux_c2 <- c2_ready
+```
+
+```{r}
+flux_c1_1 <- flux_c1[!flux_c1$ID %in% flux_c2$ID,] # keep
+flux_c1_2 <- flux_c1[flux_c1$ID %in% flux_c2$ID,]
+
+flux_c2_1 <- flux_c2[!flux_c2$ID %in% flux_c1$ID,] # keep
+flux_c2_2 <- flux_c2[flux_c2$ID %in% flux_c1$ID,]
+
+
+flux_c1_3 <- flux_c1_2[flux_c1_2$flux > 0,]
+flux_c2_3 <- flux_c2_2[flux_c2_2$flux > 0,]
+
+flux_c1_3_1 <- flux_c1_3[!flux_c1_3$ID %in% flux_c2_3$ID,] # keep
+flux_c1_3_2 <- flux_c1_3[flux_c1_3$ID %in% flux_c2_3$ID,]
+
+flux_c2_3_1 <- flux_c2_3[!flux_c2_3$ID %in% flux_c1_3$ID,] # keep
+flux_c2_3_2 <- flux_c2_3[flux_c2_3$ID %in% flux_c1_3$ID,]
+
+diff_pos <- abs(flux_c1_3_2$flux- flux_c2_3_2$flux)
+flux_c1_3_2 <- flux_c1_3_2[diff_pos > diff,] # keep
+flux_c2_3_2 <- flux_c2_3_2[diff_pos > diff,] # keep
+
+
+flux_c1_4 <- flux_c1_2[flux_c1_2$flux < 0,]
+flux_c2_4 <- flux_c2_2[flux_c2_2$flux < 0,]
+
+
+flux_c1_4_1 <- flux_c1_4[!flux_c1_4$ID %in% flux_c2_4$ID,] # keep
+flux_c1_4_2 <- flux_c1_4[flux_c1_4$ID %in% flux_c2_4$ID,]
+
+flux_c2_4_1 <- flux_c2_4[!flux_c2_4$ID %in% flux_c1_4$ID,] # keep
+flux_c2_4_2 <- flux_c2_4[flux_c2_4$ID %in% flux_c1_4$ID,]
+
+diff_pos <- abs(flux_c1_4_2$flux- flux_c2_4_2$flux)
+flux_c1_4_2 <- flux_c1_4_2[diff_pos > diff,] # keep
+flux_c2_4_2 <- flux_c2_4_2[diff_pos > diff,] # keep
+
+flux_c1 <- rbind(flux_c1_1, flux_c1_3_1, flux_c1_3_2)
+flux_c2 <- rbind(flux_c2_1, flux_c2_3_1, flux_c2_3_2)
+```
+
+```{r}
+c2_ready <- flux_c2
+```
+
+
+```{r}
+nrow(c1_ready)
+```
+```{r}
+nrow(c2_ready)
+```
+```{r}
+c1_ready$ID[c1_ready$ID %in% c2_ready$ID]
+```
+```{r}
+table(c1_ready$SUBSYSTEM)
+```
+```{r}
+table(c2_ready$SUBSYSTEM)
+```
+
+```{r}
+write.csv(c1_ready, "results/MATLAB/flux_C1_specific_not_in_ctrl.csv")
+write.csv(c2_ready, "results/MATLAB/flux_C2_specific_not_in_ctrl.csv")
+```
+
+```{r}
+c1_heatmap_c1 <- c1_ready[,c(1,5,6)]
+ct_heatmap_c1 <- flux_ct[,c(1,5, 6)]
+c2_heatmap_c1 <- c2_ready[,c(1,5, 6)]
+
+heatmap_c1 <- merge(c1_heatmap_c1, ct_heatmap_c1, by = "ID", all.x = TRUE)
+heatmap_c1 <- merge(heatmap_c1, c2_heatmap_c1, by = "ID",all.x = TRUE, all.y = TRUE)
+heatmap_c1
+
+heatmap_c1$SUBSYSTEM.x[is.na(heatmap_c1$SUBSYSTEM.x)] <- heatmap_c1$SUBSYSTEM.y[is.na(heatmap_c1$SUBSYSTEM.x)]
+heatmap_c1$SUBSYSTEM.x[is.na(heatmap_c1$SUBSYSTEM.x)] <- heatmap_c1$SUBSYSTEM[is.na(heatmap_c1$SUBSYSTEM.x)]
+heatmap_c1$SUBSYSTEM.y <- NULL
+heatmap_c1$SUBSYSTEM <- NULL
+names(heatmap_c1) <- c("ID", "SUBSYSTEM", "flux_c1", "flux_ct", "flux_c2")
+```
+
+```{r}
+library(ComplexHeatmap)
+```
+
+```{r}
+heatmap_c1
+```
+
+```{r}
+heatmap_c1$flux_c1[is.na(heatmap_c1$flux_c1)] <- 0
+heatmap_c1$flux_c2[is.na(heatmap_c1$flux_c2)] <- 0
+heatmap_c1$flux_ct[is.na(heatmap_c1$flux_ct)] <- 0
+```
+
+```{r}
+x <- names(table(heatmap_c1$SUBSYSTEM))[table(heatmap_c1$SUBSYSTEM ) < 5]
+```
+
+```{r}
+heatmap_c1$SUBSYSTEM[heatmap_c1$SUBSYSTEM %in% x] <- "Other"
+```
+
+```{r}
+table_sub <- data.frame(SUBSYSTEM = unique(heatmap_c1$SUBSYSTEM), num = 1:9)
+heatmap_c1 <- merge(table_sub, heatmap_c1, by = "SUBSYSTEM")
+```
+
+
+```{r}
+heatmap_c1 <- heatmap_c1[,c(1, 2, 3, 5, 4, 6)]
+```
+
+
+```{r}
+pdf("results/figures/flux_groups_specific.pdf")
+Heatmap(heatmap_c1[,-c(1:3)],
+        column_order = colnames(heatmap_c1[,-c(1:3)]),
+        row_split = heatmap_c1$num
+        )
+dev.off()
+```
+
+```{r}
+reactions <- read.delim("data/GEM/reactions.tsv")
+```
+
+## make figure barplot
+```{r}
+library(ggplot2)
+```
+
+```{r}
+y <- read.csv("results/MATLAB/flux_C1_specific.csv")
+
+y$SUBSYSTEM <- as.vector(y$SUBSYSTEM)
+
+out <- names(table(y$SUBSYSTEM)[table(y$SUBSYSTEM) < 10])
+y$SUBSYSTEM[y$SUBSYSTEM %in% out] <- "Other"
+
+p<-ggplot(data=y, aes(y=ID, x=flux, fill = SUBSYSTEM)) +
+  geom_bar(stat="identity")
+p
+ggsave("result/figures/flux_specific_cluster_1.pdf")
+```
+
+```{r}
+y <- read.csv("results/MATLAB/flux_C2_specific.csv")
+
+y$SUBSYSTEM <- as.vector(y$SUBSYSTEM)
+
+out <- names(table(y$SUBSYSTEM)[table(y$SUBSYSTEM) < 10])
+y$SUBSYSTEM[y$SUBSYSTEM %in% out] <- "Other"
+
+p<-ggplot(data=y, aes(y=ID, x=flux, fill = SUBSYSTEM)) +
+  geom_bar(stat="identity")
+p
+ggsave("result/figures/flux_specific_cluster_2.pdf")
+```
+

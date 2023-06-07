@@ -1,0 +1,269 @@
+"","variable","type","levels","missing_data","missing_data_prop","Description","Format","Definition"
+"1","AGE","numeric",NA,0,0,NA,NA,NA
+"2","alat","numeric",NA,3,0.015,NA,NA,NA
+"3","alcohol","integer",NA,14,0.07,"*Weekly alcohol consumption","Num","Unit:gram"
+"4","Anti_hbcigm","factor","0_1_NA",25,0.125,NA,NA,NA
+"5","Anti_hbe","factor","0_1_NA",23,0.115,NA,NA,NA
+"6","Anti_hbs","factor","0_1_2",0,0,NA,NA,NA
+"7","Anti.hbcigg","factor","0_1_NA",22,0.11,NA,NA,NA
+"8","bmi","numeric",NA,1,0.005,"*Body mass index","Num","Unit: kg/m2"
+"9","BMI","numeric",NA,1,0.005,NA,NA,NA
+"10","BMI_cat","factor","underweight_normal_overweight_obese_extremely obese",1,0.005,NA,NA,NA
+"11","CD4","integer",NA,0,0,NA,NA,NA
+"12","CD4_ART","integer",NA,13,0.065,NA,NA,NA
+"13","CD4_nadir","integer",NA,1,0.005,NA,NA,NA
+"14","CD8","integer",NA,1,0.005,NA,NA,NA
+"15","CDA_CD8","numeric",NA,1,0.005,NA,NA,NA
+"16","CDA_CD8_cat","factor","<1_>1",1,0.005,NA,NA,NA
+"17","CDCAIDS","factor","0_1",0,0,"Previous AIDS defining condition","Dic","0: no
+1: yes"
+"18","central_obesity","factor","0_1",0,0,"*IDF definition","Cat","0: No
+1:Yes"
+"19","CMV_igg","factor","0_1_2_NA",26,0.13,NA,NA,NA
+"20","creatini","numeric",NA,5,0.025,NA,NA,NA
+"21","ddiAZTd4t","factor","0_1",0,0,NA,NA,NA
+"22","diabetes","factor","0_1",0,0,"*Min one of the following:  tx with antidiabetic drug for T2DM
+or non-fasting venous plasma glucose ≥ 11.1 mmol/L
+or  HbA1c ≥ 6.5%
+","Dic","0: No
+1: Yes"
+"23","Duration_cat","factor","<5_>15_10<x<15_5<x<10",4,0.02,NA,NA,NA
+"24","duration_months","numeric",NA,4,0.02,NA,NA,NA
+"25","duration_years","numeric",NA,4,0.02,NA,NA,NA
+"26","eGFR","numeric",NA,5,0.025,NA,NA,NA
+"27","Ethnic","factor","0_1",3,0.015,NA,NA,NA
+"28","first_drug","factor","ABC_TAF-TDF_Other",11,0.055,NA,NA,NA
+"29","GENDER","factor","Female_Male",0,0,NA,NA,NA
+"30","H2_32a","factor","0_1",0,0,"Current smoker","Dic","0: No
+1: Yes"
+"31","H2_32b","factor","0_1_NA",50,0.25,"If no, previous smoker","Dic","0: No
+1: Yes"
+"32","H2_39a","factor","0_1_NA",12,0.06,"Nicotine substitution (e.g. gum, patch)","Dic","0: No
+1: Yes"
+"33","H2_40a","factor","0_1_2_NA",16,0.08,"E-cigarettes","Cat","0: No
+1: yes with nicotine
+2: yes without nicotine"
+"34","H2_41","numeric",NA,29,0.145,"Passive smoking exposure","Num","Hours per day"
+"35","H2_42","numeric",NA,20,0.1,"Childhood (before age 18) exposure of passive smoking","Num","Years"
+"36","H2_43","numeric",NA,33,0.165,"Adulthood (after age 18) exposure of passive smoking","Num","Years"
+"37","H2_44a","factor","0_1_NA",5,0.025,"Current/previous marihuana use","Dic","0: No
+1: Yes"
+"38","H2_45a1","numeric",NA,38,0.19,NA,NA,NA
+"39","H2_45a10","numeric",NA,29,0.145,NA,NA,NA
+"40","H2_45a11","numeric",NA,43,0.215,NA,NA,NA
+"41","H2_45a12","numeric",NA,13,0.065,NA,NA,NA
+"42","H2_45a2","numeric",NA,29,0.145,NA,NA,NA
+"43","H2_45a3","numeric",NA,46,0.23,NA,NA,NA
+"44","H2_45a4","numeric",NA,9,0.045,NA,NA,NA
+"45","H2_45a5","numeric",NA,27,0.135,NA,NA,NA
+"46","H2_45a6","numeric",NA,42,0.21,NA,NA,NA
+"47","H2_45a7","numeric",NA,46,0.23,NA,NA,NA
+"48","H2_45a8","numeric",NA,49,0.245,NA,NA,NA
+"49","H2_45a9","numeric",NA,53,0.265,NA,NA,NA
+"50","H2_45b","numeric",NA,37,0.185,"If coffee, time from awakening to first cup","Num","Hours"
+"51","H2_46_1a","factor","0_1_2_3_NA",2,0.01,"All alcoholic drinks","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"52","H2_46_2a","factor","0_1_2_3_NA",6,0.03,"Beer","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"53","H2_46_2b","numeric",NA,40,0.2,"Weekly consumption (beer)","Num","Number of 33cl"
+"54","H2_46_3a","factor","0_1_2_3_NA",8,0.04,"White wine","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"55","H2_46_3b","numeric",NA,40,0.2,"Weekly consumption (white wine)","Num","Glass of 12.5 cl"
+"56","H2_46_4a","factor","0_1_2_3_NA",7,0.035,"Red wine","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"57","H2_46_4b","numeric",NA,37,0.185,NA,NA,NA
+"58","H2_46_5a","factor","0_1_2_NA",15,0.075,"Liqeur (Danish: hedvin)","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"59","H2_46_6a","factor","0_1_2_3_NA",11,0.055,"Liquor","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"60","H2_46_6b","numeric",NA,51,0.255,"Weekly consumption (liquor)","Num","4 cl"
+"61","H2_46_7a","factor","0_1_2_3_NA",24,0.12,"Other  alcoholic drinks","Cat","0:Never
+1:Monthly
+2:Weekly
+3: Daily"
+"62","H2_47","factor","1_2_3",5,0.025,"Frequency of consumption of > 5 drinks in one occasion during the past year","Cat","0:Never
+1: Less <1 per month
+2: 1-3 per month
+3: 1 per week
+4: > 1 per week"
+"63","H2_49","factor","1_2_3",2,0.01,"Main courses ","Num","Number per day"
+"64","H2_50","numeric",NA,4,0.02,"Bread, pieces per day
+1 piece = 0.5 rhye bread / 1 toast / 1 crispbread / 0.5 bun","Num","Number per day"
+"65","H2_51","factor","0_1_2_3_4_NA",4,0.02,"Type of butter on bread","Cat","0: None
+1: Butter
+2: Spreadable (Kærgården)
+3: Vegetable margarine (Plantemargarine)
+4: Other"
+"66","H2_52a","numeric",NA,17,0.085,NA,NA,NA
+"67","H2_52b","numeric",NA,29,0.145,NA,NA,NA
+"68","H2_52c","numeric",NA,22,0.11,NA,NA,NA
+"69","H2_52d","numeric",NA,20,0.1,NA,NA,NA
+"70","H2_53a","numeric",NA,10,0.05,NA,NA,NA
+"71","H2_53b","numeric",NA,22,0.11,NA,NA,NA
+"72","H2_53c","numeric",NA,15,0.075,NA,NA,NA
+"73","H2_53d","numeric",NA,20,0.1,NA,NA,NA
+"74","H2_53e","numeric",NA,49,0.245,NA,NA,NA
+"75","H2_53f","numeric",NA,54,0.27,NA,NA,NA
+"76","H2_54","factor","0_1_4_5_6",20,0.1,"Choice of fat for preparing warm dishes","Cat","0: None
+1: Butter
+2: Spreadable (Kærgården)
+3: Shortening (Stegemargarine)
+4: Vegetable margarine (Plantemargarine) 
+5: Olive oil
+6: Other oil
+7: Other"
+"77","H2_55","factor","1_2_5",2,0.01,"Vegetable intake ","Cat","0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 5-6 /week
+5: 1 /day
+6: 2-3 /day
+7: > 3/day"
+"78","H2_56","factor","1_2_5",2,0.01,"Fruit intake (whole fruit/portion of fruit)","Cat","0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 5-6 /week
+5: 1 /day
+6: 2-3 /day
+7: > 3/day"
+"79","H2_57","factor","0_1_2_3_4_5_NA",1,0.005,"Candy intake","Cat","0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 1 /day
+5: > 1/day"
+"80","H2_58a","factor","0_1_2_3_4_5_NA",1,0.005,"Chocolate intake","Cat","0: Never
+1: 1-3 /month
+2: 1-2 /week
+3: 3-4 /week
+4: 1 /day
+5: > 1/day"
+"81","H2_58b","factor","1_2_NA",19,0.095,"If yes,","","1: Dark chocolate (> 70% cocoa)
+2: Other"
+"82","H2_59","numeric",NA,12,0.06,"Ecological food and drinks","Num","% "
+"83","H2_70a","numeric",NA,10,0.05,NA,NA,NA
+"84","H2_70b","numeric",NA,13,0.065,NA,NA,NA
+"85","H2_70c","numeric",NA,37,0.185,NA,NA,NA
+"86","H2_70d","numeric",NA,9,0.045,NA,NA,NA
+"87","H2_71a","numeric",NA,14,0.07,NA,NA,NA
+"88","H2_71b","numeric",NA,16,0.08,NA,NA,NA
+"89","H2_71c","numeric",NA,41,0.205,NA,NA,NA
+"90","H2_71d","numeric",NA,14,0.07,NA,NA,NA
+"91","H2_72","numeric",NA,9,0.045,"Days per month with nightly work","Num","Days"
+"92","H2_74a","factor","1_2_3_4",3,0.015,"Physical activity in spare time","Cat ","1: Inactive 
+2: Slightly active
+3: Moderately active
+4: Very active"
+"93","H2_74c","numeric",NA,34,0.17,"Hours outdoor","Num","Hours"
+"94","H2_75a","factor","0_1_NA",5,0.025,"Motion habits changed markedly past 1 year","Dic","0: No
+1: Yes"
+"95","H2_75b","factor","1_2_NA",134,0.67,"If yes:","Dic","1: more
+2: less"
+"96","HbEAg","factor","0_1_NA",23,0.115,NA,NA,NA
+"97","HbSag","factor","0_1_NA",5,0.025,NA,NA,NA
+"98","HCV_anti","factor","0_1_NA",4,0.02,NA,NA,NA
+"99","HCV_rna","factor","0_1_NA",21,0.105,NA,NA,NA
+"100","Hdl","numeric",NA,0,0,NA,NA,NA
+"101","height","numeric",NA,1,0.005,NA,NA,NA
+"102","hypertension","factor","0_1",0,0,"*JNC7 definition","Dic","0: No
+1: Yes"
+"103","Ldl","numeric",NA,0,0,NA,NA,NA
+"104","log10VL_ART","numeric",NA,33,0.165,NA,NA,NA
+"105","m2_01","factor","0_1_NA",5,0.025,"Aspirin","Dic","0: No
+1: Yes"
+"106","m2_02a","factor","0_1",1,0.005,"Antihypertensives","Dic","0: No
+1: Yes"
+"107","m2_03a","factor","0_1_NA",6,0.03,"Drugs to treat heart conditions","Dic","0: No
+1: Yes"
+"108","m2_04","factor","0_1_NA",1,0.005,NA,NA,NA
+"109","m2_05","factor","0_1_NA",1,0.005,NA,NA,NA
+"110","m2_06","factor","0_1_NA",2,0.01,NA,NA,NA
+"111","m2_07","factor","0_1_NA",1,0.005,NA,NA,NA
+"112","m2_08","factor","0_1_NA",1,0.005,NA,NA,NA
+"113","m2_09","factor","0_1_NA",2,0.01,NA,NA,NA
+"114","m2_10","factor","0_1_NA",1,0.005,NA,NA,NA
+"115","m2_11","factor","0_1_NA",2,0.01,NA,NA,NA
+"116","m2_12","factor","0_1_NA",1,0.005,NA,NA,NA
+"117","m2_13","factor","0_NA",5,0.025,NA,NA,NA
+"118","m2_14","factor","0_NA",4,0.02,NA,NA,NA
+"119","m2_15","factor","0_1_NA",2,0.01,NA,NA,NA
+"120","m2_16","factor","0_NA",1,0.005,NA,NA,NA
+"121","m2_17","factor","0_1_NA",2,0.01,NA,NA,NA
+"122","m2_18","factor","0_NA",1,0.005,NA,NA,NA
+"123","m2_19","factor","0_1_NA",2,0.01,NA,NA,NA
+"124","m2_20","factor","0_1_NA",1,0.005,NA,NA,NA
+"125","m2_21","factor","0_1_NA",4,0.02,NA,NA,NA
+"126","m2_22","factor","0_1_NA",14,0.07,NA,NA,NA
+"127","m2_23","factor","0_1_NA",8,0.04,NA,NA,NA
+"128","m2_24","factor","0_1_NA",6,0.03,NA,NA,NA
+"129","m2_25a","factor","0_1_NA",2,0.01,"Natural remedies","Dic","0: No
+1: Yes"
+"130","m2_25b","factor","0_1_NA",20,0.1,"Other natural remedies","Dic","0: No
+1: Yes"
+"131","m2_25c","factor","0_1_NA",28,0.14,"Other natural remedies","Dic","0: No
+1: Yes"
+"132","METS","factor","0_1",0,0,NA,NA,NA
+"133","ob10","numeric",NA,1,0.005,"Systolic blood pressure, right arm","Num","Unit: mm mercury"
+"134","ob11","integer",NA,1,0.005,"Diastolic blood pressure, right arm","Num","Unit: mm mercury"
+"135","ob12","numeric",NA,8,0.04,"Bloodpressure, right leg","Num","Unit: mm mercury"
+"136","ob13","numeric",NA,10,0.05,"Bloodpressure, left leg","Num","Unit: mm mercury"
+"137","ob14","factor","1_2_NA",37,0.185,"Ankle brachial index","Cat","1: > 0.9
+2: < 0.9"
+"138","ob15","numeric",NA,19,0.095,"Liver stiffness measurement","Num","Unit: kpa"
+"139","ob16","numeric",NA,19,0.095,"Interquartile range","Num","One decimal"
+"140","ob18","numeric",NA,3,0.015,"Saturation","Num","Unit: %"
+"141","ob19","numeric",NA,6,0.03,"Pulse","Num","Unit: beats per minute"
+"142","ob2","factor","1_2_3",2,0.01,"Grandparents origin","Cat","1: Danish
+2: Other Scandinavian
+3: Other European
+4: Turkish
+5: Pakistani, Indian, Sri Lankan
+6: Arab/Iran
+7: Other (African, Asian, Greenland)"
+"143","ob3","factor","1_2_3_4_5_6_7_8_9_NA",3,0.015,"Duration since last meal","Cat","Unit: hours
+1: 0-1
+2: 1-2
+3: 2-3
+4: 3-4
+5: 4-5
+6: 5-6
+7: 6-7
+8: 7-8
+9: > 8"
+"144","ob4","numeric",NA,1,0.005,"Height of participant","Num","Unit: cm"
+"145","ob5","numeric",NA,0,0,"Weight of participant","Num","Unit: kg"
+"146","ob6","numeric",NA,0,0,"Waist circumference","Num","Unit: cm"
+"147","ob7","numeric",NA,0,0,"Hip circumference","Num","Unit: cm"
+"148","ob8","numeric",NA,0,0,"Systolic blood pressure, left arm","Num","Unit: mm mercury"
+"149","ob9","numeric",NA,0,0,"Diastolic blood pressure, left arm","Num","Unit: mm mercury"
+"150","Origin","factor","0_1",2,0.01,NA,NA,NA
+"151","SAT","numeric",NA,6,0.03,NA,NA,NA
+"152","status_smoking","factor","Current smoker_Ex smoker_Never smoker",0,0,"*Current smoking status","Cat","0: Never
+1: Current
+2: Ex-smoker
+9: Unknown"
+"153","Syph","factor","0_1_NA",1,0.005,"Syphilis infection","Dic","0: no
+1: yes"
+"154","Tgl","numeric",NA,0,0,NA,NA,NA
+"155","Transm_mode","factor","0_1_6",1,0.005,NA,NA,NA
+"156","Transm_origin","factor","1_2",6,0.03,NA,NA,NA
+"157","VAT","numeric",NA,6,0.03,NA,NA,NA
+"158","VAT_cat","factor","high_low",6,0.03,NA,NA,NA
+"159","VL","factor","<50_>50",1,0.005,NA,NA,NA
+"160","weight","numeric",NA,0,0,NA,NA,NA
+"161","WHR","numeric",NA,0,0,"*Waist hip ratio","Num","Unit: ratio"
+"162","X3rd_Drug","factor","INSTI_NNRTI_PI",2,0.01,NA,NA,NA

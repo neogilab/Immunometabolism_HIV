@@ -1,0 +1,28 @@
+Node_1	Name	type	subsystem
+ENSG00000110090	CPT1A	gene	Carnitine shuttle (cytosolic)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Transport reactions_Fatty acid oxidation
+ENSG00000169169	CPT1C	gene	Carnitine shuttle (cytosolic)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Fatty acid oxidation
+ENSG00000178537	SLC25A20	gene	Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Transport reactions_Fatty acid oxidation
+ENSG00000205560	CPT1B	gene	Carnitine shuttle (cytosolic)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Fatty acid oxidation
+ENSG00000005469	CROT	gene	Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Fatty acid oxidation_Transport reactions
+ENSG00000095321	CRAT	gene	Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Fatty acid oxidation
+ENSG00000197119	SLC25A29	gene	Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)
+MAM03489c	Sebacoyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03490c	Dodecanedioyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03495c	Succinyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03498c	Hexanoyl Carnitine	met	Fatty acid oxidation_Transport reactions_Exchange/demand reactions
+MAM03499c	Adipoyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03502c	Suberyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03727c	Alpha-Linolenyl Carnitine	met	Fatty acid oxidation
+MAM03790c	11-Octadecenoyl Carnitine	met	Fatty acid oxidation
+MAM03793c	Octadecenoyl Carnitine (Hypothetical, Position Of Double Bond Unknown)	met	
+MAM00950x	4,8-dimethylnonanoylcarnitine	met	Carnitine shuttle (cytosolic)_Carnitine shuttle (mitochondrial)_Transport reactions_Fatty acid oxidation
+MAM02634x	O-acetylcarnitine	met	Carnitine shuttle (cytosolic)_Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Carnitine shuttle (endoplasmic reticular)_Transport reactions_Exchange/demand reactions
+MAM02409c	L-octanoylcarnitine	met	Carnitine shuttle (cytosolic)_Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM02409m	L-octanoylcarnitine	met	Carnitine shuttle (cytosolic)_Carnitine shuttle (mitochondrial)_Carnitine shuttle (peroxisomal)_Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM02635x	O-butanoylcarnitine	met	Carnitine shuttle (cytosolic)_Carnitine shuttle (mitochondrial)_Fatty acid oxidation_Transport reactions_Exchange/demand reactions
+MAM03489x	Sebacoyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03490x	Dodecanedioyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03495x	Succinyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03498x	Hexanoyl Carnitine	met	Fatty acid oxidation_Transport reactions_Exchange/demand reactions
+MAM03499x	Adipoyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions
+MAM03502x	Suberyl Carnitine	met	Fatty acid oxidation_Exchange/demand reactions_Transport reactions

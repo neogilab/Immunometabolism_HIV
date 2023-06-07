@@ -1,0 +1,104 @@
+---
+title: "Design input file GSEA software"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(DESeq2)
+library(dplyr)
+library(SNFtool)
+library(xlsx)
+library(ggplot2)
+library(corrr)
+library(reshape2)
+library(ggplot2)
+library(mygene)
+library(org.Hs.eg.db)
+```
+
+
+```{r}
+col_c <- c("#6b8ea7",	"#a7846b")
+```
+
+
+## load data
+### transcriptomics
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+#data_txn$COCOMO_ID <- rownames(data_txn)
+```
+
+### olink
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_2.csv")
+clinical$X <- NULL
+#clinical <- clinical[,c(1, 4, 6, 8, 11, 12, 13, 36, 37, 38, 40)]
+clinical_HIV <- clinical[clinical$HIV_Status != "Ctrl",]
+clinical_HIV <- clinical_HIV[clinical_HIV$COCOMO_ID %in% rownames(data_olink),]
+```
+
+```{r}
+data_txn <- data_txn[rownames(data_txn) %in% clinical_HIV$COCOMO_ID,]
+data_olink <- data_olink[rownames(data_olink) %in% clinical_HIV$COCOMO_ID,]
+```
+
+```{r}
+data_olink <- data_olink[order(match(rownames(data_olink), rownames(data_txn))),]
+```
+
+## filter data
+```{r}
+data_olink <- t(data_olink)
+data_olink <- data_olink[apply(data_olink, 1, var) >= 0.2, ]
+data_olink <- data.frame(Name = rownames(data_olink), Description = NA, data_olink)
+
+name_ana <- "proteomics_"
+write.table(data_olink, sep = "\t", row.names=FALSE, quote=FALSE, paste0("results/GSEA_software/",name_ana,"expression_genes.txt"))
+
+
+data_txn <- t(data_txn)
+data_txn <- data_txn[apply(data_txn, 1, var) >= 0.2, ]
+data_txn <- data.frame(Name = rownames(data_txn), Description = NA, data_txn)
+
+name_ana <- "transcriptomics_"
+write.table(data_txn, sep = "\t", row.names=FALSE, quote=FALSE, paste0("results/GSEA_software/",name_ana,"expression_transcripts.txt"))
+
+data_txn$Name <- mapIds(org.Hs.eg.db, as.vector(data_txn$Name), keytype="ENSEMBL", column="SYMBOL")
+data_txn <- data_txn[!is.na(data_txn$Name),]
+
+name_ana <- "transcriptomics_"
+write.table(data_txn, sep = "\t", row.names=FALSE, quote=FALSE, paste0("results/GSEA_software/",name_ana,"expression_genes.txt"))
+```
+
+```{r}
+x <- read.csv("processing/cluster_SNF_transcriptomics_metabolomics_olink_3.csv")
+x$X <- NULL
+```
+
+```{r}
+label <- x$cluster
+nb <- length(label)
+table_label <- data.frame(V1 = nb, V2 = 2, V3 = 3)
+label[label == 2] <- 0
+write.table(t(label), sep = "\t", row.names=FALSE, quote=FALSE, paste0("results/GSEA_software/labels.cls"))
+```
+

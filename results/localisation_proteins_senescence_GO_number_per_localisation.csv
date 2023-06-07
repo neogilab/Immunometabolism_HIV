@@ -1,0 +1,112 @@
+"","Area","Nb"
+"1","adherens junction",2
+"2","apical plasma membrane",1
+"3","basement membrane",4
+"4","basolateral plasma membrane",1
+"5","envelope",3
+"6","plasma membrane",32
+"7","cell junction",4
+"8","chromosome, centromeric region",1
+"9","microtubule organizing center",1
+"10","chromaffin granule",1
+"11","chromaffin granule membrane",1
+"12","cis-Golgi network",1
+"13","clathrin-coated pit",3
+"14","clathrin-coated vesicle",2
+"15","clathrin-coated vesicle membrane",1
+"16","",140
+"17","COPII-coated ER to Golgi transport vesicle",1
+"18","ER to Golgi transport vesicle membrane",1
+"19","cornified envelope",1
+"20","cytoplasm",59
+"21","cytoskeleton",9
+"22","cytosol",67
+"23","early endosome",3
+"24","endoplasmic reticulum",15
+"25","endoplasmic reticulum lumen",5
+"26","endoplasmic reticulum membrane",4
+"27","endoplasmic reticulum-Golgi intermediate compartment",2
+"28","endoplasmic reticulum-Golgi intermediate compartment membrane",1
+"29","endosome membrane",2
+"30","endosome",5
+"31","extracellular space",27
+"32","focal adhesion",5
+"33","Golgi apparatus",12
+"34","Golgi lumen",3
+"35","Golgi membrane",1
+"36","Golgi cisterna membrane",1
+"37","cell cortex",1
+"38","endomembrane system",2
+"39","lateral plasma membrane",1
+"40","lipid droplet",1
+"41","lysosomal lumen",4
+"42","lysosomal membrane",4
+"43","lysosome",7
+"44","melanosome",1
+"45","membrane",63
+"46","mitochondrial inner membrane",1
+"47","mitochondrial intermembrane space",1
+"48","mitochondrial matrix",4
+"49","mitochondrial outer membrane",6
+"50","mitochondrion",16
+"51","myelin sheath",1
+"52","nuclear envelope",2
+"53","nuclear inner membrane",2
+"54","nuclear matrix",2
+"55","nuclear membrane",5
+"56","nuclear outer membrane",1
+"57","nuclear speck",4
+"58","nucleolus",5
+"59","nucleoplasm",36
+"60","nucleus",42
+"61","perikaryon",2
+"62","perinuclear region of cytoplasm",12
+"63","peroxisomal membrane",1
+"64","peroxisome",1
+"65","presynaptic membrane",1
+"66","recycling endosome",1
+"67","rough endoplasmic reticulum",2
+"68","rough endoplasmic reticulum lumen",1
+"69","sarcolemma",1
+"70","extracellular region",24
+"71","transport vesicle",3
+"72","transport vesicle membrane",1
+"73","smooth endoplasmic reticulum",1
+"74","spindle",8
+"75","synapse",9
+"76","synaptic vesicle",3
+"77","synaptic vesicle membrane",2
+"78","bicellular tight junction",1
+"79","trans-Golgi network",2
+"80","vacuole",1
+"81","chromosome, telomeric region",3
+"82","axon",7
+"83","cell projection",2
+"84","dendrite",1
+"85","dendritic spine",1
+"86","filopodium",1
+"87","growth cone",1
+"88","lamellipodium",2
+"89","microvillus",1
+"90","postsynaptic density",2
+"91","ruffle",2
+"92","ruffle membrane",2
+"93","ciliary membrane",1
+"94","cell surface",14
+"95","Z disc",1
+"96","M band",1
+"97","endosome lumen",2
+"98","membrane raft",7
+"99","spindle pole",3
+"100","PML body",1
+"101","cleavage furrow",2
+"102","chromosome",5
+"103","midbody",4
+"104","nuclear body",3
+"105","fibrillar center",2
+"106","postsynapse",1
+"107","presynapse",2
+"108","neuron projection",3
+"109","presynaptic active zone",1
+"110","neuronal dense core vesicle",2
+"111","synaptic membrane",1

@@ -1,0 +1,78 @@
+---
+title: "Run whole analysis"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+## create folders
+```{r}
+dir.create("data")
+dir.create("processing")
+dir.create("results")
+dir.create("results/figures")
+
+
+dir.create("results/networks")
+dir.create("results/networks/netDx")
+dir.create("results/olink")
+dir.create("results/clinical")
+dir.create("results/LIMMA")
+dir.create("results/figures/volcano_plots")
+dir.create("results/GSEA_software")
+dir.create("results/GSEA")
+dir.create("results/Deseq2")
+dir.create("results/ML")
+dir.create("results/networks/BNN")
+dir.create("results/networks/co_expression")
+dir.create("results/GSEA_KEGG")
+dir.create("results/MSEA")
+dir.create("results/BINGO")
+dir.create("results/figures/PCA")
+dir.create("results/figures/boxplots_SASP")
+dir.create("results/SCT")
+dir.create("processing/MSEA")
+
+
+
+
+
+dir.create("results/figures/boxplots")
+dir.create("results/figures/boxplots/boxplots_Ale")
+
+
+dir.create("results/GSMM")
+dir.create("results/MATLAB")
+dir.create("results/macrophages")
+dir.create("results/figures/SCT")
+dir.create("results/figures/SCT/gene_expression")
+```
+
+## run files in order
+```{r}
+
+```
+
+## Preprocessing
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/clean/preprocessing/COCOMO_txn_met_preprocessing_2.Rmd
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/clean/preprocessing/2e_olink_analysis_preprocessing.Rmd
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/clean/preprocessing/extra_make_input_GSEA.Rmd
+
+## clinical
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/clean/Clinical/2a_COCOMO_txn_Statistics.Rmd
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/clean/preprocessing/0_COCOMO_whole_cohort.Rmd
+
+
+
+## SNF
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_SNF.Rmd
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/src/Whole_analysis/SNF/1_COCOMO_txn_olink_metabolomics_netDX.Rmd

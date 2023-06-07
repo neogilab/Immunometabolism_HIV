@@ -1,0 +1,178 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(piano)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+name_ana <- "GSEA_proteomics_spermine_hallmark"
+```
+
+```{r}
+gset=loadGSC("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/GSEA/h.all.v7.5.1.symbols.gmt")
+```
+
+
+```{r}
+table_global <- data.frame(Name = NA, Stat..dist.dir.up.= NA, p.adj..dist.dir.up.= NA, Genes..up. = NA, Stat..dist.dir.dn.= NA, p.adj..dist.dir.dn.= NA, Genes..down. = NA, comp = NA, sign = NA)
+
+
+x <- list.files("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/GSEA/spermine/")
+input <- x[!grepl("extra", x) & !grepl("KEGG_", x) ]
+
+for (i in input) {
+  tryCatch({
+    name <- gsub(".csv", "", i)
+    DESeqout <- read.csv(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/GSEA/spermine/", i))
+    DESeqout <- DESeqout[order(DESeqout$P.Value),]
+    DESeqout <- DESeqout[!is.na(DESeqout$Gene_name),]
+    DESeqout <- DESeqout[!duplicated(DESeqout$Gene_name),]
+    rownames(DESeqout) <- DESeqout$Gene_name
+    DESeqout$Gene_name <- NULL
+    pval= as.matrix(DESeqout[ ,2]) 
+    fc= as.matrix(DESeqout[ ,1]) 
+
+    row.names(pval)=row.names(DESeqout)
+    row.names(fc)=row.names(DESeqout)
+  
+    #Main function in PIANO. Uses the pvalues, fold-changes, and gene sets. 
+    gsaRes <- runGSA(pval,fc,gsc=gset, nPerm = 1000, adjMethod = "fdr", gsSizeLim=c(10,800))
+
+    #Writes the output from PIANO to a file "piano.txt". Setting "save=FALSE" simply shows the result from PIANO
+    GSAsummaryTable(gsaRes, save=TRUE, file=paste0("processing/GSEA/KEGG_", name_ana, "_",name[i], "_2.txt"))
+    c <- read.delim(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/GSEA/KEGG_", name_ana, "_", name[i], "_2.txt"))
+    c <- c[,c(1, 3, 5, 12, 6, 8, 16)]
+    c_up <- c[c$p.adj..dist.dir.up. < 0.1, ]
+    c_down <- c[c$p.adj..dist.dir.dn. < 0.1, ]
+    print(nrow(c_up))
+    print(nrow(c_down))
+    
+    table_piano <- data.frame(Name = NA, Stat..dist.dir.up.= NA, p.adj..dist.dir.up.= NA, Genes..up. = NA, Stat..dist.dir.dn.= NA, p.adj..dist.dir.dn.= NA, Genes..down. = NA, comp = NA, sign = NA)
+    if (nrow(c_up) > 1) {
+      c_up$comp <- name
+      c_up$sign <- "up"
+      table_piano <- rbind(c_up, table_piano)
+    }
+    if (nrow(c_down) > 1) {
+      c_down$comp <- name
+      c_down$sign <- "down"
+      table_piano <- rbind(c_down, table_piano)
+    }
+    
+    table_global <- rbind(table_global, table_piano)
+    
+  }, error=function(e){cat("ERROR :",i, "\n")})
+}
+```
+
+
+```{r}
+table_global_2 <- table_global[!is.na(table_global$Name),]
+table(table_global_2$comp)
+write.csv(table_global_2, paste0("processing/GSEA/hallmark_", name_ana, "_all_comparisons.csv"))
+```
+
+```{r}
+table_global_2 <- table_global_2[table_global_2$comp %in% c("proteomics_norm_spermin_frac_CBoth-CControl", "proteomics_norm_spermin_frac_CSpermine-CControl"),]
+```
+
+```{r}
+table(table_global_2$comp)
+```
+## extract pathways model 3
+```{r}
+table_model_4 <- table_global_2
+table_model_4$comp <- gsub("model1_gsea_input_", "txn_", table_model_4$comp)
+table_model_4$comp <- gsub("model_1_", "", table_model_4$comp)
+table_model_4$pvalue <- ifelse(table_model_4$sign == "up", table_model_4$p.adj..dist.dir.up., table_model_4$p.adj..dist.dir.dn.)
+table_model_4$Nb <- ifelse(table_model_4$sign == "up", table_model_4$Genes..up., table_model_4$Genes..down.)
+table_model_4 <- table_model_4[order(table_model_4$sign, table_model_4$pvalue, table_model_4$Nb, decreasing = TRUE),]
+table_model_4$Name <- gsub("HALLMARK\\_", "",table_model_4$Name)
+#table_model_4$Name <- factor(table_model_4$Name, levels = table_model_4$Name)
+```
+
+```{r}
+table_model_4 <- table_model_4[!table_model_4$Name %in% c("UV_RESPONSE_UP", "ESTROGEN_RESPONSE_EARLY", "ALLOGRAFT_REJECTION", "APICAL_JUNCTION", "MYOGENESIS"),]
+table_model_4 <- table_model_4[order(table_model_4$pvalue, decreasing = TRUE),]
+table_model_4$Name <- factor(table_model_4$Name, levels = unique(table_model_4$Name))
+```
+
+```{r}
+write.csv(table_model_4, paste0("results/", name_ana, "_model_1_pathways_clean_proteomics_monocytes.csv"))
+```
+
+## figures
+## bubble plot horizontal
+
+```{r}
+colors <- c("#b22222", "#177c7c")
+```
+
+
+```{r}
+table_model_4$Stat <- ifelse(table_model_4$sign == "up", table_model_4$Stat..dist.dir.up., -table_model_4$Stat..dist.dir.dn.)
+```
+
++
+  geom_text(aes(size = 12, label=ifelse(abs(Stat) > 0.4, as.character(Name),'')), hjust=0.2,vjust=1)
+
+```{r}
+library(ggrepel)
+```
+
+```{r}
+table_model_4$Name <- as.vector(table_model_4$Name)
+table_model_4$Name <- tolower(table_model_4$Name)
+```
+
+## figures
+## bubble plot horizontal
+
+```{r}
+colors <- c("#b22222", "#177c7c")
+```
+
+
+```{r}
+table_model_4$Stat <- ifelse(table_model_4$sign == "up", table_model_4$Stat..dist.dir.up., -table_model_4$Stat..dist.dir.dn.)
+```
+
+```{r}
+library(ggrepel)
+```
+
+```{r}
+table_model_4$Name <- as.vector(table_model_4$Name)
+table_model_4$Name <- tolower(table_model_4$Name)
+```
+
+```{r}
+table_model_4$comp <- gsub("proteomics_norm_spermin_frac_C", "",table_model_4$comp)
+```
+
+```{r}
+a <- ggplot(table_model_4, aes(y=Name,  x= comp, size = Nb, color = sign))+geom_point()+theme_light()+ labs(title="", x="", y="", fill="")+ theme(
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())+ scale_color_manual(values=rev(colors))+ylab("Piano Statistics")+xlab("")
+a
+
+ggsave(paste0("results/figures/", name_ana, "_bubble_plot.pdf"), height = 4, width = 6)
+```
+

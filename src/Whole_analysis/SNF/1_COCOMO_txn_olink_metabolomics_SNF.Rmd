@@ -1,0 +1,610 @@
+---
+title: "SNF transcriptomics / metabolomics / olink"
+output: html_notebook
+---
+
+
+## Aim
+Clustering patients based on omics profile
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory (replace by your directory)
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(DESeq2)
+library(dplyr)
+library(SNFtool)
+library(xlsx)
+library(ggplot2)
+library(corrr)
+library(reshape2)
+library(ggplot2)
+library(RColorBrewer)
+library(circlize)
+```
+
+
+```{r}
+col_c <- c("#6b8ea7",	"#a7846b")
+```
+
+## load data
+### transcriptomics
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+#data_txn$COCOMO_ID <- rownames(data_txn)
+```
+### metabolomics
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+data_met <- data_met[rownames(data_met) %in% rownames(data_txn), ]
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+#data_met$COCOMO_ID <- rownames(data_met)
+```
+
+### olink
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_2.csv")
+clinical$X <- NULL
+#clinical <- clinical[,c(1, 4, 6, 8, 11, 12, 13, 36, 37, 38, 40)]
+clinical_HIV <- clinical[clinical$HIV_Status != "Ctrl",]
+#clinical_HIV <- clinical
+clinical_HIV <- clinical_HIV[clinical_HIV$COCOMO_ID %in% rownames(data_olink),]
+```
+
+```{r}
+table(clinical$HIV_Status)
+```
+
+```{r}
+table(clinical_HIV$HIV_Status)
+```
+
+```{r}
+data_txn <- data_txn[rownames(data_txn) %in% clinical_HIV$COCOMO_ID,]
+data_met <- data_met[rownames(data_met) %in% clinical_HIV$COCOMO_ID,]
+data_olink <- data_olink[rownames(data_olink) %in% clinical_HIV$COCOMO_ID,]
+```
+
+```{r}
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+data_olink <- data_olink[order(match(rownames(data_olink), rownames(data_txn))),]
+```
+
+## filter data
+```{r}
+data_met <- t(data_met)
+data_met <- data_met[apply(data_met, 1, var) >= 0.2, ]
+data_met <- t(data_met)
+
+data_olink <- t(data_olink)
+data_olink <- data_olink[apply(data_olink, 1, var) >= 0.2, ]
+data_olink <- t(data_olink)
+
+data_txn <- t(data_txn)
+data_txn <- data_txn[apply(data_txn, 1, var) >= 0.2, ]
+data_txn <- t(data_txn)
+```
+
+## Normalization
+```{r}
+Data1 = standardNormalization(data_txn)
+Data2 = standardNormalization(data_met)
+Data3 = standardNormalization(data_olink)
+```
+
+## Distance matrices
+```{r}
+Dist1 = dist2(as.matrix(Data1),as.matrix(Data1));
+Dist2 = dist2(as.matrix(Data2),as.matrix(Data2));
+Dist3 = dist2(as.matrix(Data3),as.matrix(Data3));
+```
+
+```{r}
+.discretisation <- function(eigenVectors) {
+  
+  normalize <- function(x) x / sqrt(sum(x^2))
+  eigenVectors = t(apply(eigenVectors,1,normalize))
+  
+  n = nrow(eigenVectors)
+  k = ncol(eigenVectors)
+  
+  R = matrix(0,k,k)
+  R[,1] = t(eigenVectors[round(n/2),])
+  
+  mini <- function(x) {
+    i = which(x == min(x))
+    return(i[1])
+  }
+  
+  c = matrix(0,n,1)
+  for (j in 2:k) {
+    c = c + abs(eigenVectors %*% matrix(R[,j-1],k,1))
+    i = mini(c)
+    R[,j] = t(eigenVectors[i,])
+  }
+  
+  lastObjectiveValue = 0
+  for (i in 1:20) {
+    eigenDiscrete = .discretisationEigenVectorData(eigenVectors %*% R)
+    
+    svde = svd(t(eigenDiscrete) %*% eigenVectors)
+    U = svde[['u']]
+    V = svde[['v']]
+    S = svde[['d']]
+    
+    NcutValue = 2 * (n-sum(S))
+    if(abs(NcutValue - lastObjectiveValue) < .Machine$double.eps) 
+      break
+    
+    lastObjectiveValue = NcutValue
+    R = V %*% t(U)
+    
+  }
+  
+  return(list(discrete=eigenDiscrete,continuous =eigenVectors))
+}  
+```
+
+```{r}
+.discretisationEigenVectorData <- function(eigenVector) {
+  
+  Y = matrix(0,nrow(eigenVector),ncol(eigenVector))
+  maxi <- function(x) {
+    i = which(x == max(x))
+    return(i[1])
+  }
+  j = apply(eigenVector,1,maxi)
+  Y[cbind(1:nrow(eigenVector),j)] = 1
+  
+  return(Y)
+  
+}
+```
+
+```{r}
+my_estimateNumberOfClustersGivenGraph <- function(W, NUMC=2:5) {
+    # Estimates the best number of clusters from a vector of choices, using 
+    #   the eigen-gap & rotation cost heuristics.
+    #
+    # Args:
+    #   W: Affinity matrix (usually result from SNF)
+    #   NUMC: A vector of integers specifying which cluster numbers to check
+    #
+    # Returns:
+    #   A vector of the top two suggested number of clusters using
+    #       the eigen-gap and rotation cost heuristics. 
+    #
+
+    #Put this check after the length(NUMC) check?
+    if (min(NUMC) == 1) {
+        warning('Note that we always assume there are more than one cluster.')
+        NUMC <- NUMC[NUMC > 1]
+    }
+
+    #Why is this performed here?
+    W <- (W + t(W))/2
+    diag(W) <- 0
+
+    #NUMC validity check
+    if (length(NUMC) <= 0) {
+        warning(paste("Invalid NUMC provided, must be an integer vector",
+             "with atleast one other number than 1.",
+              "Using default NUMC=c(2,3,4,5)",sep=""))
+        NUMC <- 2:5 
+    }
+
+    # compute unnormalized Laplacian
+    degs <- rowSums(W)
+    degs[degs == 0] <- .Machine$double.eps    
+    D <- diag(degs)    
+    L <- D - W
+    Di <- diag(1 / sqrt(degs))
+    L <- Di %*% L %*% Di
+    #print(dim(L))
+
+    # compute the eigenvectors corresponding to the k smallest
+    eigs <- eigen(L)
+    eigs_order <- sort(eigs$values, index.return=T)$ix
+    eigs$values <- eigs$values[eigs_order]
+    eigs$vectors <- eigs$vectors[, eigs_order]
+    eigengap <- abs(diff(eigs$values))
+#    eigengap <- eigengap * (1 - eigs$values[1:length(eigs$values) - 1]
+#        ) / (1 - eigs$values[2:length(eigs$values)])
+
+    quality <- list()
+    for (c_index in 1:length(NUMC)) {
+        ck <- NUMC[c_index]
+        UU <- eigs$vectors[, 1:ck]
+        EigenvectorsDiscrete <- .discretisation(UU)[[1]]
+        EigenVectors <- EigenvectorsDiscrete^2
+      
+        #MATLAB: sort(EigenVectors,2, 'descend');
+        temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
+             function(i) EigenVectors[, i])), ]
+        temp1 <- t(apply(temp1, 1, sort, TRUE))  
+  
+        quality[[c_index]] <- (1 - eigs$values[ck + 1]) / 
+            (1 - eigs$values[ck]) * 
+            sum( sum( diag(1 / (temp1[, 1] + .Machine$double.eps) ) %*%
+            temp1[, 1:max(2, ck-1)] ))
+    }
+    #Eigen-gap best two clusters
+    m1 <- eigengap[NUMC]
+    t1 <- sort(eigengap[NUMC], decreasing=TRUE, index.return=T)$ix
+    K1 <- NUMC[t1[1]]
+    K12 <- NUMC[t1[2]]
+
+    #Rotation cost best two clusters
+    m2 <- quality
+    t2 <- sort(unlist(quality), index.return=TRUE)$ix
+    K2 <- NUMC[t2[1]]
+    K22 <- NUMC[t2[2]]    
+  
+    output <- list("Eigen-gap best"=K1, "Eigen-gap 2nd best"=K12,
+        "Rotation cost best"=K2, "Rotation cost 2nd best"=K22)
+    output_2 <- list(m1, m2, K1, K12, K2, K22)
+    return (output_2)
+}
+```
+
+## run loop to find best parameters
+K <- 10:30
+C <- 2:8
+A <- c(0.3, 0.4, 0.5, 0.6, 0.7, 0.8)
+T <- 10:20
+
+
+options(warn=-1)
+table_measures_2 <- data.frame(cluster = NA, eigen_gap = NA, rotation_cost = NA, K = NA, A = NA, T = NA)
+
+for (k in K) {
+  for (a in A) {
+    W1 = affinityMatrix(Dist1, k, a)
+    W2 = affinityMatrix(Dist2, k, a)
+    W3 = affinityMatrix(Dist3, k, a)
+    for(t in T){
+      W = SNF(list(W1,W2, W3), k, t)
+      for (c in C) {
+        x <- my_estimateNumberOfClustersGivenGraph(W, NUMC=c:c)
+        table_measures <- data.frame(cluster = c, eigen_gap = x[[1]], rotation_cost = unlist(x[[2]]), K = k, A = a, T = t)
+        table_measures_2 <- rbind(table_measures, table_measures_2)
+        
+      }
+    }
+  }
+  print(k)
+}
+
+SNF_table <- table_measures_2
+SNF_table <- SNF_table[order(SNF_table$eigen_gap, decreasing = TRUE),]
+SNF_table$rank_eigen <- 1:nrow(SNF_table)
+SNF_table <- SNF_table[order(SNF_table$rotation_cost),]
+SNF_table$rank_rot <- 1:nrow(SNF_table)
+SNF_table$tot <- SNF_table$rank_rot + SNF_table$rank_eigen
+SNF_table_2 <- SNF_table[SNF_table$tot == min(SNF_table$tot),]
+
+## run final model
+
+```{r}
+k = 30;##number of neighbors, usually (10~30)
+a = 0.7; ##hyperparameter, usually (0.3~0.8)
+t = 20; ###Number of Iterations, usually (10~20)
+```
+
+```{r}
+W1 = affinityMatrix(Dist1, k, a)
+W2 = affinityMatrix(Dist2, k, a)
+W3 = affinityMatrix(Dist3, k, a)
+W = SNF(list(W1,W2, W3), k, t)
+```
+
+
+```{r}
+write.csv(W, "processing/SNG_fused_network.csv")
+```
+```{r}
+W <- read.csv("processing/SNG_fused_network.csv")
+```
+
+## SNF
+```{r}
+W = SNF(list(W1,W2, W3), k, t)
+c = 2###number of clusters
+group = spectralClustering(W,c);###the final subtypes information
+```
+
+```{r}
+table(group)
+```
+## extract cluters
+```{r}
+table_cluters <- data.frame(cluster = group, names = rownames(data_met))
+write.csv(table_cluters, "processing/cluster_SNF_transcriptomics_metabolomics_olink_3.csv")
+```
+
+```{r}
+x <- read.csv("processing/cluster_SNF_transcriptomics_metabolomics_olink_3.csv")
+```
+
+```{r}
+table_clu <- merge(x, table_cluters, by = "names")
+```
+
+```{r}
+min(W)
+max(W)
+```
+
+```{r}
+x <- colorRampPalette(c("black", "#007f7f","#00ffff"))(200)
+```
+
+```{r}
+displayClusters2 <- function(W, group, ColSideColors) {
+    # Visualize the clusters present in given similarity matrix with sample 
+    #   information displayed by given colors.
+    #
+    # Args:
+    #   W: Affinity matrix
+    #   group: labels of cluster groups 
+    #   ColSideColors: Character vector of length(group) containing color names 
+    #       for horizontal side bar to annotate columns of W, OR a character 
+    #       matrix with number of rows matching number of rows in W.
+    #
+    # Returns:
+    #   NULL
+    normalize <- function(X) X/rowSums(X)
+    ind <- sort(as.vector(group), index.return = TRUE)
+    ind <- ind$ix
+
+    diag(W) <- median(as.vector(W))
+    W <- normalize(W)
+    W <- W + t(W)
+    x <- heatmap(W[ind, ind],scale="none",Rowv=NA,Colv=NA, ColSideColors=ColSideColors[ind], labRow = FALSE, labCol = FALSE, col = x)
+    return(x)
+}
+```
+
+```{r}
+displayClusters(W1,group)
+```
+
+```{r}
+displayClusters(W2,group)
+```
+  
+```{r}
+color_group <- group
+color_group[color_group == 1] <- col_c[1]
+color_group[color_group == 2] <-col_c[2]
+```
+
+```{r}
+pdf("results/figures/Heatmap_transcriptomics_cocomo_SNF_3.pdf", height = 4.5, width = 5)
+displayClusters2(W1,group, color_group)
+dev.off()
+pdf("results/figures/Heatmap_metabolites_cocomo_SNF_3.pdf", height = 4.5, width = 5)
+displayClusters2(W2,group, color_group)
+dev.off()
+
+pdf("results/figures/Heatmap_olink_cocomo_SNF_3.pdf", height = 4.5, width = 5)
+displayClusters2(W3,group, color_group)
+dev.off()
+
+pdf("results/figures/Heatmap_whole_cocomo_SNF_3.pdf", height = 4.5, width = 5)
+displayClusters2(W,group, color_group)
+dev.off()
+```
+
+```{r}
+displayClusters(W,group);
+#SNFNMI = Cal_NMI(group, truelabel)
+ConcordanceMatrix = concordanceNetworkNMI(list(W, W1,W2, W3), c);
+sum(ConcordanceMatrix)
+```
+
+```{r}
+write.csv(ConcordanceMatrix, "processing/concordance_matrix_3.csv")
+```
+
+
+```{r}
+library(ComplexHeatmap)
+
+pdf("results/figures/NMI_matrix_selection_clusters_3.pdf")
+col = colorRamp2(c(0, 0.1, 0.5), c("white", "#9999cc","#000080"))
+Heatmap(ConcordanceMatrix, cluster_rows = FALSE, col = col, cluster_columns = FALSE)
+dev.off()
+```
+
+```{r}
+n_clus <- 2:10
+x <- my_estimateNumberOfClustersGivenGraph(W, NUMC=n_clus)
+
+table_measures <- data.frame(cluster = n_clus, eigen_gap = x[[1]], rotation_cost = unlist(x[[2]]))
+```
+
+## figure eigen gap/ rotation cost
+```{r}
+scaleFactor <- max(table_measures$eigen_gap) / max(table_measures$rotation_cost)
+```
+
+```{r}
+ggplot(table_measures, aes(x=cluster)) +
+  geom_line(aes(y=eigen_gap), method="loess", col="blue", size=2) +
+  geom_line(aes(y=rotation_cost * scaleFactor), method="loess", col="red" , size=2) +
+  scale_y_continuous(name="eigen gap", sec.axis=sec_axis(~./scaleFactor, name="rotation cost"))+ 
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)), legend.position = "none") +
+  theme(
+    axis.title.y.left=element_text(color="blue"),
+    axis.text.y.left=element_text(color="blue"),
+    axis.title.y.right=element_text(color="red"),
+    axis.text.y.right=element_text(color="red")
+  )
+ggsave("results/figures/SNF_selection_clusters_3.pdf")
+```
+
+```{r}
+library(reshape2)
+W <- read.csv("/home/flomik/Desktop/Code-PHD/extra/COCOMO_txn_3/processing/SNF_2_cluster_input_Cytoscape_no_filter_3.csv")
+W$X <- NULL
+
+
+W <- dcast(W, Var2 ~ Var1)
+W[is.na(W)] <- 1
+
+rownames(W) <- W$Var2
+W$Var2 <- NULL
+
+for (i in 1:158){
+  for (j in 1:158){
+    if(W[i,j] == 0){
+      W[i,j] <- W[j,i]
+    }
+  }
+}
+```
+
+```{r}
+x
+```
+
+```{r}
+names_a <- x$names[match(colnames(W),x$names)]
+group <- x$cluster[match(colnames(W),x$names)]
+```
+
+```{r}
+colnames(W)
+```
+```{r}
+rownames(W)
+```
+
+## PCA
+```{r}
+pca= prcomp(W) 
+df_out <- as.data.frame(pca$x)
+df_out$group <- group
+```
+
+```{r}
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+barplot(project.pca.proportionvariances, cex.names=1, xlab=paste("Principal component (PC), 1-", length(pca$sdev)), ylab="Proportion of variation (%)", main="Scree plot", ylim=c(0,100))
+PCAloadings <- data.frame(Variables = rownames(pca$rotation), pca$rotation)
+PCAloadings_2 <- PCAloadings
+x <- abs(PCAloadings_2$PC1) < 0.15 & abs(PCAloadings_2$PC2) < 0.15
+PCAloadings_2$PC1[x] <- NA
+PCAloadings_2$PC2[x] <- NA
+PCAloadings_2$Variables[x] <- NA
+```
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+df_out$group <- factor(df_out$group)
+```
+
+```{r}
+ggplot(df_out)+
+    geom_point(aes(x=PC1,y=PC2, color=group, fill = group), size=4) +
+    theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))+ scale_color_manual(values = col)+ scale_fill_manual(values = col)+ scale_fill_manual(values = col)+ geom_density_2d(aes(x=PC1,y=PC2,color=group, fill = group))+xlim(-0.18, 0.22)+ylim(-0.2, 0.32)
+
+path_fig <- paste0("results/figures/PCA_SNF_fusion_2_density.pdf")
+dev.copy(pdf, path_fig, height = 4, width = 6)
+dev.off()
+```
+
+
+```{r}
+gg <- data.frame(cluster=factor(df_out$group), x=df_out$PC1, y=df_out$PC2)
+centroids <- aggregate(cbind(x,y)~cluster,data=gg,mean)
+gg <- merge(gg,centroids,by="cluster",suffixes=c("",".centroid"))
+
+ggplot(gg)+
+  geom_point(aes(x=x,y=y,color=cluster, fill = cluster), size=3)+
+  stat_ellipse(geom = "polygon", aes(x=x,y=y,color=cluster, fill = cluster), alpha = 0.3) +
+  geom_point(data=centroids, aes(x=x, y=y, color=cluster, fill = cluster), size = 5, alpha = 0.9, shape = 19)+ 
+  geom_segment(aes(x=x.centroid, y=y.centroid, xend=x, yend=y, color=cluster))+
+  theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+    theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0)))+ scale_color_manual(values=col)+ scale_fill_manual(values=col)
+
+path_fig <- paste0("results/figures/PCA_SNF_fusion_2.pdf")
+dev.copy(pdf, path_fig, height = 4, width = 6)
+dev.off()
+```
+```{r}
+library(Matrix)
+colnames(W) <- colnames(Dist1)
+rownames(W) <- colnames(Dist1)
+W[lower.tri(W)] <- 0 
+W <- melt(W)
+W <- data.frame(W[W$Var1 != W$Var2,])
+write.csv(W, "processing/SNF_2_cluster_input_Cytoscape_no_filter_3.csv")
+
+W <- read.csv("processing/SNF_2_cluster_input_Cytoscape_no_filter_3.csv")
+W <- W[W$value > 0.007,]
+nrow(W)
+write.csv(W, "processing/SNF_2_cluster_input_Cytoscape.csv")
+```
+
+

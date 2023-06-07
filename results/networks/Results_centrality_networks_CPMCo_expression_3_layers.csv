@@ -1,0 +1,11 @@
+Network_name,Connectivity,Number_community,N_metabolites,Clustering_coeff,Terms_Metabolites,Terms_Lipids,Terms_Microbiome,Prop_met,Prop_lip,Prop_mic
+pos_w,32.12,1,1107,,,Not,,341,Not,765
+pos_w,131.5,2,801,,Not,,Not,Not,794,Not
+pos_w,360.44,3,705,,,Not,,21,Not,683
+pos_w,304.54,4,658,,Not,,Not,Not,658,Not
+pos_w,296.79,5,369,,Not,,Not,Not,369,Not
+pos_w,45.67,6,282,,,Not,Not,271,Not,Not
+pos_w,66.38,7,222,,Not,,Not,Not,222,Not
+pos_w,112.27,8,187,,Not,,Not,Not,186,Not
+pos_w,28.98,9,114,,Not,Not,Not,106,Not,Not
+pos_w,65.93,10,91,0.85,Not,,Not,Not,91,Not

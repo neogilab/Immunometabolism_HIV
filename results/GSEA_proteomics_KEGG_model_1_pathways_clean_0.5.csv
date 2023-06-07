@@ -1,0 +1,55 @@
+"","X","Name","Stat..dist.dir.up.","p.adj..dist.dir.up.","Genes..up.","Stat..dist.dir.dn.","p.adj..dist.dir.dn.","Genes..down.","comp","sign","sub_2","pvalue","Nb"
+"41",29,"starch and sucrose metabolism",0.32653,0.49808,8,0.67347,1,5,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.49808,8
+"66",80,"insulin signaling pathway",0.36284,0.49496,24,0.63716,1,13,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.49496,24
+"95",40,"erbb signaling pathway",0.36096,0.4781,17,0.63904,1,8,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.4781,17
+"119",72,"b cell receptor signaling pathway",0.35236,0.45783,15,0.64764,1,9,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.45783,15
+"54",56,"vegf signaling pathway",0.33367,0.45608,15,0.66633,1,8,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.45608,15
+"2",28,"ppar signaling pathway",0.43539,0.45484,9,0.56461,1,6,"proteomics_monocytes_frac_HC_like_vs_At_risk","up","yes",0.45484,9
+"3",31,"calcium signaling pathway",0.42191,0.45412,9,0.57809,1,8,"proteomics_monocytes_frac_HC_like_vs_At_risk","up","yes",0.45412,9
+"14",66,"melanogenesis",0.39576,0.45412,7,0.60424,1,5,"proteomics_monocytes_frac_HC_like_vs_At_risk","up","yes",0.45412,7
+"126",801,"insulin signaling pathway",0.35321,0.43374,24,0.64679,1,13,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.43374,24
+"115",63,"complement and coagulation cascades",0.34346,0.42539,16,0.65654,1,9,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.42539,16
+"145",38,"ppar signaling pathway",0.5028,1,9,0.4972,0.37898,12,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.37898,12
+"141",282,"glutathione metabolism",0.50348,1,10,0.49652,0.37898,11,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.37898,11
+"118",701,"natural killer cell mediated cytotoxicity",0.34048,0.36106,22,0.65952,1,11,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.36106,22
+"127",81,"gnrh signaling pathway",0.32041,0.36106,16,0.67959,1,7,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.36106,16
+"22",281,"glutathione metabolism",0.61229,1,7,0.38771,0.35631,14,"proteomics_spermin_frac_CBoth-CControl","down","yes",0.35631,14
+"12",53,"hematopoietic cell lineage",0.39538,0.3544,10,0.60462,1,4,"proteomics_monocytes_frac_HC_like_vs_At_risk","up","yes",0.3544,10
+"154",392,"mapk signaling pathway",0.33441,0.35122,40,0.66559,1,10,"proteomics_spermin_frac_CSpermine-CControl","up","yes",0.35122,40
+"91",211,"pyrimidine metabolism",0.3104,0.33808,14,0.6896,1,5,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.33808,14
+"61",731,"fc epsilon ri signaling pathway",0.30927,0.31439,18,0.69073,1,7,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.31439,18
+"140",18,"fatty acid metabolism",0.51018,1,10,0.48982,0.30732,15,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.30732,15
+"51",531,"wnt signaling pathway",0.30793,0.29801,17,0.69207,1,7,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.29801,17
+"166",752,"leukocyte transendothelial migration",0.32077,0.27005,32,0.67923,1,8,"proteomics_spermin_frac_CSpermine-CControl","up","yes",0.27005,32
+"168",802,"insulin signaling pathway",0.31463,0.26129,28,0.68537,1,9,"proteomics_spermin_frac_CSpermine-CControl","up","yes",0.26129,28
+"142",30,"amino sugar and nucleotide sugar metabolism",0.53019,1,9,0.46981,0.24942,8,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.24942,8
+"108",561,"vegf signaling pathway",0.30141,0.23204,16,0.69859,1,7,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.23204,16
+"43",39,"mapk signaling pathway",0.33224,0.22047,34,0.66776,1,16,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.22047,34
+"164",631,"complement and coagulation cascades",0.28135,0.19435,19,0.71865,1,6,"proteomics_spermin_frac_CSpermine-CControl","up","yes",0.19435,19
+"38",21,"pyrimidine metabolism",0.26758,0.18528,15,0.73242,1,4,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.18528,15
+"67",84,"adipocytokine signaling pathway",0.22799,0.17324,11,0.77201,1,3,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.17324,11
+"92",291,"starch and sucrose metabolism",0.246,0.16878,10,0.754,1,3,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.16878,10
+"90",201,"purine metabolism",0.28966,0.16178,20,0.71034,1,7,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.16178,20
+"120",732,"fc epsilon ri signaling pathway",0.29077,0.16178,18,0.70923,1,7,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.16178,18
+"93",312,"inositol phosphate metabolism",0.23909,0.16178,11,0.76091,1,2,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.16178,11
+"128",841,"adipocytokine signaling pathway",0.23765,0.16178,11,0.76235,1,3,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.16178,11
+"82",23,"glycerophospholipid metabolism",0.20089,0.14375,10,0.79911,1,2,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.14375,10
+"105",532,"wnt signaling pathway",0.25517,0.124,16,0.74483,1,8,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.124,16
+"156",443,"phosphatidylinositol signaling system",0.24118,0.12216,16,0.75882,1,2,"proteomics_spermin_frac_CSpermine-CControl","up","yes",0.12216,16
+"42",311,"inositol phosphate metabolism",0.20206,0.11877,11,0.79794,1,2,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.11877,11
+"37",20,"purine metabolism",0.24792,0.086337,21,0.75208,1,6,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.086337,21
+"29",2,"glycerophospholipid metabolism",0.17393,0.086337,11,0.82607,1,1,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.086337,11
+"139",17,"galactose metabolism",0.60093,1,6,0.39907,0.085514,7,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.085514,7
+"46",431,"chemokine signaling pathway",0.29627,0.082599,36,0.70373,1,16,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.082599,36
+"98",432,"chemokine signaling pathway",0.27167,0.072882,39,0.72833,1,13,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.072882,39
+"94",391,"mapk signaling pathway",0.28244,0.064136,38,0.71756,1,12,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.064136,38
+"11",49,"complement and coagulation cascades",0.31775,0.042957,17,0.68225,1,9,"proteomics_monocytes_frac_HC_like_vs_At_risk","up","yes",0.042957,17
+"147",641,"antigen processing and presentation",0.57378,1,10,0.42622,0.035631,18,"proteomics_spermin_frac_CSpermine-CControl","down","yes",0.035631,18
+"122",751,"leukocyte transendothelial migration",0.24062,0.026723,31,0.75938,1,9,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.026723,31
+"63",75,"leukocyte transendothelial migration",0.22233,0.022906,31,0.77767,1,9,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.022906,31
+"44",41,"calcium signaling pathway",0.18074,0.016445,23,0.81926,1,4,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.016445,23
+"47",441,"phosphatidylinositol signaling system",0.14356,0.016445,16,0.85644,1,2,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.016445,16
+"36",19,"oxidative phosphorylation",0.18693,0.0097176,57,0.81307,1,12,"proteomics_spermin_frac_CBoth-CControl","up","yes",0.0097176,57
+"89",191,"oxidative phosphorylation",0.2107,0.0082225,57,0.7893,1,12,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.0082225,57
+"96",411,"calcium signaling pathway",0.15401,0.0082225,22,0.84599,1,5,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.0082225,22
+"99",442,"phosphatidylinositol signaling system",0.11982,0.0082225,16,0.88018,1,2,"proteomics_spermin_frac_CSpermidine-CControl","up","yes",0.0082225,16

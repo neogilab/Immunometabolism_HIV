@@ -1,0 +1,712 @@
+---
+title: "Seurat PBMCs"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+```{r}
+library(dplyr)
+library(Seurat)
+library(patchwork)
+```
+
+## data
+
+
+## Seurat tutorial
+tutorial -> https://satijalab.org/seurat/archive/v2.4/pbmc3k_tutorial.html
+
+
+
+```{r}
+name_ana <- "8k_pbmc_donor"
+```
+
+# We filter out cells that have unique gene counts over 2,500 or less than 200
+```{r}
+# Load the PBMC dataset
+pbmc.data <- Read10X(data.dir = "/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/sample_feature_bc_matrix")
+# Initialize the Seurat object with the raw (non-normalized data).
+pbmc <- CreateSeuratObject(counts = pbmc.data, project = "hg19", min.cells = 3, min.features = 200, max.features = 2500)
+pbmc
+```
+
+## calculate percentage mitonchondria
+```{r}
+# The [[ operator can add columns to object metadata. This is a great place to stash QC stats
+pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
+```
+
+## remove cell with more than 5 % mitochondria
+```{r}
+length(colnames(pbmc))
+to_remove <- rownames(pbmc@meta.data)[pbmc@meta.data$percent.mt > 7]
+pbmc<- pbmc[,!colnames(pbmc) %in% to_remove]
+length(colnames(pbmc))
+```
+## Normalizing the data
+After removing unwanted cells from the dataset, the next step is to normalize the data. By default, we employ a global-scaling normalization method “LogNormalize” that normalizes the gene expression measurements for each cell by the total expression, multiplies this by a scale factor (10,000 by default), and log-transforms the result.
+```{r}
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+```
+
+## Detection of variable genes across the single cells
+Seurat calculates highly variable genes and focuses on these for downstream analysis. FindVariableGenes calculates the average expression and dispersion for each gene, places these genes into bins, and then calculates a z-score for dispersion within each bin. This helps control for the relationship between variability and average expression. This function is unchanged from (Macosko et al.), but new methods for variable gene expression identification are coming soon. We suggest that users set these parameters to mark visual outliers on the dispersion plot, but the exact parameter settings may vary based on the data type, heterogeneity in the sample, and normalization strategy. The parameters here identify ~2,000 variable genes, and represent typical parameter settings for UMI data that is normalized to a total of 1e4 molecules.
+```{r}
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
+```
+## Scaling the data and removing unwanted sources of variation
+Your single cell dataset likely contains ‘uninteresting’ sources of variation. This could include not only technical noise, but batch effects, or even biological sources of variation (cell cycle stage). As suggested in Buettner et al, NBT, 2015, regressing these signals out of the analysis can improve downstream dimensionality reduction and clustering. To mitigate the effect of these signals, Seurat constructs linear models to predict gene expression based on user-defined variables. The scaled z-scored residuals of these models are stored in the scale.data slot, and are used for dimensionality reduction and clustering.
+
+We can regress out cell-cell variation in gene expression driven by batch (if applicable), cell alignment rate (as provided by Drop-seq tools for Drop-seq data), the number of detected molecules, and mitochondrial gene expression. For cycling cells, we can also learn a ‘cell-cycle’ score (see example here) and regress this out as well. In this simple example here for post-mitotic blood cells, we regress on the number of detected molecules per cell as well as the percentage mitochondrial gene content.
+
+Seurat v2.0 implements this regression as part of the data scaling process. Therefore, the RegressOut function has been deprecated, and replaced with the vars.to.regress argument in ScaleData.
+```{r}
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+```
+
+## Perform linear dimensional reduction
+Next we perform PCA on the scaled data. By default, the genes in object@var.genes are used as input, but can be defined using pc.genes. We have typically found that running dimensionality reduction on highly variable genes can improve performance. However, with UMI data - particularly after regressing out technical variables, we often see that PCA returns similar (albeit slower) results when run on much larger subsets of genes, including the whole transcriptome.
+
+```{r}
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+```
+
+## Determine statistically significant principal components
+To overcome the extensive technical noise in any single gene for scRNA-seq data, Seurat clusters cells based on their PCA scores, with each PC essentially representing a ‘metagene’ that combines information across a correlated gene set. Determining how many PCs to include downstream is therefore an important step.
+
+In Macosko et al, we implemented a resampling test inspired by the jackStraw procedure. We randomly permute a subset of the data (1% by default) and rerun PCA, constructing a ‘null distribution’ of gene scores, and repeat this procedure. We identify ‘significant’ PCs as those who have a strong enrichment of low p-value genes.
+```{r}
+# NOTE: This process can take a long time for big datasets, comment out for expediency. More
+# approximate techniques such as those implemented in ElbowPlot() can be used to reduce
+# computation time
+pbmc <- JackStraw(pbmc, num.replicate = 100)
+pbmc <- ScoreJackStraw(pbmc, dims = 1:20)
+```
+## should be above the line to be significant
+```{r}
+JackStrawPlot(object = pbmc)
+pdf(paste0("results/figures/SCT/", name_ana, "_JackStrawPlot.pdf"))
+JackStrawPlot(object = pbmc)
+dev.off()
+```
+
+## Cluster the cells
+Seurat now includes an graph-based clustering approach compared to (Macosko et al.). Importantly, the distance metric which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data [SNN-Cliq, Xu and Su, Bioinformatics, 2015] and CyTOF data [PhenoGraph, Levine et al., Cell, 2015]. Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar gene expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’. As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). To cluster the cells, we apply modularity optimization techniques such as the Louvain algorithm (default) or SLM [SLM, Blondel et al., Journal of Statistical Mechanics], to iteratively group cells together, with the goal of optimizing the standard modularity function.
+
+The FindClusters function implements the procedure, and contains a resolution parameter that sets the ‘granularity’ of the downstream clustering, with increased values leading to a greater number of clusters. We find that setting this parameter between 0.6-1.2 typically returns good results for single cell datasets of around 3K cells. Optimal resolution often increases for larger datasets. The clusters are saved in the object@ident slot.
+
+```{r}
+pbmc <- FindNeighbors(pbmc, dims = 1:5)
+pbmc <- FindClusters(pbmc, resolution = 0.5)
+```
+pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
+# note that you can set do.label=T to help label individual clusters
+TSNEPlot(object = pbmc)
+```{r}
+# If you haven't installed UMAP, you can do so via reticulate::py_install(packages =
+# 'umap-learn')
+pbmc <- RunUMAP(pbmc, dims = 1:5)
+pbmc <- RunTSNE(pbmc, dims = 1:5)
+```
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_tsne_clusters.pdf"), width = 5, height = 3)
+DimPlot(pbmc, reduction = "tsne", group.by = "seurat_clusters")
+dev.off()
+```
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "umap")
+
+pdf(paste("results/figures/SCT/", name_ana, "_UMAP_clusters.pdf"), width = 5, height = 3)
+DimPlot(pbmc, reduction = "umap", group.by = "seurat_clusters")
+dev.off()
+```
+
+
+```{r}
+saveRDS(pbmc, file = paste("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/", name_ana, ".rds"))
+```
+
+```{r}
+pbmc <- readRDS(paste("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/", name_ana, ".rds"))
+```
+
+Cluster ID	Markers	Cell Type
+0	IL7R, CCR7	Naive CD4+ T
+1	CD14, LYZ	CD14+ Mono
+2	IL7R, S100A4	Memory CD4+
+3	MS4A1	B
+4	CD8A	CD8+ T
+5	FCGR3A, MS4A7	FCGR3A+ Mono
+6	GNLY, NKG7	NK
+7	FCER1A, CST3	DC
+8	PPBP	Platelet
+
+```{r}
+FeaturePlot(pbmc, features = c("CD3D"), reduction = "tsne")
+```
+```{r}
+## NK cells
+### activated = CD69
+FeaturePlot(pbmc, features = c("NKG7", "GNLY"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_NK_cells.pdf"))
+FeaturePlot(pbmc, features = c("NKG7", "GNLY"))
+dev.off()
+```
+```{r}
+## T-CD4 Memory
+FeaturePlot(pbmc, features = c("CD4","IL7R", "S100A4"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_CD4_memory.pdf"))
+FeaturePlot(pbmc, features = c("CD4","IL7R", "S100A4"))
+dev.off()
+```
+
+```{r}
+## T-CD4 Naive(CD8-, IL2RA-")
+FeaturePlot(pbmc, features = c("IL7R", "CCR7"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_CD4_naive.pdf"))
+FeaturePlot(pbmc, features = c("CD4","IL7R", "CCR7"))
+dev.off()
+```
+
+```{r}
+## T-CD8 (CD4-)
+FeaturePlot(pbmc, features = c("CD8A", "CD4"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_CD8.pdf"))
+FeaturePlot(pbmc, features = c("CD8A", "CD4"))
+dev.off()
+```
+```{r}
+## B cells
+FeaturePlot(pbmc, features = c("CD19", "MS4A1"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_B_cells.pdf"))
+FeaturePlot(pbmc, features = c("CD19", "MS4A1"))
+dev.off()
+```
+
+
+```{r}
+## monocytes CD14 (CD19-)
+### CD86 = macrophage
+FeaturePlot(pbmc, features = c("LYZ", "CD14"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_monocytes_CD14.pdf"))
+FeaturePlot(pbmc, features = c("LYZ", "CD14"))
+dev.off()
+```
+
+```{r}
+## monocytes CD16 (CD19-)
+FeaturePlot(pbmc, features = c("CD19", "FCGR3A"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_monocytes_CD16.pdf"))
+FeaturePlot(pbmc, features = c("CD19", "FCGR3A", "MS4A7"))
+dev.off()
+```
+```{r}
+## dentritic cells (CD14-)
+FeaturePlot(pbmc, features = c("FCER1A", "CST3", "CD14"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_dendritic_cells.pdf"))
+FeaturePlot(pbmc, features = c("FCER1A", "CST3", "CD14"))
+dev.off()
+```
+
+```{r}
+## platelets
+FeaturePlot(pbmc, features = c("PPBP"), reduction = "tsne")
+
+pdf(paste("results/figures/SCT/", name_ana, "_feature_plot_platelet.pdf"))
+FeaturePlot(pbmc, features = c("PPBP"))
+dev.off()
+```
+```{r}
+FeaturePlot(pbmc, features = c("CD8A", "CD4"), reduction = "tsne")
+DimPlot(pbmc, reduction = "tsne")
+```
+
+```{r}
+DimPlot(pbmc, reduction = "tsne", group.by = "seurat_clusters")
+```
+
+```{r}
+new.cluster.ids <- c("CD4 T", "CD4 T","CD14+ Mono", "CD8 T", "CD8 T",
+                    "CD14+ Mono", "B", "CD8 T", "NK",
+                    "CD16+ Mono", "DC",  "Platelets", "CD4 T", "CD4 T","CD4 T")
+```
+
+```{r}
+names(new.cluster.ids) <- levels(pbmc)
+pbmc <- RenameIdents(pbmc, new.cluster.ids)
+DimPlot(pbmc, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
+```
+
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "tsne")
+
+pdf(paste0("results/figures/SCT/", name_ana, "_tsne_clusters_cell_type.pdf"), height = 3, width = 5)
+DimPlot(pbmc, reduction = "tsne")
+dev.off()
+```
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "umap")
+
+pdf(paste0("results/figures/SCT/", name_ana, "_UMAP_clusters.pdf"), width = 5, height = 3)
+DimPlot(pbmc, reduction = "umap")
+dev.off()
+```
+
+```{r}
+# find markers for every cluster compared to all remaining cells, report only the positive
+# ones
+pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+
+pbmc.markers %>%
+    group_by(cluster) %>%
+    slice_max(n = 2, order_by = avg_log2FC)
+```
+
+
+```{r}
+saveRDS(pbmc, file = paste("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/", name_ana, "_with_cell_type.rds"))
+```
+
+```{r}
+pbmc <- readRDS(paste("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/SCT/", name_ana, "_with_cell_type.rds"))
+```
+
+```{r}
+library(RColorBrewer)
+col <- brewer.pal(9, "Dark2")
+col
+```
+```{r}
+col <- c(col, "grey")
+```
+
+
+```{r}
+# note that you can set `label = TRUE` or use the LabelClusters function to help label
+# individual clusters
+DimPlot(pbmc, reduction = "tsne")
+
+pdf(paste0("results/figures/SCT/", name_ana, "_tsne_clusters_cell_type.pdf"), height = 3, width = 5)
+DimPlot(pbmc, reduction = "tsne", cols = col)
+dev.off()
+```
+
+```{r}
+write.csv(pbmc.markers, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_differences_cell_types.csv"))
+```
+
+```{r}
+pbmc.markers <- read.csv(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_differences_cell_types.csv"))
+```
+
+
+```{r}
+cell_age <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/senescence/signatures_senescence.csv", sep = ";")
+cell_age <- cell_age$gene_symbol
+```
+
+```{r}
+sen_2 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/senescence/SASP_reactome.tsv")
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+
+sasap <- sen_2$Gene_name
+```
+
+```{r}
+csgene <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/senescence/csgene_human.txt")
+csgene <- csgene$GeneSymb
+```
+
+```{r}
+sen <- c(cell_age, sasap, csgene)
+```
+
+```{r}
+pbmc.markers_filt <- pbmc.markers[pbmc.markers$p_val_adj < 0.05,]
+pbmc.markers_filt <- pbmc.markers[!pbmc.markers$cluster %in% c("Other", "Platelets"),]
+pbmc.markers_filt_sasap <- pbmc.markers_filt[pbmc.markers_filt$gene %in% sen,]
+pbmc.markers_filt_sasap$SASAP <- ifelse(pbmc.markers_filt_sasap$gene %in% sasap, "SASAP", NA)
+pbmc.markers_filt_sasap$cell_age <- ifelse(pbmc.markers_filt_sasap$gene %in% cell_age, "cell_age", NA)
+pbmc.markers_filt_sasap$GSGene <- ifelse(pbmc.markers_filt_sasap$gene %in% csgene, "CSGene", NA)
+write.csv(pbmc.markers_filt_sasap, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_senescence_all_cell_types.csv"))
+```
+
+```{r}
+pbmc.markers_filt_sasap_2 <- pbmc.markers_filt[pbmc.markers_filt$gene %in% cell_age,]
+pbmc.markers_filt_sasap_2$cluster <- factor(pbmc.markers_filt_sasap_2$cluster)
+x <- data.frame(table(pbmc.markers_filt_sasap_2$cluster))
+
+library(ggplot2)
+library(dplyr)
+
+# Hole size
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/cell_age_cell_types.pdf")
+```
+
+```{r}
+pbmc.markers_filt_sasap_2 <- pbmc.markers_filt[pbmc.markers_filt$gene %in% sasap,]
+pbmc.markers_filt_sasap_2$cluster <- factor(pbmc.markers_filt_sasap_2$cluster)
+x <- data.frame(table(pbmc.markers_filt_sasap_2$cluster))
+
+library(ggplot2)
+library(dplyr)
+
+# Hole size
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/sasap_cell_types.pdf")
+```
+
+```{r}
+pbmc.markers_filt_sasap$cluster <- factor(pbmc.markers_filt_sasap$cluster)
+x <- data.frame(table(pbmc.markers_filt_sasap$cluster))
+
+library(ggplot2)
+library(dplyr)
+
+# Hole size
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/senescence_cell_types.pdf")
+```
+
+
+```{r}
+dge <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+
+#
+pbmc.markers_filt_sasap <- pbmc.markers_filt_sasap[pbmc.markers_filt_sasap$gene %in% dge$BIOCHEMICAL,]
+
+write.csv(pbmc.markers_filt_sasap, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_senescence_all_cell_types_filt.csv"))
+```
+
+```{r}
+pbmc.markers_filt_sasap$cluster <- factor(pbmc.markers_filt_sasap$cluster)
+x <- data.frame(table(pbmc.markers_filt_sasap$cluster))
+x$name <- "senescence"
+col_2 <- c(col[1], col[2], col[6], col[5], col[4], col[7])
+x$Var1 <- factor(x$Var1, levels = c("CD4 T", "CD8 T", "CD14+ Mono", "CD16+ Mono", "NK", "B", "DC"))
+
+# Stacked + percent
+ggplot(x, aes(fill=Var1, y=Freq, x=name)) + 
+    geom_bar(stat="identity")+theme(axis.line=element_blank(),
+      axis.ticks=element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      panel.background=element_blank(),
+      panel.border=element_blank(),
+      panel.grid.major=element_blank(),
+      panel.grid.minor=element_blank(),
+      plot.background=element_blank())+scale_fill_manual(values = col_2)+ geom_text(aes(label=ifelse(Freq >= 5, round(Freq, 0), "")), position=position_stack(vjust=0.5), colour="black")
+
+ggsave("results/figures/senescence_barplot.pdf", width = 3, height = 4)
+```
+
+```{r}
+
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/senescence_cell_types_sign_C1_C2.pdf")
+```
+
+
+
+## barplot cell age
+```{r}
+pbmc.markers_filt_sasap_2 <- pbmc.markers_filt_sasap[pbmc.markers_filt_sasap$gene %in% cell_age,]
+
+write.csv(pbmc.markers_filt_sasap_2, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_cell_age_all_cell_types_filt.csv"))
+
+pbmc.markers_filt_sasap_2$cluster <- factor(pbmc.markers_filt_sasap_2$cluster)
+```
+
+```{r}
+x <- data.frame(table(pbmc.markers_filt_sasap_2$cluster))
+x$name <- "Cell_age"
+col_2 <- c(col[1], col[2], col[6], col[5], col[4], col[7])
+x$Var1 <- factor(x$Var1, levels = c("CD4 T", "CD8 T", "CD14+ Mono", "CD16+ Mono", "NK", "B", "DC"))
+
+# Stacked + percent
+ggplot(x, aes(fill=Var1, y=Freq, x=name)) + 
+    geom_bar(stat="identity")+theme(axis.line=element_blank(),
+      axis.ticks=element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      panel.background=element_blank(),
+      panel.border=element_blank(),
+      panel.grid.major=element_blank(),
+      panel.grid.minor=element_blank(),
+      plot.background=element_blank())+scale_fill_manual(values = col_2)+ geom_text(aes(label=ifelse(Freq >= 5, round(Freq, 0), "")), position=position_stack(vjust=0.5), colour="black")
+
+ggsave("results/figures/cell_age_barplot.pdf", width = 3, height = 4)
+```
+
+```{r}
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/cell_age_cell_types_sign_C1_C2.pdf")
+```
+
+```{r}
+pbmc.markers_filt_sasap_2 <- pbmc.markers_filt_sasap[pbmc.markers_filt_sasap$gene %in% sasap,]
+
+write.csv(pbmc.markers_filt_sasap_2, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_SASAP_all_cell_types_filt.csv"))
+pbmc.markers_filt_sasap_2$cluster <- factor(pbmc.markers_filt_sasap_2$cluster)
+x <- data.frame(table(pbmc.markers_filt_sasap_2$cluster))
+```
+
+
+```{r}
+x <- data.frame(table(pbmc.markers_filt_sasap_2$cluster))
+x$name <- "SASAP"
+col_2 <- c(col[1], col[2], col[6], col[5], col[4], col[7])
+x$Var1 <- factor(x$Var1, levels = c("CD4 T", "CD8 T", "CD14+ Mono", "CD16+ Mono", "NK", "B", "DC"))
+
+# Stacked + percent
+ggplot(x, aes(fill=Var1, y=Freq, x=name)) + 
+    geom_bar(stat="identity")+theme(axis.line=element_blank(),
+      axis.ticks=element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      panel.background=element_blank(),
+      panel.border=element_blank(),
+      panel.grid.major=element_blank(),
+      panel.grid.minor=element_blank(),
+      plot.background=element_blank())+scale_fill_manual(values = col_2)+ geom_text(aes(label=ifelse(Freq >= 5, round(Freq, 0), "")), position=position_stack(vjust=0.5), colour="black")
+
+ggsave("results/figures/SASAP_barplot.pdf", width = 3, height = 4)
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+
+hsize <- 3
+
+ggplot(x, aes(x = hsize, y = Freq, fill = Var1)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Freq),
+             position = position_stack(vjust = 0.5)) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "GnBu") +
+  xlim(c(0.2, hsize + 0.5)) +
+  theme(panel.background = element_rect(fill = "white"),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+ggsave("results/figures/sasap_cell_types_sign_C1_C2.pdf")
+```
+
+
+
+```{r}
+pbmc.markers_filt_sasap$cluster <- factor(pbmc.markers_filt_sasap$cluster)
+```
+
+```{r}
+driver_genes <- c("PLPBP", "TXLNA", "LATS1", "TBCB", "GGCT")
+
+pbmc.markers_filt_driver <- pbmc.markers_filt[pbmc.markers_filt$gene %in% driver_genes,]
+
+driver_genes[driver_genes %in% sen]
+```
+```{r}
+pbmc.markers_filt_sasap <- pbmc.markers_filt_sasap[abs(pbmc.markers_filt_sasap$avg_log2FC) > 1,]
+
+pbmc.markers_filt_sasap <- pbmc.markers_filt_sasap[order(pbmc.markers_filt_sasap$avg_log2FC, decreasing = TRUE),]
+pbmc.markers_filt_sasap$rank <- 1:21
+```
+
+```{r}
+write.csv(pbmc.markers_filt_sasap, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_top_10_markers.csv"))
+```
+
+```{r}
+# How many cells are in each cluster
+prop <- data.frame(table(Idents(pbmc)))
+write.csv(prop, paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/SCT/", name_ana, "_numbers_cell_types.csv"))
+```
+
+```{r}
+library(ggplot2)
+library("gridExtra")
+```
+
+```{r}
+library(viridis)
+col <- c("lightgrey", viridis(7))
+```
+
+```{r}
+x <- FeaturePlot(pbmc, features = "EPSTI1", reduction = "tsne", cols = col)
+ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/EPSTI1_feature_plot.pdf"), height = 3, width = 5)
+```
+
+```{r}
+list_x <- list()
+list_y <- list()
+a <- 1
+
+for (i in pbmc.markers_filt_sasap$gene) {
+  print(i)
+  x <- FeaturePlot(pbmc, features = i, reduction = "tsne", cols = col)
+  list_x[[a]] <- x
+  ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/", name_ana, "_feature_plot_", i, ".pdf"), height = 3, width = 3.5)
+  y <- VlnPlot(object = pbmc, features = i, cols = col)
+  list_y[[a]] <- y
+  #ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/", name_ana, "_violon_plot_", i, ".pdf"), height = 3, width = 6)
+  
+  a <- a + 1
+  #pdf(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/gene_expression/", name_ana, "feature_violon_plot_", i, ".pdf"), height = 3, width = 10)
+  #grid.arrange(x, y, ncol = 2, nrow = 1)
+  #dev.off()
+  
+}
+```
+```{r}
+pdf(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/tsne_top_10_genes.pdf"), height = 9, width = 26)
+FeaturePlot(pbmc, features = pbmc.markers_filt_sasap$gene[1:10], reduction = "tsne", keep.scale = "feature", ncol = 5, coord.fixed = TRUE, repel = TRUE)
+dev.off()
+```
+
+```{r}
+levels(pbmc@active.ident) <- rev(c("CD8 T","CD4 T", "CD14+ Mono", "CD16+ Mono", "DC", "NK", "B", "Platelets", "Others"))
+```
+
+```{r}
+col <- brewer.pal(10, "Set3")
+```
+
+```{r}
+pdf(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/violin_plot_top_10_genes.pdf"), height = 5, width = 12)
+VlnPlot(object = pbmc, features = pbmc.markers_filt_sasap$gene[1:10], stack = TRUE , idents = c("CD8 T","CD4 T", "CD14+ Mono", "CD16+ Mono", "DC", "NK", "B"), same.y.lims = TRUE, cols = col, pt.size = 1)
+dev.off()
+```
+
+
+
+```{r}
+x <- unique(pbmc@active.ident)
+```
+
+```{r}
+col2 <- brewer.pal(15, "Set2")
+```
+
+```{r}
+y
+ggplot2::ggsave(paste0("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/SCT/", name_ana, "_violon_plot_global.pdf"), width = 10)
+```
+
+

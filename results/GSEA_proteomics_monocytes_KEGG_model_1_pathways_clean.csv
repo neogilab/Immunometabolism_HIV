@@ -1,0 +1,16 @@
+"","X","Name","Stat..dist.dir.up.","p.adj..dist.dir.up.","Genes..up.","Stat..dist.dir.dn.","p.adj..dist.dir.dn.","Genes..down.","comp","sign","pvalue","Nb"
+"20",57,"FC_EPSILON_RI_SIGNALING_PATHWAY",2.5911e-14,0.099132,19,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.099132,19
+"4",13,"FOCAL_ADHESION",9.4287e-18,0.08991,34,1,1,0,"proteomics_monocytes_CB","up",0.08991,34
+"3",9,"MAPK_SIGNALING_PATHWAY",3.0096e-18,0.08991,16,1,1,0,"proteomics_monocytes_CB","up",0.08991,16
+"15",30,"ERBB_SIGNALING_PATHWAY",1.037e-14,0.064436,15,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.064436,15
+"18",44,"ECM_RECEPTOR_INTERACTION",1.7385e-14,0.061367,19,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.061367,19
+"22",65,"GNRH_SIGNALING_PATHWAY",1.0737e-14,0.061367,16,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.061367,16
+"21",62,"LONG_TERM_DEPRESSION",4.7875e-15,0.051548,15,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.051548,15
+"17",40,"TGF_BETA_SIGNALING_PATHWAY",2.8195e-15,0.051548,10,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.051548,10
+"14",10,"CITRATE_CYCLE_TCA_CYCLE",3.7795e-15,0.042957,21,1,1,0,"proteomics_norm_monocytes_frac_CB","up",0.042957,21
+"10",131,"FOCAL_ADHESION",2.944e-19,0.035964,34,1,1,0,"proteomics_norm_monocytes_CB","up",0.035964,34
+"6",20,"LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION",2.186e-18,0.035964,21,1,1,0,"proteomics_monocytes_CB","up",0.035964,21
+"12",201,"LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION",8.5389e-20,0.035964,21,1,1,0,"proteomics_norm_monocytes_CB","up",0.035964,21
+"9",91,"MAPK_SIGNALING_PATHWAY",6.7828e-20,0.035964,16,1,1,0,"proteomics_norm_monocytes_CB","up",0.035964,16
+"5",14,"ECM_RECEPTOR_INTERACTION",3.1065e-19,0.026973,12,1,1,0,"proteomics_monocytes_CB","up",0.026973,12
+"11",141,"ECM_RECEPTOR_INTERACTION",1.4473e-20,0.026973,12,1,1,0,"proteomics_norm_monocytes_CB","up",0.026973,12

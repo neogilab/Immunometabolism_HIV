@@ -1,0 +1,116 @@
+---
+title: "Liam writing"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(DESeq2)
+library(dplyr)
+library(SNFtool)
+library(xlsx)
+library(ggplot2)
+library(corrr)
+library(mygene)
+library(edgeR)
+```
+
+```{r}
+col <- c("#878782",	"#761212")
+```
+
+```{r}
+hb <- read.csv("/home/flomik/Desktop/Code-PHD/Aging_COCOMO/manuscript/data_HB_COCOMO_patients.csv")
+```
+
+### olink
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv", row.names = 1)
+clinical_2 <- clinical[,c(1:2)]
+data_olink$COCOMO_ID <- rownames(data_olink)
+data <- merge(clinical_2, data_olink, by = "COCOMO_ID")
+data <- data[, colnames(data) %in% c("COCOMO_ID", "cluster","NPTX1")]
+```
+
+```{r}
+my_comparisons <- list(c("HC-like", "At-risk"))
+```
+
+```{r}
+data$cluster <- ifelse(data$cluster == 1 , "HC-like", "At-risk")
+data$cluster <- factor(data$cluster, levels = c("HC-like", "At-risk"))
+```
+
+```{r}
+a <- ggplot(data, aes(x = cluster, y = data[,3], fill = cluster)) + 
+    geom_boxplot(position=position_dodge(1), size = 0.1, alpha =0.8, outlier.shape = NA)+ 
+    labs(x="Cluster", y = "Q15818")+ 
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size=16, face = "bold",color="black"),
+          axis.text = element_text(color="black",size=16, face = "bold"),
+          axis.text.x =element_text(color="black",size=16, face = "bold"),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank(),
+          strip.text.x = element_text(size = 9,color="black"),
+          legend.position="none",
+          panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+          plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+          legend.background=element_rect(fill = alpha("white", 0))) + 
+    geom_jitter(shape=16, size=1, color="black", position=position_jitter(0.05))+ scale_fill_manual(values=col)+ 
+  stat_compare_means(comparisons = my_comparisons)
+  a
+  ggsave(paste0("results/figures/boxplots/Liam_Q15818_clusters.pdf"), height = 4, width = 3)
+```
+```{r}
+names(clinical_2)[1] <- "X"
+clinical <- merge(clinical_2, hb, by = "X")
+clinical$X.1 <- NULL
+```
+```{r}
+clinical[is.na(clinical)] <- "NA"
+```
+
+```{r}
+clinical$cluster <- ifelse(clinical$cluster == 1 , "HC-like", "At-risk")
+clinical$cluster <- factor(clinical$cluster, levels = c("HC-like", "At-risk"))
+```
+
+```{r}
+for (i in 3:ncol(clinical)) {
+  data_3 <- clinical[,c(which(colnames(clinical) == "cluster"), i)]
+  data_3 <- data.frame(table(data_3))
+  m1 <- rbind(table(clinical$cluster, clinical[,i]))
+  f <- chisq.test(m1)
+  print(f)
+  
+  ggplot(data_3, aes(fill=data_3[,2], y=Freq, x=cluster)) + 
+    geom_bar(position = 'dodge', stat="identity")+theme_classic() + labs(fill = colnames(data_3)[2])+
+  geom_text(aes(label=Freq), position=position_dodge(width=0.9), vjust=-0.25)
+  ggsave(paste0("results/figures/barplot_HB_",colnames(data_3)[2],".pdf"))
+}
+```
+
+```{r}
+
+```
+
+
+

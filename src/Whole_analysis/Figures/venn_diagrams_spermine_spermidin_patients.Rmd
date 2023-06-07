@@ -1,0 +1,205 @@
+---
+title: "Venn diagrams overlaping"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+dge_1 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+dge_1 <- dge_1[!is.na(dge_1$BIOCHEMICAL),]
+```
+
+```{r}
+dge_2 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/LIMMA/LIMMA_spermin_proteomics_frac_filt.csv", sep = " ")
+dge_2 <- dge_2[!is.na(dge_2$BIOCHEMICAL),]
+```
+
+```{r}
+table(dge_2$Comp)
+```
+
+```{r}
+spermidine_up <- as.vector(dge_2$Gene_name[dge_2$logFC > 0 & dge_2$Comp == "CSpermidine-CControl"])
+spermidine_down <- as.vector(dge_2$Gene_name[dge_2$logFC < 0 & dge_2$Comp == "CSpermidine-CControl"])
+at_risk_up <- as.vector(dge_1$BIOCHEMICAL[dge_1$logFC > 0])
+at_risk_down <- as.vector(dge_1$BIOCHEMICAL[dge_1$logFC < 0])
+```
+
+```{r}
+spermidine <- as.vector(dge_2$Gene_name[dge_2$Comp == "CSpermidine-CControl"])
+
+both <- as.vector(dge_2$Gene_name[dge_2$Comp == "CBoth-CControl"])
+```
+
+## venn diagrams R
+```{r}
+x <- list( spermidine_up = spermidine_up,
+           spermidine_down = spermidine_down,
+           at_risk_patients_up = at_risk_up)
+```
+
+```{r}
+overlap_up_spermidine_up_at_risk <- x$spermidine_up[x$spermidine_up %in% x$at_risk_patients_up]
+y <- x$spermidine_up[x$spermidine_up %in% x$at_risk_patients_up]
+```
+
+```{r}
+write.csv(y, "results/proteomics_overlap_up_spermidine_up_at_risk.csv")
+```
+
+
+```{r}
+library(nVennR)
+myV <- plotVenn(x)
+showSVG(myV, opacity=0.2, outFile = "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_spermidine_at_risk.svg", setColors=c("#EFC000FF", "#868686FF", "#CD534CFF"))
+```
+
+## venn patients and spermidine
+```{r}
+library(ggvenn)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+ggsave("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_spermidine_at_risk.pdf")
+```
+## venn diagrams R
+```{r}
+x <- list( spermidine = spermidine,
+           both = both)
+```
+
+
+```{r}
+library(nVennR)
+myV <- plotVenn(x)
+showSVG(myV, opacity=0.2, outFile = "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_spermidine_both.svg", setColors=c("#EFC000FF", "#868686FF", "#CD534CFF"))
+```
+
+## venn venn and spermidine
+```{r}
+library(ggvenn)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+ggsave("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_spermidine_both.pdf")
+```
+
+```{r}
+overlap_both_spermidine <- x$spermidine[x$spermidine %in% x$both]
+y <- x$spermidine[x$spermidine %in% x$both]
+```
+
+```{r}
+write.csv(y, "results/proteomics_overlap_both_spermidine.csv")
+```
+
+## venn diagrams R
+```{r}
+x <- list( overlap_both_spermidine = overlap_both_spermidine,
+           overlap_up_spermidine_up_at_risk = overlap_up_spermidine_up_at_risk)
+```
+
+
+```{r}
+library(nVennR)
+myV <- plotVenn(x)
+showSVG(myV, opacity=0.2, outFile = "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_overlap_up_patients_spermidine_vs_spermidine_both.svg", setColors=c("#EFC000FF", "#868686FF", "#CD534CFF"))
+```
+
+```{r}
+y <- x$overlap_both_spermidine[x$overlap_both_spermidine %in% x$overlap_up_spermidine_up_at_risk]
+```
+
+```{r}
+write.csv(y, "results/proteomics_up_patients_spermidine_vs_spermidine_both.csv")
+```
+
+## venn venn and spermidine
+```{r}
+library(ggvenn)
+ggvenn(
+  x, 
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"),
+  stroke_size = 0.5, set_name_size = 4
+  )
+ggsave("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/figures/venn_diagram_up_patients_spermidine_vs_spermidine_both.pdf")
+```
+## pathways
+```{r}
+path_1 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/KEGG_2021_pathways_overlap_sperminde_both_up_spermidine_at_risk.txt")
+path_1 <- path_1[path_1$Adjusted.P.value < 0.1,]
+path_1$Comp <- "up_spermidine_patients"
+path_2 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/KEGG_pathways_spermidine_both.txt")
+path_2 <- path_2[path_2$Adjusted.P.value < 0.005,]
+path_2$Comp <- "spermidine_both"
+path_3 <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/GSEA/KEGG_pathways_spermidine_up_patients_at_risk_up.txt")
+path_3 <- path_3[path_3$Adjusted.P.value < 0.1,]
+path_3$Comp <- "overlap_2_comp"
+
+gset2 <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/GSEA/KEGG_1_3_5.gmt", sep = "\t", header = FALSE)
+```
+
+```{r}
+path <- rbind(path_1, path_2, path_3)
+table_global_2 <- path[,c(1, 2, 4, 8, 10)]
+
+table_global_2$Term <- tolower(table_global_2$Term)
+
+table_global_2$sub_2 <- ifelse(table_global_2$Term %in% gset2$V1, "yes", "no")
+table_global_2 <- table_global_2[table_global_2$sub_2 == "yes",]
+
+table(table_global_2$Comp)
+
+table_global_2$Nb <- gsub("\\/.*","",table_global_2$Overlap)
+table_global_2$Nb <- as.numeric(table_global_2$Nb)
+
+table_model_4 <- table_global_2[table_global_2$Nb > 5,]
+
+table_model_4 <- table_model_4[!table_model_4$Term %in% c("cardiac muscle contraction", "vascular smooth muscle contraction", "axon guidance", "long-term depression", "oxytocin signaling pathway"),]
+table_model_4 <- table_model_4[order(table_model_4$Adjusted.P.value, decreasing = TRUE),]
+```
+```{r}
+table(table_model_4$Comp)
+```
+
+```{r}
+write.csv(table_model_4, paste0("results/proteomics_comparisons_patients_spermidine_pathways_clean.csv"))
+```
+
+## figures
+## bubble plot horizontal
+
+```{r}
+colors <- c("#b22222", "#177c7c")
+library(ggrepel)
+library(viridis)
+```
+
+```{r}
+table_model_4$Comp <- factor(table_model_4$Comp, levels = c("spermidine_both", "up_spermidine_patients", "overlap_2_comp"))
+```
+
+```{r}
+a <- ggplot(table_model_4, aes(y=Term,  x= Comp, size = Nb, color = Nb))+geom_point()+theme_light()+ labs(title="", x="", y="", fill="")+ theme(
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())+ylab("KEGG Terms")+xlab("Comparisons")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ scale_color_viridis()
+
+a
+ggsave(paste0("results/figures/comparisons_patients_spermidine_bubble_plot_0.1_nb_10.pdf"), height = 10, width = 6)
+```
+

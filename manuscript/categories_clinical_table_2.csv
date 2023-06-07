@@ -1,0 +1,157 @@
+"","Name","Parameter","cat","Dictionary","new_dic"
+"2","Age ","AGE_cat","cat","<55 55<x<65 >65","<55, 55<x<65, >65"
+"3","Gender ","GENDER","cat","male/female","0:female, 1:male"
+"4","Grandparents origin ","ob2","cat","European, non European","0:non european, 1:european"
+"12","Body mass index ","BMI_cat","cat","underweight, normal, overweight, obese","underweight(<18.5), normal(18.5>x>25), overweight(25<x<30), obese (30<x<35), extremely obese (>35)"
+"13","Central_obesity ","central_obesity","cat","0:no, 1:yes","0:no, 1:yes"
+"14","Ethnicity ","Ethnic","cat","Caucasian, non-caucasian","0:non-caucasian, 1:caucasian"
+"15","Origin defined as in the Danish HIV cohort ","Origin","cat","European, non European","0:non european, 1:european"
+"18","CD4/CD8 ratio ","CDA_CD8_cat","cat","<1, >1","<1, >1"
+"22","Mode of HIV transmission ","Transm_mode","cat","MSM, Heterosexual, Other","View(parameters)"
+"23","Viral load ","VL_cat","cat","<50, >50","View(parameters)"
+"24","Duration ART ","Duration_cat","cat","<5, 5<x<10,10<x<15, >15","View(parameters)"
+"27","First ART drug ","first_drug","cat","ABC, TDF-TAF, Other","ABC, TDF-TAF, other"
+"28","Previous AIDS defining condition ","CDCAIDS","cat","0:no, 1:yes","0:no, 1:yes"
+"29","Previous ddi/AZT/d4t ART exposure","ddiAZTd4t","cat","Previous ddi/AZT/d4t ART exposure","0:no, 1:yes"
+"33","Candy intake ","H2_57","cat","Never, 1-3 per month, 1-2 per week, 3-4 per week, 1 per day, > 1 per day","0:never, 1:1-3 per month, 2:1-2 per week, 3:3-4 per week, 4:1 per day, 5:> 1 per day"
+"38","Chocolate intake ","H2_58a","cat","Never, 1-3 per month, 1-2 per week, 3-4 per week, 1 per day, > 1 per day","0:never, 1:1-3 per month, 2:1-2 per week, 3:3-4 per week, 4:1 per day, 5:> 1 per day"
+"39","Choice of fat for preparing warm dishes ","H2_54","cat","None, Butter, Spreadable, Shortening, Margarine, Olive oil, Other oil, Other","0:none, 1:butter, 4:margarine, 5:olive oil, 6:other"
+"43","Fruit intake ","H2_56","cat","Never, 1-3 per month, 1-2 per week, 3-4 per week, 5-6 per week, 1 per day , 2-3 per day, >3 per day","1:x<3 per month, 2:>1 per week, 5:>1 per day"
+"49","Liquer ","H2_46_5a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"50","Liquor ","H2_46_6a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"53","Vegetable intake ","H2_55","cat","Never, 1-3 per month, 1-2 per week, 3-4 per week, 5-6 per week, 1 per day , 2-3 per day, >3 per day","1:x<3 per month, 2:>1 per week, 5:>1 per day"
+"58","Current smoker ","H2_32a","cat","0:no, 1:yes","0:no, 1:yes"
+"59","E-cigarettes ","H2_40a","cat","no / yes with nicotine / yes without nicotine","0:no, 1:yes with nicotine, 2:yes without nicotine"
+"65","All alcoholic drinks ","H2_46_1a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"66","Beer ","H2_46_2a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"67","Frequency of consumption of > 5 drinks in one occasion during the past year ","H2_47","cat","Never, 1< per month, 1-3 per month, 1 per week, > 1 per week","1:<1 per month, 2:1-3 per month, 3:>1 per week"
+"72","White wine ","H2_46_3a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"73","Other alcohlic drinks","H2_46_7a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"77","Ankle brachial index ","ob14","cat","> 0.9, < 0.9","> 0.9, < 0.9"
+"81","Metabolic Syndrome ","METS","cat","0:no, 1:yes","0:no, 1:yes"
+"85","Anti dyslipedemics ","m2_05","cat","0:no, 1:yes","0:no, 1:yes"
+"86","Anti-coagulative therapy ","m2_17","cat","0:no, 1:yes","0:no, 1:yes"
+"87","Antihypertensives ","m2_02a","cat","0:no, 1:yes","0:no, 1:yes"
+"88","Anxiolytics/antidepressant ","m2_08","cat","0:no, 1:yes","0:no, 1:yes"
+"89","Arthritis medication ","m2_06","cat","0:no, 1:yes","0:no, 1:yes"
+"90","Aspirin ","m2_01","cat","0:no, 1:yes","0:no, 1:yes"
+"91","Birth control pills ","m2_13","cat","0:no, 1:yes","0:no, 1:yes"
+"92","Drugs to treat heart conditions ","m2_03a","cat","0:no, 1:yes","0:no, 1:yes"
+"93","D-vitamin ","m2_23","cat","0:no, 1:yes","0:no, 1:yes"
+"94","Medication for eye conditons ","m2_15","cat","0:no, 1:yes","0:no, 1:yes"
+"95","Medication for weight loss ","m2_16","cat","0:no, 1:yes","0:no, 1:yes"
+"96","Menopausal medication ","m2_14","cat","0:no, 1:yes","0:no, 1:yes"
+"97","Insuline ","m2_11","cat","0:no, 1:yes","0:no, 1:yes"
+"98","Current/previous marihuana use ","H2_44a","cat","0:no, 1:yes","0:no, 1:yes"
+"114","Diabetes ","diabetes","cat","0:no, 1:yes","0:no, 1:yes"
+"115","Diuretics ","m2_04","cat","0:no, 1:yes","0:no, 1:yes"
+"116","CMV IgG ","CMV_igg","cat","0:no, 1:yes","0:no, 1:yes"
+"117","Hypertension ","hypertension","cat","0:no, 1:yes","0:no, 1:yes"
+"118","Hypnotica ","m2_07","cat","0:no, 1:yes","0:no, 1:yes"
+"119","Duration since last meal ","ob3","cat","0-1, 1-2, 2-3, 3-4, 4-5, 5-6, 6-7, 7-8, >8","1:0-1, 2:1-2, 3:2-3, 4:3-4, 5:4-5, 6:5-6, 7:6-7, 8:7-8, 9:>8"
+"120","Motion habits changed ","H2_75b","cat","more/less","more, less"
+"124","Motion habits changed markedly past 1 year ","H2_75a","cat","0:no, 1:yes","0:no, 1:yes"
+"125","Natural remedies ","m2_25a","cat","0:no, 1:yes","0:no, 1:yes"
+"126","Nicotine substitution","H2_39a","cat","0:no, 1:yes","0:no, 1:yes"
+"127","Other alcohlic drinks","H2_46_7a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"128","Other antidiabetic medication ","m2_12","cat","0:no, 1:yes","0:no, 1:yes"
+"129","Other medication ","m2_22","cat","0:no, 1:yes","0:no, 1:yes"
+"130","Other natural remedies ","m2_25b","cat","0:no, 1:yes","0:no, 1:yes"
+"131","Other pain relief medication ","m2_21","cat","0:no, 1:yes","0:no, 1:yes"
+"132","Other vitamin ","m2_24","cat","0:no, 1:yes","0:no, 1:yes"
+"133","Paracetamol ","m2_20","cat","0:no, 1:yes","0:no, 1:yes"
+"138","Physical activity in spare time ","H2_74a","cat","Inactive, Slightly active, Moderated active, Very active","1:inactive, 2:slightly active, 3:moderated active, 4:very active"
+"141","Positive ab anti-Hbe ","Anti_hbe","cat","0:no, 1:yes","0:no, 1:yes"
+"142","Positive ab anti-HBs ","Anti_hbs","cat","0:no, 1:yes","0:no, 1:yes"
+"143","Positive HbeAg ","HbEAg","cat","0:no, 1:yes","0:no, 1:yes"
+"144","Positive HBsAg ","HbSag","cat","0:no, 1:yes","0:no, 1:yes"
+"145","Positive HCV antibodies ","HCV_anti","cat","0:no, 1:yes","0:no, 1:yes"
+"146","Positive HCV RNA ","HCV_rna","cat","0:no, 1:yes","0:no, 1:yes"
+"147","Positive IgM anti-HB ","Anti_hbcigm","cat","0:no, 1:yes","0:no, 1:yes"
+"149","Previous smoker ","H2_32b","cat","0:no, 1:yes","0:no, 1:yes"
+"152","Red wine ","H2_46_4a","cat","Never, Monthly, Weekly, Daily","0:never, 1:monthly, 2:weekly, 3:daily"
+"155","Smoking status ","status_smoking","cat","Never, Current, Ex-smoker, Unknown","0:never, 1:Current, 2:Ex-smoker, 9:Unknown"
+"159","Syphilis infection ","Syph","cat","0:no, 1:yes","0:no, 1:yes"
+"163","Third ART drug ","X3rd_Drug","cat","PI, INSTI, NNRTI","PI, INSTI, NNRTI"
+"165","Transmission origin ","Transm_origin","cat","Europe, Non Europe","1:non-european, 2:european"
+"166","Treatment for hyperthyroidism ","m2_18","cat","0:no, 1:yes","0:no, 1:yes"
+"167","Tx for asthma/bronchitis/COPD ","m2_10","cat","0:no, 1:yes","0:no, 1:yes"
+"168","Tx for gastric acidity ","m2_09","cat","0:no, 1:yes","0:no, 1:yes"
+"169","Type of butter on bread ","H2_51","cat","None, Butter, Spreadable, Margarine, Other","0:None, 1:Butter, 2:Spreadable, 3:Margarine, 4:Other"
+"170","Type of chocolate ","H2_58b","cat","Dark chocolate, Other","1:Dark chocolate, 2:Other"
+"171","VAT ","VAT_cat","cat","high / low","low(male < 40 and female < 35), high (male > 40 and female > 35)"
+"1","Age ","AGE","num","years",NA
+"5","Height ","height","num","m",NA
+"6","Hip circumference ","ob7","num","cm",NA
+"7","Weight of participant ","ob5","num","kg",NA
+"8","Waist circumference ","ob6","num","cm",NA
+"9","Waist hip ratio ","WHR","num","ratio",NA
+"10","Viceral adipose tissue","VAT","num","Viceral adipose tissue",NA
+"11","Body mass index ","BMI","num","kg/m2",NA
+"16","CD4 at ART initiation","CD4_ART","num","CD4 at ART initiation",NA
+"17","CD4/CD8 ratio","CDA_CD8","num","CD4/CD8 ratio",NA
+"19","Current CD4 count","CD4","num","Current CD4 count",NA
+"20","Current CD8 count","CD8","num","Current CD8 count",NA
+"21","Log10 VL at ART initiation","log10VL_ART","num","Log10 VL at ART initiation",NA
+"25","Duration ART","duration_years","num","years",NA
+"26","Lowest recorded CD4","CD4_nadir","num","Lowest recorded CD4",NA
+"31","Beef intake ","H2_53a","num","Times per week in average",NA
+"32","Bread, pieces per day ","H2_50","num","Number per day",NA
+"34","Coffe consumption ","H2_45a4","num","cup per week",NA
+"35","Coke consumption ","H2_45a6","num","bottles of 0.5 L per week",NA
+"36","Coke light consumption ","H2_45a7","num","bottles of 0.5 L per week",NA
+"37","Cheese Cold cut ","H2_52d","num","Times per week in average",NA
+"40","Deli meats Cold cut ","H2_52a","num","Times per week in average",NA
+"41","Fish Cold cut ","H2_52c","num","Times per week in average",NA
+"42","Fish intake ","H2_53d","num","Times per week in average",NA
+"44","Ecological food and drinks ","H2_59","num","%",NA
+"45","Fastfood intake ","H2_53e","num","Times per week in average",NA
+"46","Juice consumption ","H2_45a10","num","glass per week",NA
+"47","Lamb intake ","H2_53f","num","Times per week in average",NA
+"48","Limonade consumption ","H2_45a11","num","glass per week",NA
+"51","Water consumption ","H2_45a12","num","bottles of 0.5 L per week",NA
+"52","Whole milk consumption ","H2_45a1","num","glass per week",NA
+"56","Adulthood ","H2_43","num","Years",NA
+"57","Childhood ","H2_42","num","Years",NA
+"64","Alcohol ","alcohol","num","Unit:gram / per week",NA
+"68","Weekly consumption ","H2_46_2b","num","Number of 33 cl",NA
+"69","Weekly consumption ","H2_46_6b","num","Number of 33 cl",NA
+"70","Weekly consumption ","H2_46_4b","num","Number of 33 cl",NA
+"71","Weekly consumption ","H2_46_3b","num","Number of 33 cl",NA
+"74","Alaninaminotransferase","alat","num","Alaninaminotransferase",NA
+"75","Bloodpressure, left leg ","ob13","num","mm mercury",NA
+"76","Bloodpressure, right leg ","ob12","num","mm mercury",NA
+"78","Diastolic blood pressure, left arm ","ob9","num","mm mercury",NA
+"79","Diastolic blood pressure, right arm ","ob11","num","mm mercury",NA
+"80","eGFR","eGFR","num","mL/min/1.73m2",NA
+"99","Daily use of Computer ","H2_70b","num","Minutes",NA
+"100","Daily use of Computer games ","H2_70c","num","Minutes",NA
+"101","Daily use of mobile phone ","H2_70d","num","Minutes",NA
+"102","Daily use of television ","H2_70a","num","Minutes",NA
+"103","Days per month with nightly work ","H2_72","num","Days",NA
+"104","Hours outdoor ","H2_74c","num","Hours",NA
+"105","Number of years with Daily use of Computer ","H2_71b","num","Years",NA
+"106","Number of years with Daily use of Computer games ","H2_71c","num","Years",NA
+"107","Number of years with Daily use of mobile phone ","H2_71d","num","Years",NA
+"108","Number of years with Daily use of television ","H2_71a","num","Years",NA
+"121","Liver stiffness measurement ","ob15","num","kpa",NA
+"122","Low fat milk consumption ","H2_45a2","num","glass per week",NA
+"123","Main courses ","H2_49","num","Number per day",NA
+"134","Passive smoking exposure ","H2_41","num","Hours per day",NA
+"135","Pate Cold cut ","H2_52b","num","Times per week in average",NA
+"136","P-Cholesterol+ester, i HDL ","Hdl","num","mmol/L",NA
+"137","P-Creatininium ","creatini","num","µmol/L",NA
+"139","P-Kolesterol LDL ","Ldl","num","mmol/L",NA
+"140","Pork intake ","H2_53b","num","Times per week in average",NA
+"148","Poultry intake ","H2_53c","num","Times per week in average",NA
+"150","P-Triglycerid ","Tgl","num","mmol/L",NA
+"151","Pulse ","ob19","num","beats per minute",NA
+"153","Saturation ","ob18","num","%",NA
+"154","Skim milk consumption ","H2_45a3","num","glass per week",NA
+"156","Soda consumption ","H2_45a8","num","bottles of 0.5 L per week",NA
+"157","Soda light consumption ","H2_45a9","num","bottles of 0.5 L per week",NA
+"158","subcutaneous adipose tissue","SAT","num","subcutaneous adipose tissue",NA
+"160","Systolic blood pressure, left arm ","ob8","num","mm mercury",NA
+"161","Systolic blood pressure, right arm ","ob10","num","mm mercury",NA
+"162","Tea consumption ","H2_45a5","num","cup per week",NA
+"164","time from awakening to first cup of coffee ","H2_45b","num","Hours",NA

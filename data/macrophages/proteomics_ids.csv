@@ -1,0 +1,40 @@
+TMT-ID,ID
+"Abundance: F6: 132N, Sample, E, E, Set3", E- E
+"Abundance: F4: 127C, Sample, Healthy, 25, Set1", Healthy-25
+"Abundance: F4: 129N, Sample, Healthy, 26, Set1", Healthy-26
+"Abundance: F4: 130C, Sample, Healthy, 27, Set1", Healthy-27
+"Abundance: F4: 132N, Sample, Healthy, 28, Set1", Healthy-28
+"Abundance: F5: 126, Sample, Healthy, 29, Set2", Healthy-29
+"Abundance: F5: 128N, Sample, Healthy, 30, Set2", Healthy-30
+"Abundance: F5: 129C, Sample, Healthy, 31, Set2", Healthy-31
+"Abundance: F5: 131N, Sample, Healthy, 32, Set2", Healthy-32
+"Abundance: F6: 126, Sample, Healthy, 33, Set3", Healthy-33
+"Abundance: F6: 128C, Sample, Healthy, 34, Set3", Healthy-34
+"Abundance: F6: 130C, Sample, Healthy, 35, Set3", Healthy-35
+"Abundance: F4: 126, Sample, HIV, 1, Set1", HIV-1
+"Abundance: F5: 127C, Sample, HIV, 10, Set2", HIV-10
+"Abundance: F5: 128C, Sample, HIV, 11, Set2", HIV-11
+"Abundance: F5: 129N, Sample, HIV, 12, Set2", HIV-12
+"Abundance: F5: 130N, Sample, HIV, 13, Set2", HIV-13
+"Abundance: F5: 130C, Sample, HIV, 14, Set2", HIV-14
+"Abundance: F5: 131C, Sample, HIV, 15, Set2", HIV-15
+"Abundance: F5: 132N, Sample, HIV, 16, Set2", HIV-16
+"Abundance: F6: 127N, Sample, HIV, 17, Set3", HIV-17
+"Abundance: F6: 127C, Sample, HIV, 18, Set3", HIV-18
+"Abundance: F6: 128N, Sample, HIV, 19, Set3", HIV-19
+"Abundance: F4: 127N, Sample, HIV, 2, Set1", HIV-2
+"Abundance: F6: 129N, Sample, HIV, 20, Set3", HIV-20
+"Abundance: F6: 129C, Sample, HIV, 21, Set3", HIV-21
+"Abundance: F6: 130N, Sample, HIV, 22, Set3", HIV-22
+"Abundance: F6: 131N, Sample, HIV, 23, Set3", HIV-23
+"Abundance: F6: 131C, Sample, HIV, 24, Set3", HIV-24
+"Abundance: F4: 128N, Sample, HIV, 3, Set1", HIV-3
+"Abundance: F4: 128C, Sample, HIV, 4, Set1", HIV-4
+"Abundance: F4: 129C, Sample, HIV, 5, Set1", HIV-5
+"Abundance: F4: 130N, Sample, HIV, 6, Set1", HIV-6
+"Abundance: F4: 131N, Sample, HIV, 7, Set1", HIV-7
+"Abundance: F4: 131C, Sample, HIV, 8, Set1", HIV-8
+"Abundance: F5: 127N, Sample, HIV, 9, Set2", HIV-9
+"Abundance: F4: 132C, Sample, Pool, Pool, Set1", Pool- Pool
+"Abundance: F5: 132C, Sample, Pool, Pool, Set2", Pool- Pool
+"Abundance: F6: 132C, Sample, Pool, Pool, Set3", Pool- Pool

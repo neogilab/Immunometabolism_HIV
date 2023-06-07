@@ -1,0 +1,250 @@
+---
+title: "NetDx clustering"
+output: html_notebook
+---
+
+## Aim
+Validate clusters using a second tool
+
+## Documentation
+https://www.bioconductor.org/packages/release/bioc/vignettes/netDx/inst/doc/ThreeWayClassifier.html#4_Rules_to_create_features_(patient_similarity_networks)
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+suppressWarnings(suppressMessages(require(netDx)))
+library(mygene)
+library(org.Hs.eg.db)
+library(MultiAssayExperiment)
+library(piano)
+```
+
+```{r}
+col_c <- c("#6b8ea7",	"#a7846b")
+```
+
+## load data
+### transcriptomics
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+data_txn <- data.frame(t(data_txn))
+data_txn$Gene_name <- mapIds(org.Hs.eg.db, rownames(data_txn), keytype="ENSEMBL", column="SYMBOL")
+data_txn <- data_txn[!is.na(data_txn$Gene_name),]
+data_txn <- data_txn[!duplicated(data_txn$Gene_name),]
+rownames(data_txn) <- data_txn$Gene_name
+data_txn$Gene_name <- NULL
+data_txn <- data.frame(t(data_txn))
+#data_txn$COCOMO_ID <- rownames(data_txn)
+rownames(data_txn) <- gsub("X", "", rownames(data_txn))
+```
+### metabolomics
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+data_met <- data_met[rownames(data_met) %in% rownames(data_txn), ]
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+#data_met$COCOMO_ID <- rownames(data_met)
+```
+### olink
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical$X <- NULL
+clinical$User <- NULL
+clinical_HIV <- clinical[!is.na(clinical$METS),]
+clinical_HIV <- clinical_HIV[clinical_HIV$COCOMO_ID %in% rownames(data_olink),]
+```
+
+```{r}
+data_txn <- data_txn[rownames(data_txn) %in% clinical_HIV$COCOMO_ID,]
+data_met <- data_met[rownames(data_met) %in% clinical_HIV$COCOMO_ID,]
+data_olink <- data_olink[rownames(data_olink) %in% clinical_HIV$COCOMO_ID,]
+```
+
+```{r}
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+data_olink <- data_olink[order(match(rownames(data_olink), rownames(data_txn))),]
+```
+
+## filter data
+```{r}
+data_met <- t(data_met)
+data_met <- data_met[apply(data_met, 1, var) >= 0.2, ]
+
+data_olink <- t(data_olink)
+data_olink <- data_olink[apply(data_olink, 1, var) >= 0.2, ]
+
+data_txn <- t(data_txn)
+data_txn <- data_txn[apply(data_txn, 1, var) >= 0.2, ]
+```
+
+```{r}
+colnames(data_met) <- paste0("P", colnames(data_met))
+colnames(data_txn) <- paste0("P", colnames(data_txn))
+colnames(data_olink) <- paste0("P", colnames(data_olink))
+```
+
+```{r}
+clinical_HIV$cluster <- paste0("C", clinical_HIV$cluster)
+```
+
+
+## check clinical
+```{r}
+patient.data_2 <- data.frame(
+  patientID = paste0("P", clinical_HIV$COCOMO_ID),
+  age= clinical_HIV$AGE,
+  gender = clinical_HIV$GENDER,
+  BMI = clinical_HIV$BMI,
+  Duration = clinical_HIV$Duration,
+  MetS = clinical_HIV$METS,
+  Ethnicity = clinical_HIV$Ethnic,
+  SAT = clinical_HIV$SAT,
+  VAT = clinical_HIV$VAT,
+  CD4_CD8 = clinical_HIV$CDA_CD8,
+  ID = paste0("P", clinical_HIV$COCOMO_ID),
+  STATUS = clinical_HIV$cluster,
+  row.names= paste0("P", clinical_HIV$COCOMO_ID))
+
+Exp <- list("txn"= data_txn, "prot" = data_olink, "met" = data_met)
+MultiAssay <- MultiAssayExperiment(experiments=Exp, colData=patient.data_2)
+```
+
+## add clinical to groupList
+```{r}
+expr_2 <- assays(MultiAssay)
+groupList_2 <- list()
+for (k in 1:length(expr_2)) { # loop over all layers
+    cur <- expr_2[[k]]; nm <- names(expr_2)[k]
+
+    # all measures from this layer go into our single PSN
+    groupList_2[[nm]] <- list(nm=rownames(cur)) 
+
+    # assign same layer name as in input data
+    names(groupList_2[[nm]])[1] <- nm;
+}
+
+groupList_2[["clinical"]] <- list(
+    age="age",
+    MetS = "MetS",
+    gender = "gender",
+    BMI = "BMI",
+    Duration = "Duration",
+    Ethnicity = "Ethnicity",
+    CD4_CD8 = "CD4_CD8",
+    status = "STATUS"
+)
+```
+
+## load pathways / group genes by pathways
+```{r}
+gset <- loadGSC("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/GSEA/h.all.v7.5.1.symbols.gmt")
+gset <- gset$gsc
+#groupList_2[["txn"]] <- gset
+#groupList_2[["prot"]] <- gset
+
+#pathFile <- sprintf("%s/extdata/pathway_ex3.gmt", path.package("netDx"))
+#pathList <- suppressMessages(readPathways(pathFile))
+#groupList_2[["prot"]] <- pathList
+```
+
+## type of comparison
+```{r}
+sims_2 <- list(a="pearsonCorr", b="pearsonCorr", c = "pearsonCorr", d = "normDiff")
+names(sims_2) <- names(groupList_2)
+## "normDiff" = clinical data
+```
+
+look for features that score 7+ out of 10 in >70% splits
+featScoreMax=10, featSelCutoff=7 and numSplits=100L
+
+```{r}
+Data <- dataList2List(MultiAssay, groupList_2)
+
+DataList <- Data$assays
+DataList <- c(DataList, list(Data$pheno))
+names(DataList)[5] <- "pheno"
+
+data <- convertToMAE(DataList)
+
+nco_2 <- round(parallel::detectCores()*0.75) # use 75% available cores
+message(sprintf("Using %i of %i cores", nco_2, parallel::detectCores()))
+## Using 54 of 72 cores
+outDir_2 <- "/home/flomik/Desktop/Code-PHD/COCOMO_txn/results/netDx/netDx_m5"
+
+if (file.exists(outDir_2)) unlink(outDir_2,recursive=TRUE)
+numSplits <- 20L
+
+t0_2 <- Sys.time()
+set.seed(42) # make results reproducible
+model_2 <- suppressMessages(
+    buildPredictor(
+        dataList=data,          ## your data
+        groupList=groupList_2,    ## grouping strategy
+        sims = sims_2,
+        outDir=outDir_2,          ## output directory
+        trainProp=0.8,          ## pct of samples to use to train model in each split
+        numSplits=20L,           ## number of train/test splits
+        featSelCutoff=7L,       ## threshold for calling something feature-selected
+        featScoreMax=10L,        ## max score for feature selection
+        numCores=nco_2,           ## set higher for parallelizing
+        debugMode=FALSE,
+        keepAllData=FALSE,  ## set to TRUE for debugging or low-level files used by the dictor
+        logging="none"
+  ))
+t1_2 <- Sys.time()
+print(t1_2-t0_2)
+```
+
+```{r}
+pdf("results/networks/netDx/results_model_5.pdf")
+results <- getResults(model_2,unique(colData(data)$STATUS),
+                      featureSelCutoff=2L,featureSelPct=0.50)
+dev.off()
+```
+```{r}
+summary(results)
+```
+```{r}
+results$performance
+```
+
+```{r}
+results$featureScores
+```
+```{r}
+pdf("results/networks/netDx/results_model_5_confusion_matrix.pdf")
+confMat <- confusionMatrix(model_2)
+dev.off()
+```
+```{r}
+results$selectedFeatures$C1
+write.csv(results$selectedFeatures$C1, "results/networks/netDx/results_model_5_features_C1.csv")
+write.csv(results$selectedFeatures$C2, "results/networks/netDx/results_model_5_features_C2.csv")
+```
+```{r}
+psn <- suppressMessages(getPSN(
+  data,
+  groupList_2,
+  sims=sims_2,
+  selectedFeatures=results$selectedFeatures,
+  plotCytoscape = TRUE,
+))
+
+write.csv(psn$patientSimNetwork_pruned, "results/networks/netDx/results_model_5_patientSimNetwork_pruned.csv", quote = FALSE)
+write.csv(psn$patientSimNetwork_unpruned, "results/networks/netDx/results_model_5_patientSimNetwork_unpruned.csv", quote = FALSE)
+```

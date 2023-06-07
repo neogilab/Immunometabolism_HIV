@@ -1,0 +1,204 @@
+---
+title: "COCOMO transcriptomics"
+output: html_notebook
+---
+
+
+1) get data
+2) Normalization
+3) PCA, sample-sample correlation → determine outliers
+4) remove low counts threshold → graph normalized counts against % of genes above threshold
+5) Clustering based on transcriptomics and metabolomics (SNF)
+6) DGE between clusters / clinical characteristics
+7) Clustering genes → gene set enrichment analysis
+8) Digital cell quantification (EPIC)
+9) Transcriptomics aging clock (transcriptomics age, biological age)
+10) MOFA → metabolomics and transcriptomics
+11) take MOFA HIV data to validate our findings
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+### load packages
+```{r}
+library(DESeq2)
+library(dplyr)
+library(SNFtool)
+library(xlsx)
+library(ggplot2)
+library(corrr)
+library(mygene)
+library(edgeR)
+```
+## load data
+```{r}
+data <- read.delim("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/salmon.merged.gene_counts.tsv", row.names = 1)
+data_tpm <- read.delim("/home/flomik/Desktop/Code-PHD/data_COCOMO_txn/salmon.merged.gene_tpm_length_scaled.tsv", row.names = 1)
+```
+
+```{r}
+dim(data)
+```
+## load clinical and match ids
+```{r}
+clinical <- read.xlsx("data/clinical/COCOMO_Master File_SK.xlsx", 1)
+id <- read.delim("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/U.Neogi_21_01_sample_info.txt")
+names(id)[1:2] <- c("User.ID","NGI.ID")
+
+table_conversion_id <- data.frame(User.ID = colnames(data), tpm_ID = colnames(data_tpm))
+
+clinical <- clinical[,-c(1, 2, 4, 12:14, 16, 17, 18, 20:28)]
+
+clinical <- merge(clinical, id, by = "NGI.ID", all.x = TRUE)
+clinical$User.ID <- paste0(clinical$User.ID, "_R1")
+table_conversion_id_2 <- merge(table_conversion_id, clinical, by = "User.ID", all.x = TRUE)
+
+clini_1 <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/clinical_data_microbiome_project.csv")
+names(clini_1)[1] <- "COCOMO_ID"
+clinical_data <- merge(table_conversion_id_2, clini_1, by = "COCOMO_ID", all.x = TRUE)
+```
+
+## recalculate time treatment for 2 patients
+```{r}
+time <- read.csv("data/clinical/time_treatment_missing_patients.csv")
+time <- time[,c(1, grep("date", colnames(time)))]
+```
+
+```{r}
+clinical_data$Duration.of.therapy[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] <- 2015 - 1999
+clinical_data$Duration.of.therapy[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] <- 2016 - 1995
+```
+
+## add gender, age, bmi and mets
+```{r}
+clinical_data$AGE.x[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$AGE.y[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] 
+clinical_data$AGE.x[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$AGE.y[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)]
+
+clinical_data$BMI.x[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$BMI.y[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] 
+clinical_data$BMI.x[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$BMI.y[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] 
+
+clinical_data$GENDER.x[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$GENDER.y[clinical_data$COCOMO_ID == "1198" & !is.na(clinical_data$COCOMO_ID)] 
+clinical_data$GENDER.x[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] <- clinical_data$GENDER.y[clinical_data$COCOMO_ID == "1914" & !is.na(clinical_data$COCOMO_ID)] 
+
+clinical_data$HIV_Status[clinical_data$COCOMO_ID %in% c("1914", "1198") & !is.na(clinical_data$COCOMO_ID)] <- "HIV"
+```
+
+```{r}
+clinical_data$BMI.x[is.na(clinical_data$BMI.x)] <- clinical_data$BMI.y[is.na(clinical_data$BMI.x)]
+clinical_data$GENDER.x[is.na(clinical_data$GENDER.x)] <- clinical_data$GENDER.y[is.na(clinical_data$GENDER.x)]
+clinical_data$AGE.x[is.na(clinical_data$AGE.x)] <- clinical_data$AGE.y[is.na(clinical_data$AGE.x)]
+
+clinical_data$tpm_ID <- NULL
+clinical_data$AGE.y <- NULL
+clinical_data$GENDER.y <- NULL
+clinical_data$MetS <- NULL
+clinical_data$BMI.y <- NULL
+clinical_data$id <- NULL
+clinical_data$Metabolomics <- NULL
+clinical_data$Transcriptomics <- NULL
+```
+
+```{r}
+write.csv(clinical_data, "processing/clinical_data_clean.csv")
+```
+
+```{r}
+clinical_data <- clinical_data[!is.na(clinical_data$HIV_Status),]
+data <- data[,colnames(data) != "P20109_402_R1"]
+```
+
+```{r}
+rownames(data) <- gsub("\\..*", "", rownames(data))
+```
+
+```{r}
+data <- data.frame(t(data))
+data$User.ID <- rownames(data)
+clinical_2 <- clinical_data[, c(2, 1, 4)]
+data_2 <- merge(clinical_2, data, by = "User.ID")
+data_2$User.ID <- NULL
+```
+
+
+## Create Deseq2 object
+```{r}
+coldata <- data.frame(samples = data_2$COCOMO_ID, condition = as.factor(data_2$HIV_Status))
+
+coldata$condition <- relevel(coldata$condition, ref = "Ctrl")
+
+dds <- DESeqDataSetFromMatrix(countData = round(t(data_2[,-c(1,2)])), colData = coldata, design = ~ condition)
+```
+
+```{r}
+library(org.Hs.eg.db)
+dds$genes$Symbol <- mapIds(org.Hs.eg.db, rownames(dds), keytype="ENSEMBL", column="SYMBOL")
+```
+
+```{r}
+dim(dds)
+```
+
+```{r}
+#dds <- dds[!is.na(dds$genes$Symbol), ]
+#dim(dds)
+```
+
+```{r}
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep,]
+dim(dds)
+```
+
+```{r}
+dds <- estimateSizeFactors(dds)
+vsd <- assay(varianceStabilizingTransformation(dds,  blind = TRUE, fitType = "parametric"))
+colnames(vsd) <- dds$samples
+write.csv(t(vsd), "processing/COCOMO_transcriptomics_vsd_data_deseq2.csv")
+```
+
+
+```{r}
+library("vsd")
+vsn::meanSdPlot(vsd)
+```
+
+```{r}
+sampleDists <- dist(t(vsd))
+```
+
+```{r}
+library("RColorBrewer")
+sampleDistMatrix <- as.matrix(sampleDists)
+rownames(sampleDistMatrix) <- paste(dds$condition)
+colnames(sampleDistMatrix) <- NULL
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+library(pheatmap)
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows=sampleDists,
+         clustering_distance_cols=sampleDists,
+         col=colors)
+```
+
+## processing of metabolomics data
+```{r}
+data_met <- read.csv("data/metabolomics/cocomo_norm_data_filt.csv")
+data_met <- data_met[data_met$SUPER.PATHWAY !="",]
+write.csv(data_met[, c(1:3)], "processing/COCOMO_metabolomics_pathways.csv")
+
+data_met <- data_met[,c(1,13:232)]
+names(data_met)[-1] <- gsub("X", "", names(data_met)[-1])
+data_met[,-1] <- log2(data_met[,-1])
+rownames(data_met) <- data_met$BIOCHEMICAL
+data_met$BIOCHEMICAL <- NULL
+data_met <- data_met[, sapply(data_met, var) > 0.3]
+write.csv(t(data_met), paste0("processing/COCOMO_metabolomics_log2_norm_filt.csv"))
+```
+

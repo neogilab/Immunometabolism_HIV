@@ -1,0 +1,70 @@
+---
+title: "BINGO sub processing"
+output: html_notebook
+---
+
+
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+```{r}
+bingo_edges <- read.csv("results/BINGO/all_genes default edge.csv")
+bingo_edges$Node_1 <- gsub(" \\(pp\\).*","",bingo_edges$name)
+bingo_edges$Node_2 <- gsub(".*\\(pp\\) ","",bingo_edges$name)
+bingo_edges <- bingo_edges[,c(8:9)]
+```
+
+```{r}
+#ujjwal <- read.csv("results/BINGO/Ujjwal_selection_BINGO.csv")
+```
+
+```{r}
+bingo_nodes <- read.csv("results/BINGO/All_genes default node.csv")
+bingo_nodes <- bingo_nodes[order(bingo_nodes$adjustedPValue_All_genes),]
+bingo_nodes$top <- NA 
+bingo_nodes$top[1:30] <- "top"
+bingo_nodes$names_2 <- NA
+bingo_nodes$names_2[1:30] <- as.vector(bingo_nodes$description_All_genes)[1:30]
+
+top <- bingo_nodes$name[bingo_nodes$top == "top"]
+```
+
+```{r}
+bingo_edges_1 <- bingo_edges[bingo_edges$Node_1 %in% top | bingo_edges$Node_2 %in% top,]
+
+bingo_edges_2 <- bingo_edges[bingo_edges$Node_1 %in% bingo_edges_1$Node_1 | bingo_edges$Node_2 %in% bingo_edges_1$Node_1 | bingo_edges$Node_2 %in% bingo_edges_1$Node_2 | bingo_edges$Node_1 %in% bingo_edges_1$Node_2,]
+bingo_edges_2$level <- "L2"
+
+bingo_edges_3 <- bingo_edges[bingo_edges$Node_1 %in% bingo_edges_2$Node_1 | bingo_edges$Node_2 %in% bingo_edges_2$Node_1 | bingo_edges$Node_2 %in% bingo_edges_2$Node_2 | bingo_edges$Node_1 %in% bingo_edges_2$Node_2,]
+bingo_edges_3$level <- "L3"
+
+write.csv(bingo_edges_1, "results/BINGO/network_bingo_level_1.csv", quote = FALSE)
+write.csv(bingo_edges_2, "results/BINGO/network_bingo_level_2.csv", quote = FALSE)
+write.csv(bingo_edges_3, "results/BINGO/network_bingo_level_3.csv", quote = FALSE)
+```
+
+
+```{r}
+bingo_nodes$nodeFillColor_All_genes[1:30] <- -1*bingo_nodes$nodeFillColor_All_genes[1:30]
+
+bingo_nodes$L1 <- ifelse(bingo_nodes$name %in% c(bingo_edges_1$Node_1, bingo_edges_1$Node_2), "L1", NA)
+bingo_nodes$L2 <- ifelse(bingo_nodes$name %in% c(bingo_edges_2$Node_1, bingo_edges_2$Node_2), "L2", NA)
+
+write.csv(bingo_nodes, "results/BINGO/network_bingo_table_nodes.csv", quote = FALSE)
+```
+
+
+```{r}
+
+```
+

@@ -1,0 +1,117 @@
+x
+sphinganine
+sphingosine
+1-stearoyl-2-arachidonoyl-GPS (18:0/20:4)
+serotonin
+AMP
+phosphoethanolamine (PE)
+maltose
+hexadecasphingosine (d16:1)*
+N-acetylneuraminate
+nicotinamide
+spermidine
+taurine
+beta-citrylglutamate
+spermine
+N-oleoyltaurine
+phosphocholine
+sphingadienine
+sphingosine 1-phosphate
+glycerol 3-phosphate
+sphinganine-1-phosphate
+leucylglycine
+docosatrienoate (22:3n6)*
+3-phosphoglycerate
+dihydroorotate
+3-hydroxydecanoylcarnitine
+tetradecadienoate (14:2)*
+myristoleoylcarnitine (C14:1)*
+palmitoleoylcarnitine (C16:1)*
+linolenate (18:3n3 or 3n6)
+oleoylcarnitine (C18:1)
+oleate/vaccenate (18:1)
+palmitoleate (16:1n7)
+branched-chain, straight-chain, or cyclopropyl 12:1 fatty acid*
+kynurenate
+laurylcarnitine (C12)
+myristoleate (14:1n5)
+3-decenoylcarnitine
+acetylcarnitine (C2)
+cysteinylglycine disulfide*
+anthranilate
+(S)-3-hydroxybutyrylcarnitine
+3-hydroxyoleoylcarnitine
+nonanoylcarnitine (C9)
+3-hydroxylaurate
+10-heptadecenoate (17:1n7)
+myristate (14:0)
+eicosenoate (20:1n9 or 1n11)
+10-nonadecenoate (19:1n9)
+3-hydroxydecanoate
+octanoylcarnitine (C8)
+1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*
+linolenoylcarnitine (C18:3)*
+5-dodecenoylcarnitine (C12:1)
+N-formylanthranilic acid
+margaroylcarnitine (C17)*
+3-hydroxybutyrate (BHBA)
+cis-4-decenoate (10:1n6)*
+hypotaurine
+N-acetylkynurenine (2)
+palmitate (16:0)
+glycerophosphoethanolamine
+(14 or 15)-methylpalmitate (a17:0 or i17:0)
+hexanoylcarnitine (C6)
+lactobacillic acid
+(R)-3-hydroxybutyrylcarnitine
+gamma-glutamylvaline
+N-palmitoylglycine
+decanoylcarnitine (C10)
+taurocholate
+5-dodecenoate (12:1n7)
+myristoylcarnitine (C14)
+aspartate
+docosapentaenoate (n6 DPA; 22:5n6)
+taurochenodeoxycholic acid 3-sulfate
+gamma-glutamylthreonine
+pentadecanoate (15:0)
+linoleate (18:2n6)
+stearate (18:0)
+hexadecadienoate (16:2n6)
+oleoyl ethanolamide
+adrenoylcarnitine (C22:4)*
+palmitoylcarnitine (C16)
+(16 or 17)-methylstearate (a19:0 or i19:0)
+cis-4-decenoylcarnitine (C10:1)
+2'-deoxyuridine
+dihomo-linolenoylcarnitine (C20:3n3 or 6)*
+dihomolinoleate (20:2n6)
+3-hydroxyhexanoylcarnitine (1)
+margarate (17:0)
+N-acetylglutamine
+quinolinate
+laurate (12:0)
+2R,3R-dihydroxybutyrate
+docosadienoate (22:2n6)
+tiglyl carnitine (C5)
+N-acetylcarnosine
+mead acid (20:3n9)
+3-hydroxymyristate
+3-hydroxy-2-ethylpropionate
+taurodeoxycholic acid 3-sulfate
+vanillic acid glycine
+docosapentaenoate (DPA; 22:5n3)
+N-stearoyltaurine
+gamma-glutamylisoleucine*
+dodecadienoate (12:2)*
+9-hydroxystearate
+N-acetylglucosamine/N-acetylgalactosamine
+glutamine conjugate of C7H12O2*
+S-adenosylhomocysteine (SAH)
+N-acetylalanine
+3-hydroxyoctanoate
+gamma-glutamyltryptophan
+stearoylcarnitine (C18)
+dihomolinolenate (20:3n3 or 3n6)
+3-hydroxyhexanoate
+N-acetylhistidine

@@ -1,0 +1,20 @@
+INFO [2023-02-20 16:13:49] $x
+INFO [2023-02-20 16:13:49] list(a, b, c, d)
+INFO [2023-02-20 16:13:49] 
+INFO [2023-02-20 16:13:49] $category.names
+INFO [2023-02-20 16:13:49] c("Spermidine vs Ctl", "Spermine vs Ctl", "Spermine + Spermidine vs Ctrl", 
+INFO [2023-02-20 16:13:49]     "At-risk vs HC-like")
+INFO [2023-02-20 16:13:49] 
+INFO [2023-02-20 16:13:49] $filename
+INFO [2023-02-20 16:13:49] [1] "results/figures/spermidine_spermine_proteomics.pdf"
+INFO [2023-02-20 16:13:49] 
+INFO [2023-02-20 16:13:49] $output
+INFO [2023-02-20 16:13:49] [1] TRUE
+INFO [2023-02-20 16:13:49] 
+INFO [2023-02-20 16:13:49] $fill
+INFO [2023-02-20 16:13:49] myCol
+INFO [2023-02-20 16:13:49] 
+INFO [2023-02-20 16:13:49] $cat.default.pos
+INFO [2023-02-20 16:13:49] [1] "text"
+INFO [2023-02-20 16:13:49] 
+ERROR [2023-02-20 16:13:49] Unexpected parameter length for "fill"

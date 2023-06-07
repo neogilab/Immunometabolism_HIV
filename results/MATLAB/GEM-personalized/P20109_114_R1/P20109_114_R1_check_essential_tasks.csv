@@ -1,0 +1,58 @@
+id,description,ok
+ER,Aerobic rephosphorylation of ATP from glucose,1
+ER,Aerobic rephosphorylation of GTP,1
+ER,Aerobic rephosphorylation of CTP,1
+ER,Aerobic rephosphorylation of UTP,1
+BS,ATP de novo synthesis,1
+BS,CTP de novo synthesis,1
+BS,GTP de novo synthesis,1
+BS,UTP de novo synthesis,1
+BS,dATP de novo synthesis,1
+BS,dCTP de novo synthesis,1
+BS,dGTP de novo synthesis,1
+BS,dTTP de novo synthesis,1
+SU,Histidine uptake,1
+SU,Isoleucine uptake,1
+SU,Leucine uptake,1
+SU,Lysine uptake,1
+SU,Methionine uptake,1
+SU,Phenylalanine uptake,1
+SU,Threonine uptake,1
+SU,Tryptophan uptake,1
+SU,Valine uptake,1
+IC,Glycerate 3-phosphate  de novo synthesis,1
+IC,Mitochondrial acetyl-CoA de novo synthesis,1
+IC,Mitochondrial AKG de novo synthesis,1
+IC,Erythrose 4-phosphate de novo synthesis,1
+IC,Fructose 6-phosphate de novo synthesis,1
+IC,Glyceraldehyde 3-phosphate de novo synthesis,1
+IC,Glucose 6-phosphate de novo synthesis,1
+IC,Mitochondrial oxaloacetate de novo synthesis,1
+IC,Phosphoenolpyruvate de novo synthesis,1
+IC,Pyruvate de novo synthesis,1
+IC,Ribose 5-phosphate de novo synthesis,1
+IC,Mitochondrial succinyl-CoA de novo synthesis,1
+BS,Cholesterol de novo synthesis,1
+BS,Protein synthesis from AAs,1
+ER,Oxidative phosphorylation,1
+ER,Oxidative decarboxylation,1
+ER,Krebs cycle NADH,1
+ER,Ubiquinol-to-proton,1
+ER,Ubiquinol-to-ATP,1
+SU,Beta oxidation of saturated FA,1
+SU,Beta oxidation of long-chain FA,1
+SU,Beta oxidation of odd-chain FA,1
+SU,Beta oxidation of unsaturated fatty acid (n-9) ,1
+SU,Beta oxidation of unsaturated fatty acid (n-6) ,1
+SU,Uptake and beta oxidation of all NEFAs,1
+SU,Choline uptake,1
+SU,Inositol uptake,1
+BS,Phosphatidylcholine de novo synthesis,1
+BS,Phosphatidylethanolamine de novo synthesis,1
+BS,Phosphatidylserine de novo synthesis,1
+BS,Phosphatidylinositol de novo synthesis,1
+BS,Thiamin phosphorylation to TPP,1
+BS,Coenzyme A synthesis from pantothenate,1
+BS,FAD synthesis from riboflavin,1
+BS,Heme biosynthesis,1
+GR,Growth on Ham's media (biomass production),1

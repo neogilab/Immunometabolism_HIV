@@ -1,0 +1,76 @@
+---
+title: "Extract genes database"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+## Genes --> forebrain, human
+cerebrum
+Thalamus
+Hypotalamus
+
+## load packages
+```{r loadPackages, include=FALSE, cache=FALSE}
+## load additional packages in this chunk
+library(pander)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(igraph)
+library(UpSetR)
+library(igraph)
+```
+
+## database location
+```{r}
+dbname<-"/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/synaptic.proteome_SR_20210408.db.sqlite"
+```
+
+## Connect DB
+```{r connect}
+con <- DBI::dbConnect(RSQLite::SQLite(), dbname = dbname)
+```
+
+# Query
+## Get specific genes information
+```{r get.specific.genes}
+gns <-con %>% tbl("FullGeneFullPaperFullRegion")
+
+gns <- data.frame(gns)
+names(gns)
+
+gns <-  select(gns, Localisation, HumanName, BrainRegion, SpeciesTaxID)
+```
+
+```{r}
+table(gns$SpeciesTaxID)
+```
+9606 : Human
+10090 : Mus musculus Linnaeus
+10116 : Rattus norvegicus
+
+## select human genes
+```{r}
+gns <- gns[gns$SpeciesTaxID == "9606",]
+gns$SpeciesTaxID <- NULL
+```
+
+```{r}
+table(gns$BrainRegion)
+```
+The outer layer of the cerebrum is called the cerebral cortex, and in each hemisphere it is traditionally divided into four lobes - frontal, parietal, occipital and temporal.
+
+```{r}
+write.csv(gns, "data/brain_genes_clean_table.csv")
+```
+

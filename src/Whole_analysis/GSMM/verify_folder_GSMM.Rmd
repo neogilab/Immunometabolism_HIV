@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+```{r}
+data <- read.csv("results/MATLAB/patients_groups.csv")
+```
+
+
+```{r}
+folder <- list.files("results/MATLAB/GEM-personalized")
+out <- data[!data$Name %in% folder,]
+out
+```
+
+```{r}
+data <- data[data$Name %in% folder,]
+write.csv(data, "results/MATLAB/patients_groups_2.csv", quote = FALSE, row.names = FALSE)
+out
+```
+

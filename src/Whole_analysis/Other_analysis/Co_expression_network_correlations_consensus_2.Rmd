@@ -1,0 +1,276 @@
+---
+title: "Co-expression network"
+output: html_notebook
+---
+
+NB : larges files (to save outside repository / too large for github)
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+print("starting !")
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+source("src/ML.R")
+library(stringi)
+library(randomForest)
+library(caret)
+library(mygene)
+library(org.Hs.eg.db)
+library(Hmisc)
+```
+
+```{r}
+flat_cor_mat <- function(cor_r, cor_p){
+  #This function provides a simple formatting of a correlation matrix
+  #into a table with 4 columns containing :
+    # Column 1 : row names (variable 1 for the correlation test)
+    # Column 2 : column names (variable 2 for the correlation test)
+    # Column 3 : the correlation coefficients
+    # Column 4 : the p-values of the correlations
+  library(tidyr)
+  library(tibble)
+  cor_r <- rownames_to_column(as.data.frame(cor_r), var = "row")
+  cor_r <- gather(cor_r, column, cor, -1)
+  cor_p <- rownames_to_column(as.data.frame(cor_p), var = "row")
+  cor_p <- gather(cor_p, column, p, -1)
+  cor_p_matrix <- left_join(cor_r, cor_p, by = c("row", "column"))
+  cor_p_matrix
+}
+```
+
+## load data
+### transcriptomics
+```{r}
+data_txn <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+data_txn <- data.frame(t(data_txn))
+data_txn$Gene_name <- mapIds(org.Hs.eg.db, rownames(data_txn), keytype="ENSEMBL", column="SYMBOL")
+data_txn <- data_txn[!is.na(data_txn$Gene_name),]
+data_txn <- data_txn[!duplicated(data_txn$Gene_name),]
+rownames(data_txn) <- data_txn$Gene_name
+data_txn$Gene_name <- NULL
+#data_txn <- data_txn[apply(data_txn, 1, var) >= 0.2, ]
+data_txn <- data.frame(t(data_txn))
+rownames(data_txn)<- gsub("X", "", rownames(data_txn))
+```
+### metabolomics
+```{r}
+data_met <- read.csv("processing/COCOMO_metabolomics_log2_norm_filt.csv", row.names = 1, check.names = FALSE)
+data_met <- data_met[rownames(data_met) %in% rownames(data_txn), ]
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+#data_met$COCOMO_ID <- rownames(data_met)
+```
+### olink
+```{r}
+data_olink <- read.csv("processing/olink_data_new_ids.csv", row.names = 1, check.names = FALSE)
+data_olink$Condition <- NULL
+```
+
+
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt")
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv")
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";")
+```
+
+
+```{r}
+x <- colnames(data_txn)[colnames(data_txn) %in% c(as.vector(sen_1$GeneSymb), as.vector(sen_2$Gene_name), as.vector(sen_3$gene_symbol))]
+y <- colnames(data_olink)[colnames(data_olink) %in% c(as.vector(sen_1$GeneSymb), as.vector(sen_2$Gene_name), as.vector(sen_3$gene_symbol))]
+x <- unique(x)
+y <- unique(y)
+m <- unique(c(x, y))
+```
+
+
+### clinical parameters
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_2.csv")
+clinical$X <- NULL
+#clinical <- clinical[,c(1, 4, 6, 8, 11, 12, 13, 36, 37, 38, 40)]
+clinical_HIV <- clinical[clinical$HIV_Status != "Ctrl",]
+clinical_HIV <- clinical_HIV[clinical_HIV$COCOMO_ID %in% rownames(data_olink),]
+```
+
+```{r}
+data_txn <- data_txn[rownames(data_txn) %in% clinical_HIV$COCOMO_ID,]
+data_met <- data_met[rownames(data_met) %in% clinical_HIV$COCOMO_ID,]
+data_olink <- data_olink[rownames(data_olink) %in% clinical_HIV$COCOMO_ID,]
+```
+
+```{r}
+data_met <- data_met[order(match(rownames(data_met), rownames(data_txn))),]
+data_olink <- data_olink[order(match(rownames(data_olink), rownames(data_txn))),]
+```
+
+```{r}
+write.csv(data_txn, "processing/COCOMO_transcriptomics_vsd_data_deseq2_filt.csv")
+write.csv(data_olink, "processing/COCOMO_proteomics_olink_filt.csv")
+write.csv(data_met, "processing/COCOMO_metabolomics_metabolon_filt.csv")
+```
+
+
+```{r}
+name_ana <-  "co_expression_network"
+```
+
+```{r}
+my_cor_matrix_globale <- data.frame(feat1 = NA, feat2 = NA, R = NA, p = NA, Padj = NA, slice = NA)
+
+n_feat <- 400
+
+for (i in 987:1000) {
+  print(i)
+  title_ana <- paste0(name_ana, "_", "slice", i)
+  
+  data_1 <- data_met[, sample(ncol(data_met), n_feat, replace = FALSE)]
+  data_2 <- data_txn[, sample(ncol(data_txn), n_feat, replace = FALSE)]
+  data_3 <- data_olink[, sample(ncol(data_olink), n_feat, replace = FALSE)]
+  
+  data_1$ID <- rownames(data_1)
+  data_2$ID <- rownames(data_2)
+  data_3$ID <- rownames(data_3)
+
+  data <- merge(data_1, data_2, by = "ID")
+  data <- merge(data, data_3, by = "ID")
+  
+  cor_3 <- rcorr(as.matrix(data[,-1]), type = "spearman")
+  cor_3$r[upper.tri(cor_3$r)] <- NA
+  my_cor_matrix <- flat_cor_mat(cor_3$r, cor_3$P)
+  my_cor_matrix$padj <- p.adjust(my_cor_matrix$p, method = "fdr")
+  my_cor_matrix$cor <- ifelse(my_cor_matrix$padj > 0.000001, 0, my_cor_matrix$cor)
+  my_cor_matrix <- my_cor_matrix[complete.cases(my_cor_matrix), ]
+  names(my_cor_matrix) <- c("feat1", "feat2", "R", "p", "Padj")
+  my_cor_matrix$slice <- title_ana
+  write.table(my_cor_matrix, paste0("results/networks/co_expression/co_exprecorrelation_matrix_iteration_", i, ".txt"), quote = FALSE, row.names = FALSE, sep = "\t")
+  my_cor_matrix_globale <- rbind(my_cor_matrix_globale, my_cor_matrix)
+  
+}
+
+```
+
+
+```{r}
+list_pair <- read.delim("/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/output_files_co_expression/dataframe_list_pairs_co-expression_network.txt")
+```
+
+```{r}
+dir <- list.files("/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/co_expression")
+
+for (i in 1:length(dir)) {
+  print(list_pair$slice[i])
+  x <- paste0("/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/co_expression/",dir[i])
+  data <- read.delim(x)
+  data$Comp <- ifelse(data$feat1 > data$feat2, 
+                       paste0(data$feat1, "_", data$feat2), 
+                       paste0(data$feat2, "_", data$feat1))
+  list_pair$count[list_pair$Comp %in% data$Comp] <- list_pair$count[list_pair$Comp %in% data$Comp] + 1
+  data <- data[data$R != 0,]
+  list_pair$count_sign[list_pair$Comp %in% data$Comp] <- list_pair$count_sign[list_pair$Comp %in% data$Comp] + 1
+  list_pair$slice[1] = list_pair$slice[1] + 1
+}
+```
+
+```{r}
+write.table(list_pair, "results/networks/dataframe_list_pairs_co-expression_network_test.txt", quote = FALSE, sep = "\t", row.names = FALSE)
+```
+
+```{r}
+table_count <- read.csv("/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/output_files_co_expression/dataframe_list_pairs_co-expression_network_test.txt", sep = "\t")
+
+table_count <- table_count[table_count$count > 0,]
+
+table_count$proportion <- table_count$count_sign / table_count$count
+
+table_count <- table_count[table_count$proportion > 0.9,]
+```
+
+```{r}
+write.csv(table_count, "/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/output_files_co_expression/final_list_interactions.csv")
+```
+
+
+## find types of interactions
+```{r}
+table_count <- read.csv("/home/flomik/Desktop/Code-PHD/Data/data_COCOMO_txn/output_files_co_expression/final_list_interactions.csv")
+
+table_count$type_1[table_count$feat1 %in% colnames(data_met)] <- "met"
+
+table_count$type_1[table_count$feat1 %in% colnames(data_olink) & table_count$feat1 %in% colnames(data_txn)] <- "olink-trx"
+
+table_count$type_1[table_count$feat1 %in% colnames(data_olink) & !table_count$feat1 %in% colnames(data_txn)] <- "olink"
+
+table_count$type_1[!table_count$feat1 %in% colnames(data_olink) & table_count$feat1 %in% colnames(data_txn)] <- "trx"
+
+
+table_count$type_2[table_count$feat2 %in% colnames(data_met)] <- "met"
+
+table_count$type_2[table_count$feat2 %in% colnames(data_olink) & table_count$feat2 %in% colnames(data_txn)] <- "olink-trx"
+
+table_count$type_2[table_count$feat2 %in% colnames(data_olink) & !table_count$feat2 %in% colnames(data_txn)] <- "olink"
+
+table_count$type_2[!table_count$feat2 %in% colnames(data_olink) & table_count$feat2 %in% colnames(data_txn)] <- "trx"
+
+```
+
+```{r}
+table(table_count$type_1)
+```
+
+```{r}
+table(table_count$type_2)
+```
+```{r}
+table_count$type_both <- ifelse(table_count$type_1 > table_count$type_2, 
+                       paste0(table_count$type_1, "_", table_count$type_2), 
+                       paste0(table_count$type_2, "_", table_count$type_1))
+```
+
+```{r}
+table(table_count$type_both)
+```
+```{r}
+list_items <- unique(c(table_count$feat1, table_count$feat2))
+write.csv(list_items, "processing/list_items_consensus_co-expression.csv")
+```
+
+```{r}
+data_met
+```
+
+```{r}
+data_met$X <- rownames(data_met)
+data_olink$X <- rownames(data_olink)
+data_txn$X <- rownames(data_txn)
+data <- merge(data_met, data_olink, by = "X")
+data <- merge(data, data_txn, by = "X")
+
+data <- data[,colnames(data) %in% list_items]
+
+rownames(data) <- data_met$X
+write.csv(data, "processing/data_merged_co_expression_network_features_consensus.csv", row.names = TRUE)
+```
+
+
+
+
+
+colors
+-> communities´
+-> different in C1/ (logistic regression)
+-> driver genes
+-> SASAP
+-> 

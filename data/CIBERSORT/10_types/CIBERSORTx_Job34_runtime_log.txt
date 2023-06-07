@@ -1,0 +1,29 @@
+>Running CIBERSORTx GEP imputation (representative profiles only)...
+>[Options] mixture: files/flora.mikaeloff@ki.se/cybersort_input_1.txt
+>[Options] sigmatrix: files/common/LM22.update-gene-symbols.txt
+>[Options] classes: files/common/LM10_merged_classes.txt
+>[Options] threads: 7
+>[Options] nsampling: 30
+>[Options] redo: TRUE [to rerun CIBERSORT, set 'redocibersort' to TRUE]
+>[Options] QN: FALSE
+>[Options] outdir: files/flora.mikaeloff@ki.se/results/
+>[Options] label: Job34
+>Estimating cell proportions...
+done.
+>Loaded 198 mixture samples, 25578 genes, and 10 cell subsets...
+>Imputing representative cell type GEPs...done.
+>Writing output to disk...done.
+>Running time (sec): 274
+  adding: CIBERSORTxGEP_Job34_Fractions.txt (deflated 56%)
+  adding: CIBERSORTxGEP_Job34_GEPs.txt (deflated 53%)
+  adding: CIBERSORTxGEP_Job34_GEPs_CVs.txt (deflated 54%)
+  adding: CIBERSORTxGEP_Job34_GEPs_Filtered.txt (deflated 59%)
+  adding: CIBERSORTxGEP_Job34_GEPs_Pvals.txt (deflated 60%)
+  adding: CIBERSORTxGEP_Job34_GEPs_Qvals.txt (deflated 90%)
+  adding: CIBERSORTxGEP_Job34_GEPs_StdErrs.txt (deflated 52%)
+  adding: CIBERSORTxGEP_Job34_GEPs_ThresholdPlots.jpg (deflated 2%)
+  adding: CIBERSORTxGEP_Job34_GEPs_ThresholdPlots.pdf (deflated 50%)
+  adding: CIBERSORTxGEP_Job34_SM_GEPs_Filtered.txt (deflated 59%)
+  adding: CIBERSORTxGEP_Job34_Weights.txt (deflated 55%)
+  adding: CIBERSORTx_Job34_error_log.txt (stored 0%)
+  adding: CIBERSORTx_Job34_runtime_log.txt

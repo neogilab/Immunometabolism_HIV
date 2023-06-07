@@ -1,0 +1,151 @@
+---
+title: "RF models 3 layers integration metabolome"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+
+
+
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt")
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv")
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";")
+```
+
+```{r}
+library(dplyr)
+library(ComplexHeatmap)
+library(mygene)
+library(org.Hs.eg.db)
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+### clinical paraolinkers
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+```
+
+### olink
+```{r}
+data <- read.csv("processing/COCOMO_transcriptomics_vsd_data_deseq2.csv", row.names = 1, check.names = FALSE)
+```
+
+```{r}
+data$COCOMO_ID <- rownames(data)
+pca_data <- merge(clinical, data, by = "COCOMO_ID")
+data_prot <- data.frame(cluster = pca_data$cluster, CD4_CD8 = pca_data$CDA_CD8_cat, VAT = pca_data$VAT_cat, MetS = pca_data$METS, 
+                        pca_data[,-c(1:47)])
+```
+
+
+```{r}
+dge <- read.csv("results/Deseq2/model3_results_DGE_2_1_filt.csv", sep = ",")
+```
+
+```{r}
+cluster <- data_prot$cluster
+CD4_CD8 <- data_prot$CD4_CD8
+VAT <- data_prot$VAT
+MetS <- as.factor(data_prot$MetS)
+
+data_prot_2 <- data.frame(t(data_prot[,-c(1:4)]))
+data_prot_2$Gene_name <- mapIds(org.Hs.eg.db, rownames(data_prot_2), keytype="ENSEMBL", column="SYMBOL")
+data_prot_2 <- merge(dge, data_prot_2, by = "Gene_name")
+```
+
+
+```{r}
+data_prot_3 <- data_prot_2[data_prot_2$Gene_name %in% sen_1$GeneSymb,]
+data_prot_4 <- data_prot_2[data_prot_2$Gene_name %in% sen_2$Gene_name,]
+data_prot_5 <- data_prot_2[data_prot_2$Gene_name %in% sen_3$gene_symbol,]
+```
+
+```{r}
+sen <- c(sen_3$gene_symbol, sen_1$gene_symbol, sen_2$Gene_name)
+sen <- unique(sen)
+```
+
+```{r}
+data_prot_6 <- data_prot_2[data_prot_2$Gene_name %in% c(as.vector(data_prot_4$Gene_name),as.vector(data_prot_5$Gene_name), as.vector(data_prot_3$Gene_name)),]
+data_prot_6$CSGene <- ifelse(data_prot_6$Gene_name %in% sen_1$GeneSymb, "yes", NA)
+data_prot_6$CellAge <- ifelse(data_prot_6$Gene_name %in% sen_3$gene_symbol, "yes", NA)
+data_prot_6$SASAP <- ifelse(data_prot_6$Gene_name %in% sen_2$Gene_name, "yes", NA)
+
+table(data_prot_6$SASAP)
+table(data_prot_6$CellAge)
+table(data_prot_6$CSGene)
+
+rownames(data_prot_6) <- data_prot_6$Gene_name
+```
+
+```{r}
+data_prot_6[,-c(1:9,186:188)] <- data.frame(t(scale(t(data_prot_6[,-c(1:9,186:188)]))))
+```
+
+
+
+```{r}
+library(circlize)
+col_fun1 = colorRamp2(c(-3,-1.2, -1, 0,1, 1.2,3), c("#008080","#66b2b2" ,"#cce5e5","white","#d8b2b2","#b26666","#800000"))
+col_fun_2 = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+```
+
+```{r}
+x <- which(cluster != "Ctrl")
+
+cluster <- cluster[x]
+
+data_prot_7 <- data_prot_6[,-c(1:9,186:188)]
+```
+
+```{r}
+col
+```
+```{r}
+n <- data_prot_6[,c(186:188)]
+```
+SASAP transcriptomics --> MAPK1
+
+```{r}
+pdf("results/figures/Heatmap_transcriptomics_senescence_genes_significant.pdf", width = 10, height = 5)
+ht = Heatmap(data_prot_7[,x], 
+             #column_order = sort(colnames(t(data_prot_6[,-c(1:5)]))),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = FALSE,
+             #column_split = cluster, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(LogFC = data_prot_6$LFC_2_1, CSGene = data_prot_6$CSGene, SASAP = data_prot_6$SASAP, CellAge = data_prot_6$CellAge,
+                                              col = list(LogFC = col_fun_2, CSGene = c("yes" = "#408040"), SASAP = c("yes" = "#6aa84f"), CellAge = c("yes" = "#804080")), show_legend = TRUE),
+             
+             top_annotation = HeatmapAnnotation(cluster = cluster,
+                                              col = list(cluster = c("Ctrl" = col[1], "1" = col[2], "2" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```
+```{r}
+write.csv(data_prot_6, "processing/senescence_genes_C1_C2.csv")
+```
+

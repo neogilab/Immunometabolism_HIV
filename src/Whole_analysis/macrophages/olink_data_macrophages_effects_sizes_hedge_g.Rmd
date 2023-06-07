@@ -1,0 +1,557 @@
+---
+title: "Processing data macrophages"
+output: html_notebook
+---
+
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(mygene)
+library(org.Hs.eg.db)
+library(ggplot2)
+library(limma)
+source("src/usefull_functions.R")
+```
+
+## proteomics
+1) Normalization per batch
+2) Batch correction
+3) Filtering
+
+```{r}
+name_ana <- "macrophages_COCOMO"
+```
+
+```{r}
+data <- read.xlsx("data/macrophages/Q-00959_Neogi_NPX_UN.xlsx", 1)
+```
+
+```{r}
+id_Anoop <- read.xlsx("data/macrophages/Macrophage_Flora.xlsx", 1)
+names(id_Anoop)[2] <- "COCOMO_ID"
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+clinical <- clinical[,c(2, 3)]
+```
+
+```{r}
+names(data)[1] <- "Olink.ID"
+data <- merge(id_Anoop, data, by = "Olink.ID")
+data <- merge(clinical, data, by = "COCOMO_ID", all.y = TRUE)
+data$cluster[grep("Hea", data$Proteomics.ID)] <- "Ctrl"
+data$cluster <- as.vector(data$cluster)
+data$cluster[is.na(data$cluster)] <- "HIV"
+```
+
+```{r}
+pca_data <- data.frame(condition = data$cluster, data[,-c(1:7)])
+pca_data <- pca_data[!pca_data$condition %in% c("HIV", "Pool"),]
+pca_data$condition <- factor(pca_data$condition, levels = c("Ctrl", "1", "2"))
+```
+
+```{r}
+condition <- pca_data$condition
+condition <- as.vector(condition)
+condition[condition != "Ctrl"] <- paste0("C", condition[condition != "Ctrl"])
+design <- model.matrix( ~ 0 + condition)
+colnames(design) <- gsub("condition", "", colnames(design))
+fit <- lmFit(t(pca_data[,-c(1)]), design)
+```
+
+
+
+```{r}
+list_comp <- unique(condition)
+list_pair <- data.frame(t(combn(list_comp,2)))
+list_pair$comp <- paste0(list_pair$X1, "-", list_pair$X2)
+comp <- list_pair$comp
+names(comp) <- gsub("roup", "", comp)
+comp
+```
+## effect sizes
+# Effect size
+
+```{r}
+library(effectsize)
+library(ggrepel)
+```
+
+```{r}
+pca_data$condition <- factor(pca_data$condition, levels = c(2, 1, "Ctrl"))
+```
+
+
+```{r}
+pca_data_2 <- pca_data
+```
+
+```{r}
+library(RColorBrewer)
+col <- brewer.pal(9, "YlOrRd")
+col <- c("grey", col)
+```
+
+
+```{r}
+pca_data <- pca_data_2[pca_data_2$condition != "Ctrl",]
+e <- list()
+names_e <- list()
+ci_down <- list()
+ci_up <-list()
+
+for (i in 2:ncol(pca_data)) {
+  x <- cohens_d(pca_data[,i] ~ condition, data = pca_data, var.equal = FALSE, hedges.correction = TRUE)
+  e[i-1] <- x$Cohens_d
+  names_e[i-1] <- colnames(pca_data)[i]
+  ci_down[i-1] <- x$CI_low
+  ci_up[i-1] <- x$CI_high
+}
+
+m <- ncol(pca_data)-1
+
+effect_size_table <- data.frame(Met = rep(0, m), effect_size = rep(0, m), CI_down = rep(0, m), CI_up = rep(0, m))
+effect_size_table$Met <- unlist(names_e)
+effect_size_table$effect_size <- unlist(e)
+effect_size_table$CI_down <- unlist(ci_down)
+effect_size_table$CI_up <- unlist(ci_up)
+
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) > 0.8, "large", NA)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.8 & abs(effect_size_table$effect_size) > 0.5, "medium", effect_size_table$relative_size)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.5 & abs(effect_size_table$effect_size) > 0.2, "small", effect_size_table$relative_size)
+
+ag <- aggregate(. ~ condition, pca_data, function(x) c(mean = mean(x)))
+mean_df <- data.frame(t(ag[1,-1]-ag[2,-1]))
+mean_df$Met <- rownames(mean_df)
+
+effect_size_table <- merge(effect_size_table, mean_df, by = "Met")
+
+write.xlsx(effect_size_table,"results/effect_size_C1_C2.xlsx")
+
+effect_size_table$relative_size[is.na(effect_size_table$relative_size)] <- "NS"
+effect_size_table$label <- ifelse(abs(effect_size_table$effect_size) > 0.6, effect_size_table$Met,"")
+
+ggplot(effect_size_table, aes(x=X1, y=effect_size, size = abs(effect_size), label = label, col = abs(effect_size))) + 
+  geom_point()+theme_bw()+
+  xlab("Mean difference")+
+  ylab("Hedges g")+
+  xlim(c(-2, 4))+
+  #ylim(c(-0.7, 0.7))+ 
+  geom_hline(yintercept = -0.2, size = 0.3, color= "grey") + 
+  geom_hline(yintercept = -0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = -0.8, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.2, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.8, size = 0.3, color= "grey")+
+  geom_text(aes(3, 0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_text_repel(nudge_y = -0.05 , fontface='bold', size = 4) + scale_size_continuous(range = c(1, 4))+ 
+    scale_colour_gradientn(colours=col)
+
+ggsave("results/figures/effect_size_C1_C2_glass.pdf", width = 6, height = 4, useDingbats=FALSE)
+```
+
+
+```{r}
+pca_data <- pca_data_2[pca_data_2$condition != "1",]
+e <- list()
+names_e <- list()
+ci_down <- list()
+ci_up <-list()
+
+for (i in 2:ncol(pca_data)) {
+  x <- cohens_d(pca_data[,i] ~ condition, data = pca_data, var.equal = FALSE, hedges.correction = TRUE)
+  e[i-1] <- x$Cohens_d
+  names_e[i-1] <- colnames(pca_data)[i]
+  ci_down[i-1] <- x$CI_low
+  ci_up[i-1] <- x$CI_high
+}
+
+m <- ncol(pca_data)-1
+
+effect_size_table <- data.frame(Met = rep(0, m), effect_size = rep(0, m), CI_down = rep(0, m), CI_up = rep(0, m))
+effect_size_table$Met <- unlist(names_e)
+effect_size_table$effect_size <- unlist(e)
+effect_size_table$CI_down <- unlist(ci_down)
+effect_size_table$CI_up <- unlist(ci_up)
+
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) > 0.8, "large", NA)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.8 & abs(effect_size_table$effect_size) > 0.5, "medium", effect_size_table$relative_size)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.5 & abs(effect_size_table$effect_size) > 0.2, "small", effect_size_table$relative_size)
+
+ag <- aggregate(. ~ condition, pca_data, function(x) c(mean = mean(x)))
+mean_df <- data.frame(t(ag[1,-1]-ag[2,-1]))
+mean_df$Met <- rownames(mean_df)
+
+effect_size_table <- merge(effect_size_table, mean_df, by = "Met")
+
+write.xlsx(effect_size_table,"results/effect_size_C1_Ctrl.xlsx")
+
+effect_size_table$relative_size[is.na(effect_size_table$relative_size)] <- "NS"
+effect_size_table$label <- ifelse(effect_size_table$effect_size < -1.5, effect_size_table$Met,"")
+
+ggplot(effect_size_table, aes(x=X1, y=effect_size, size = abs(effect_size), label = label, col = abs(effect_size))) + 
+  geom_point()+theme_bw()+
+  xlab("Mean difference")+
+  ylab("Hedges g")+
+  xlim(c(-5, 4))+
+  #ylim(c(-0.7, 0.7))+ 
+  geom_hline(yintercept = -0.2, size = 0.3, color= "grey") + 
+  geom_hline(yintercept = -0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = -0.8, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.2, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.8, size = 0.3, color= "grey")+
+  geom_text(aes(3, 0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_text_repel(nudge_y = -0.05 , fontface='bold', size = 4) + scale_size_continuous(range = c(1, 4))+ 
+    scale_colour_gradientn(colours=col)
+
+ggsave("results/figures/effect_size_C1_Ctrl_glass.pdf", width = 6, height = 4, useDingbats=FALSE)
+```
+
+
+
+```{r}
+pca_data <- pca_data_2[pca_data_2$condition != "2",]
+e <- list()
+names_e <- list()
+ci_down <- list()
+ci_up <-list()
+
+for (i in 2:ncol(pca_data)) {
+  x <- cohens_d(pca_data[,i] ~ condition, data = pca_data, var.equal = FALSE, hedges.correction = TRUE)
+  e[i-1] <- x$Cohens_d
+  names_e[i-1] <- colnames(pca_data)[i]
+  ci_down[i-1] <- x$CI_low
+  ci_up[i-1] <- x$CI_high
+}
+
+m <- ncol(pca_data)-1
+
+effect_size_table <- data.frame(Met = rep(0, m), effect_size = rep(0, m), CI_down = rep(0, m), CI_up = rep(0, m))
+effect_size_table$Met <- unlist(names_e)
+effect_size_table$effect_size <- unlist(e)
+effect_size_table$CI_down <- unlist(ci_down)
+effect_size_table$CI_up <- unlist(ci_up)
+
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) > 0.8, "large", NA)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.8 & abs(effect_size_table$effect_size) > 0.5, "medium", effect_size_table$relative_size)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.5 & abs(effect_size_table$effect_size) > 0.2, "small", effect_size_table$relative_size)
+
+ag <- aggregate(. ~ condition, pca_data, function(x) c(mean = mean(x)))
+mean_df <- data.frame(t(ag[1,-1]-ag[2,-1]))
+mean_df$Met <- rownames(mean_df)
+
+effect_size_table <- merge(effect_size_table, mean_df, by = "Met")
+
+write.xlsx(effect_size_table,"results/effect_size_Ctrl_C2.xlsx")
+
+effect_size_table$relative_size[is.na(effect_size_table$relative_size)] <- "NS"
+effect_size_table$label <- ifelse(effect_size_table$effect_size < -1.5, effect_size_table$Met,"")
+
+ggplot(effect_size_table, aes(x=X1, y=effect_size, size = abs(effect_size), label = label, col = abs(effect_size))) + 
+  geom_point()+theme_bw()+
+  xlab("Mean difference")+
+  ylab("Hedges g")+
+  xlim(c(-5, 4))+
+  #ylim(c(-0.7, 0.7))+ 
+  geom_hline(yintercept = -0.2, size = 0.3, color= "grey") + 
+  geom_hline(yintercept = -0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = -0.8, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.2, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.8, size = 0.3, color= "grey")+
+  geom_text(aes(3, 0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_text_repel(nudge_y = -0.05 , fontface='bold', size = 4) + scale_size_continuous(range = c(1, 4))+ 
+    scale_colour_gradientn(colours=col)
+
+ggsave("results/figures/effect_size_Ctrl_C2_glass.pdf", width = 6, height = 4, useDingbats=FALSE)
+```
+
+```{r}
+pca_data <- pca_data_2
+pca_data$condition <- as.vector(pca_data$condition)
+pca_data$condition[pca_data$condition != "Ctrl"] <- "HIV"
+pca_data$condition <- factor(pca_data$condition, levels = c("HIV", "Ctrl"))
+e <- list()
+names_e <- list()
+ci_down <- list()
+ci_up <-list()
+
+for (i in 2:ncol(pca_data)) {
+  x <- cohens_d(pca_data[,i] ~ condition, data = pca_data, var.equal = FALSE, hedges.correction = TRUE)
+  e[i-1] <- x$Cohens_d
+  names_e[i-1] <- colnames(pca_data)[i]
+  ci_down[i-1] <- x$CI_low
+  ci_up[i-1] <- x$CI_high
+}
+
+m <- ncol(pca_data)-1
+
+effect_size_table <- data.frame(Met = rep(0, m), effect_size = rep(0, m), CI_down = rep(0, m), CI_up = rep(0, m))
+effect_size_table$Met <- unlist(names_e)
+effect_size_table$effect_size <- unlist(e)
+effect_size_table$CI_down <- unlist(ci_down)
+effect_size_table$CI_up <- unlist(ci_up)
+
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) > 0.8, "large", NA)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.8 & abs(effect_size_table$effect_size) > 0.5, "medium", effect_size_table$relative_size)
+effect_size_table$relative_size <- ifelse(abs(effect_size_table$effect_size) < 0.5 & abs(effect_size_table$effect_size) > 0.2, "small", effect_size_table$relative_size)
+
+ag <- aggregate(. ~ condition, pca_data, function(x) c(mean = mean(x)))
+mean_df <- data.frame(t(ag[1,-1]-ag[2,-1]))
+mean_df$Met <- rownames(mean_df)
+
+effect_size_table <- merge(effect_size_table, mean_df, by = "Met")
+
+write.xlsx(effect_size_table,"results/effect_size_Ctrl_HIV.xlsx")
+
+effect_size_table$relative_size[is.na(effect_size_table$relative_size)] <- "NS"
+effect_size_table$label <- ifelse(effect_size_table$effect_size < -1.5, effect_size_table$Met,"")
+
+ggplot(effect_size_table, aes(x=X1, y=effect_size, size = abs(effect_size), label = label, col = abs(effect_size))) + 
+  geom_point()+theme_bw()+
+  xlab("Mean difference")+
+  ylab("Hedges g")+
+  xlim(c(-5, 4))+
+  #ylim(c(-0.7, 0.7))+ 
+  geom_hline(yintercept = -0.2, size = 0.3, color= "grey") + 
+  geom_hline(yintercept = -0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = -0.8, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.2, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.5, size = 0.3, color= "grey")+ 
+  geom_hline(yintercept = 0.8, size = 0.3, color= "grey")+
+  geom_text(aes(3, 0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, 0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.8, label = "Large effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.5, label = "Medium effect size", vjust = -0.2), color = "grey", size = 4)+
+  geom_text(aes(3, -0.2, label = "Small effect size", vjust = -0.2), color = "grey", size = 4)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_text_repel(nudge_y = -0.05 , fontface='bold', size = 4) + scale_size_continuous(range = c(1, 4))+ 
+    scale_colour_gradientn(colours=col)
+
+ggsave("results/figures/effect_size_Ctrl_HIV_glass.pdf", width = 6, height = 4, useDingbats=FALSE)
+```
+## ven diagram
+```{r}
+library(venneuler)
+
+pdf("results/figures/ven_diagramme_olink_overlap.pdf")
+MyVenn <- venneuler(c(A =14, B= 28,"A&B"=13))
+plot(MyVenn)
+
+text(0.535,0.51,"13")
+text(0.78,0.51,"1")
+text(0.20,0.51,"15")
+dev.off()
+
+```
+```{r}
+top_table <- read.csv("results/macrophages/LIMMA_macrophages_olink_proteomics.csv")
+dge <- top_table[,c(1,2, 4, 5)]
+dge <- dge[dge$adj.P.Val < 0.01,]
+list_olink <- as.vector(dge$BIOCHEMICAL)
+```
+
+```{r}
+data_prot_6 <- pca_data_2[,colnames(pca_data_2) %in% c("condition", as.vector(list_olink))]
+condition <- pca_data_2$condition
+condition <- as.vector(condition)
+
+condition[condition == 1] <- "HC-like"
+condition[condition == 2] <- "At-risk"
+
+condition <- factor(condition, levels = c("Ctrl", "HC-like", "At-risk"))
+
+data_prot_6 <- data_prot_6[,-1]
+data_prot_6 <- data.frame(t(data_prot_6))
+```
+
+
+```{r}
+names(pca_data)
+```
+
+```{r}
+pca_data <- data.frame(condition = condition, t(data_prot_6))
+pca <- prcomp(pca_data[,-c(1, 14)])
+df_out <- as.data.frame(pca$x)
+df_out$group <- as.factor(pca_data$condition)
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+
+gg <- data.frame(cluster=factor(df_out$group), x=df_out$PC1, y=df_out$PC2)
+rownames(gg) <- rownames(df_out)
+centroids <- aggregate(cbind(x,y)~cluster,data=gg,mean)
+gg <- merge(gg,centroids,by="cluster",suffixes=c("",".centroid"))
+rownames(gg) <- rownames(df_out)
+gg$label <- rownames(gg)
+```
+
+```{r}
+#col <- c( "#005900", "#6b8ea7",	"#a7846b")
+
+#col <- c( "#005900", "#878782","#c91212")
+
+col <- c( "#005900", "#878782",	"#761212")
+
+#col <- c( "#8ea76b", "#636161",	"#e76822")
+
+#col <- c( "#8ea76b", "#0073c2",	"#efc000")
+```
+
+
+```{r}
+ggplot(df_out)+
+    geom_point(aes(x=PC1,y=PC2,color=group, fill = group), size=3) +
+    theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+            axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+      xlab(paste0("PC1: ",round(a1,0),"% variance"))+
+      ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+        theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+              axis.title.y = element_text(size=16, face = "bold",color="black"),
+              axis.text = element_text(color="black",size=16, face = "bold"),
+              axis.text.x =element_text(color="black",size=16, face = "bold"),
+              panel.border = element_blank(),
+              axis.ticks.x = element_blank(),
+              strip.text.x = element_text(size = 9,color="black"),
+              panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+              panel.grid.major = element_line(size = 0.5, linetype ='solid', colour = "grey"),
+              panel.grid.minor = element_line(size = 0.25, linetype = 'solid', colour = "grey"),
+              plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+              legend.background=element_rect(fill = alpha("white", 0)))+ scale_color_manual(values = col)+ scale_fill_manual(values = col)+ scale_fill_manual(values = col)+ geom_density_2d(aes(x=PC1,y=PC2,color=group, fill = group))
+
+
+path_fig <- paste0("results/figures/PCA_olink_macrophages_filtered_29_style_4_density.pdf")
+ggsave(path_fig, height = 4, width = 5)
+```
+## umap
+```{r}
+library(dplyr)
+library(umap)
+
+prot.labels <- pca_data$condition
+prot.umap = umap(pca_data[,-1])
+prot.umap
+  
+data <- prot.umap$data
+layout <- prot.umap$layout
+data_umap <- cbind(data, layout)
+x = ncol(data_umap)
+y = ncol(data_umap)-1
+print(x)
+print(y)
+colnames(data_umap)[y:x] <- c("UMAP1", "UMAP2")
+data_umap <-data.frame(Condition = prot.labels, data_umap)
+  
+ggplot(data_umap, aes(UMAP1, UMAP2))+ 
+  geom_point(size = 5, alpha = 1, shape = 21, color = "black", aes(fill = factor(Condition)))+
+  stat_ellipse(type = "norm", geom = "polygon", aes(fill = Condition, color = Condition), alpha = 0.25)+ 
+  theme_minimal()+ 
+      theme(legend.title=element_text(size=10),legend.text=element_text(size=10),
+            legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+            axis.title.y=element_text(size=16, color = "black", face="bold"),axis.title.x=element_text(size=16, color = "black", face="bold"),
+            axis.text.y=element_text(size=14, color = "black"),axis.text.x=element_text(size=14, color = "black"))+ scale_color_manual(values = col)+ scale_fill_manual(values = col)
+  
+  ggsave(paste0("results/figures/UMAP_olink_macrophages-filtered_29.pdf"), width = 6, height = 4)
+```
+
+## heatmap
+```{r}
+data_prot_6 <- data.frame(t(scale(t(data_prot_6))))
+```
+
+```{r}
+max(data_prot_6$X5)
+```
+
+
+```{r}
+library(circlize)
+col_fun1 = colorRamp2(c(-3,-1, -0.5, 0, 0.5, 1, 3), c("#1e90ff","#2676d0" ,"#275ea2","black","#a39a21","#d0c521","#fff21e"))
+col_fun_2 = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+```
+
+```{r}
+col <- c( "#8ea76b", "#6b8ea7",	"#a7846b")
+```
+
+```{r}
+library(ComplexHeatmap)
+```
+
+```{r}
+dge$logFC <- dge$logFC
+```
+
+```{r}
+dge_1 <- dge[dge$Comp == "C1-Ctrl",]
+dge_2 <- dge[dge$Comp == "C2-Ctrl",]
+```
+
+```{r}
+data_prot_6$BIOCHEMICAL <- rownames(data_prot_6)
+```
+
+```{r}
+data_prot_6 <- merge(dge_1, data_prot_6, by = "BIOCHEMICAL", all.y = TRUE)
+data_prot_6 <- merge(dge_2, data_prot_6, by = "BIOCHEMICAL", all.y = TRUE)
+```
+```{r}
+rownames(data_prot_6) <- data_prot_6$BIOCHEMICAL
+```
+
+```{r}
+data_prot_6 <- data_prot_6[!is.na(data_prot_6$adj.P.Val.x) & is.na(data_prot_6$adj.P.Val.y),]
+```
+
+```{r}
+condition <- factor(condition, levels = c("Ctrl", "HC-like", "At-risk"))
+```
+
+```{r}
+pdf("results/figures/Heatmap_macrophages_olink_Ctrl_vs_clusters_0_001.pdf", width = 6, height = 4)
+ht = Heatmap(data_prot_6[,-c(1:7)], 
+             #column_order = sort(colnames(t(data_prot_6[,-c(1:5)]))),  
+             col = col_fun1, 
+             show_column_names = FALSE, 
+             show_row_names = TRUE,
+             column_split = condition, 
+             #row_split = data_2$under_group, 
+             #column_title = c("Ctrl",1, 2), 
+             #column_title_gp = gpar(fill = col), 
+             border = FALSE, 
+             column_gap = unit(2, "mm"), 
+             right_annotation = rowAnnotation(C2_Ctrl = data_prot_6$logFC.x,
+                                              col = list(C2_Ctrl = col_fun_2), show_legend = TRUE),
+             top_annotation = HeatmapAnnotation(cluster = condition,
+                                              col = list(cluster = c("Ctrl" = col[1], "HC-like" = col[2], "At-risk" = col[3])), show_legend = TRUE)
+             )
+draw(ht)
+dev.off()
+
+ht
+```
+

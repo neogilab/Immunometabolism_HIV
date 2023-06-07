@@ -1,0 +1,168 @@
+---
+title: "Olink"
+output: html_notebook
+---
+
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(dplyr)
+library(reshape2)
+library(ggplot2)
+library(limma)
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean.csv")
+```
+
+```{r}
+id <- read.xlsx("/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/clinical/COCOMID_LabelID Negin.xlsx", 1)
+
+id1 <- id$COCOMO.ID
+id2 <- id$COCOMO.ID.1
+
+cm1 <- id$Olink.ID.Negin
+cm2 <- id$Olink.ID.Negin.1
+
+data1 <- data.frame(COCOMO_ID = id1, Negin_ID = cm1, olink_plate = 1)
+data2 <- data.frame(COCOMO_ID = id2, Negin_ID = cm2, olink_plate = 2)
+
+data3 <- rbind(data1, data2)
+data3$Negin_ID <- as.vector(data3$Negin_ID)
+data3$Negin_ID[1:9] <- gsub("\\.", "00", data3$Negin_ID[1:9])
+data3$Negin_ID[10:99] <- gsub("\\.", "0", data3$Negin_ID[10:99])
+data3$Negin_ID[100:176] <- gsub("\\.", "", data3$Negin_ID[100:176])
+```
+
+```{r}
+data <- read.csv("data/Olink/Q-01546_Neogi_NPX_2022-06-09.csv", sep = ";")
+```
+
+```{r}
+prot_id <- data[,c(4, 5)]
+```
+
+```{r}
+data <- data[,c(1, 5, 12)]
+```
+
+```{r}
+data_2 <- dcast(data, SampleID ~ Assay, value.var= "NPX", fun.aggregate=sum)
+```
+
+```{r}
+pdf("results/figures/distribution_olink.pdf")
+data_3 <-as.matrix(data_2[,-1])
+hist(data_3 , prob=T)
+curve(dnorm(x,mean(data_3),sd(data_3)),add=T,col="red")
+dev.off()
+```
+
+```{r}
+data[data$SampleID == "N001" & data$Assay == "HEBP1",]
+```
+
+```{r}
+data_2[data_2$SampleID == "N001", colnames(data_2) %in% c("SampleID", "HEBP1")]
+```
+
+```{r}
+clinical <- merge(data3, clinical, by = "COCOMO_ID")
+write.csv(clinical, "processing/clinical_data_clean_2.csv")
+```
+
+
+```{r}
+colnames(data_2)[1] <- "Negin_ID"
+data_2 <- merge(clinical, data_2, by = "Negin_ID")
+rownames(data_2) <- data_2$COCOMO_ID
+```
+
+
+
+
+## PCA
+
+```{r}
+pca_data <- data.frame(Condition = data_2$HIV_Status, data_2[46:2968])
+write.csv(pca_data, "processing/olink_data_new_ids.csv")
+```
+
+```{r}
+prot_id <- prot_id[!duplicated(prot_id$Assay),]
+```
+
+```{r}
+pca_data$Condition <- NULL
+pca_data <- data.frame(t(pca_data))
+pca_data$Assay <- rownames(pca_data)
+pca_data <- merge(prot_id, pca_data, by = "Assay")
+
+pca_data <- data.frame(t(pca_data))
+rownames(pca_data) <- gsub("X", "", rownames(pca_data))
+
+write.csv(pca_data, "manuscript/table_olink_COCOMO_IDs.csv")
+```
+
+```{r}
+pca_data[is.na(pca_data)] <-  0
+pca <- prcomp(pca_data[,-1])
+```
+
+```{r}
+df_out <- as.data.frame(pca$x)
+df_out$group <- pca_data$Condition
+head(df_out)
+```
+
+```{r}
+ggplot(df_out, aes( x= PC1, y = PC2, fill = group ,color = group))+ geom_point(size = 5, alpha = 0.9, shape = 21, color = "black")+
+  stat_ellipse(geom = "polygon", alpha = 0.1, aes(fill = group))+ 
+  theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))
+
+path_fig <- paste0("results/figures/PCA_olink_HC_HIV.pdf")
+dev.copy(pdf, path_fig, height = 4, width = 6)
+dev.off()
+```
+
+
+## LIMMA
+```{r}
+#  4) Differential Expression Analysis
+## limma
+## pvalue = 0.05
+## adjustment Benjamini-Hotschberg
+
+# construct of groups for model design
+group <- factor(pca_data$Condition)
+design <- model.matrix( ~ 0 + group)
+
+
+# Fit linear model : estimate fold change and standard errors
+fit <- lmFit(t(pca_data[,-1]), design)
+
+cont.matrix <- makeContrasts(HCvsHIV="groupHIV-groupCtrl",levels=design)
+fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit.cont)
+top_table <- topTable(fit.cont, adjust="BH", n = Inf, sort.by = "P")
+
+write.csv(top_table, "results/olink/LIMMA_HC_HIV.csv")
+DF_top_table <-top_table[top_table$adj.P.Val < 0.05, ]
+write.csv(DF_top_table, "results/olink/LIMMA_HC_HIV.csv")
+```
+

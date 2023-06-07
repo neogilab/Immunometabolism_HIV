@@ -1,0 +1,216 @@
+---
+title: "Overlap clusters HIV"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+processing
+
+
+"processing/parameters_aging_project_DA_RA_AA.csv"
+
+## paper 5
+```{r}
+data <- read.csv("/home/flomik/Desktop/Code-PHD/Aging_COCOMO/processing/clinical_data_clean_with_aging_categories.csv")
+data <- data[,c(2, 168)]
+data <- data[!is.na(data$group),]
+names(data)[2] <- "group (paper V)"
+```
+
+```{r}
+# Generate 3 sets of 200 words
+set1 <- data$COCOMO_ID
+
+```
+
+
+## paper 4
+```{r}
+cluster <- read.csv("/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/cluster_SNF_transcriptomics_metabolomics_olink_3.csv", row.names = 1)
+names(cluster)[2] <- "COCOMO_ID"
+names(cluster)[1] <- "group (paper IV)"
+```
+
+```{r}
+set2 <- cluster$COCOMO_ID
+
+```
+
+```{r}
+clinical <- merge(cluster, data, by = "COCOMO_ID", all.y = TRUE, all.x = TRUE)
+```
+
+## paper 3
+```{r}
+cluster <- read.csv("/home/flomik/Desktop/Code-PHD/3_layers_integration/processing/cluster_SNF_3_omics_3_clusters_plusHC.csv")
+cluster$X <- NULL
+cluster <- cluster[cluster$cluster != "Ctrl",]
+cluster <- cluster[!is.na(cluster$cluster),]
+
+names(cluster)[2] <- "COCOMO_ID"
+names(cluster)[1] <- "group (paper III)"
+```
+
+```{r}
+set3 <- cluster$COCOMO_ID
+```
+
+```{r}
+clinical <- merge(cluster, clinical, by = "COCOMO_ID", all.y = TRUE, all.x = TRUE)
+```
+
+
+```{r}
+library(ComplexHeatmap)
+```
+
+```{r}
+clinical$values <- 1:190
+```
+
+```{r}
+col_III <-  c("#2273C3","#EFC144","#868686")
+col_IV <- c("#878782",	"#761212")
+col_V <- c("#c0c0c0", "#1f3e0f", "#791919")
+```
+
+```{r}
+clinical[is.na(clinical)] <- "0"
+```
+
+```{r}
+clinical <- clinical[order(clinical$`group (paper IV)`, clinical$`group (paper III)`, clinical$`group (paper V)`),]
+```
+
+```{r}
+library(ComplexHeatmap)
+pdf("results/figures/compare_patients_different_studies.pdf", width = 10, height = 4)
+ht = Heatmap(as.matrix(clinical[,c(5)]),
+             column_order = colnames(clinical[,c(5)]),
+             row_order = rownames(clinical[,c(5)]),
+             show_row_names = TRUE,
+             show_column_names = TRUE,
+             row_title_rot = 0,
+             border = FALSE,
+             column_gap = unit(8, "mm"), 
+             right_annotation = rowAnnotation(Paper_III = clinical$`group (paper III)`,
+                                             Paper_IV = clinical$`group (paper IV)`,
+                                              Paper_V = clinical$`group (paper V)`,
+                                              col = list(Paper_III = c(
+                                                "0" = "white",
+                                                                       "1" = col_III[1],
+                                                                       "2" = col_III[2],
+                                                                       "3" = col_III[3]),
+                                                         Paper_IV = c("0" = "white", "1" = col_IV[1], 
+                                                                      "2" = col_IV[2]),
+                                                         Paper_V = c("0" = "white", "DA" = col_V[2], 
+                                                                     "RA" = col_V[1], 
+                                                                     "AA" = col_V[3])
+                                                        )
+             ,gp = gpar(col = "black")))
+ht
+dev.off()
+```
+```{r}
+# Load library
+library(VennDiagram)
+ 
+# Prepare a palette of 3 colors with R colorbrewer:
+library(RColorBrewer)
+myCol <- brewer.pal(3, "Pastel2")
+
+# Chart
+venn.diagram(
+        x = list(set1, set2, set3),
+        category.names = c("Paper V" , "Paper IV" , "Paper III"),
+        filename = '#14_venn_diagramm_overlap_studies.png',
+        output=TRUE,
+        
+        # Output features
+        imagetype="png" ,
+        height = 480 , 
+        width = 480 , 
+        resolution = 300,
+        compression = "lzw",
+        
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+        fill = myCol,
+        
+        # Numbers
+        cex = .6,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.6,
+        cat.fontface = "bold",
+        cat.default.pos = "outer",
+        cat.pos = c(-27, 27, 135),
+        cat.dist = c(0.055, 0.055, 0.085),
+        cat.fontfamily = "sans",
+        rotation = 1
+)
+```
+## overlap
+```{r}
+set1 <- clinical$COCOMO_ID[clinical$`group (paper III)` == 2]
+set2 <- clinical$COCOMO_ID[clinical$`group (paper IV)` == 2]
+set3 <- clinical$COCOMO_ID[clinical$`group (paper V)` == "AA"]
+```
+
+
+
+```{r}
+# Load library
+library(VennDiagram)
+ 
+# Prepare a palette of 3 colors with R colorbrewer:
+library(RColorBrewer)
+myCol <- brewer.pal(3, "Pastel1")
+
+# Chart
+venn.diagram(
+        x = list(set1, set2, set3),
+        category.names = c("Paper V" , "Paper IV" , "Paper III"),
+        filename = '#14_venn_diagramm_overlap_studies_risk_groups.png',
+        output=TRUE,
+        
+        # Output features
+        imagetype="png" ,
+        height = 480 , 
+        width = 480 , 
+        resolution = 300,
+        compression = "lzw",
+        
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+        fill = myCol,
+        
+        # Numbers
+        cex = .6,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.6,
+        cat.fontface = "bold",
+        cat.default.pos = "outer",
+        cat.pos = c(-27, 27, 135),
+        cat.dist = c(0.055, 0.055, 0.085),
+        cat.fontfamily = "sans",
+        rotation = 1
+)
+```
+
+

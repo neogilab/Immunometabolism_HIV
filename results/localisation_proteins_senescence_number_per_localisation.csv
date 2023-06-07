@@ -1,0 +1,61 @@
+"","Area","Nb"
+"1","Apical cell membrane",0
+"2","Cell junction",2
+"3","Cell membrane",14
+"4","cis-Golgi network",1
+"5","Cytoplasm",48
+"6","Cytoplasmic vesicle",7
+"7","Early endosome",2
+"8","Endoplasmic reticulum",8
+"9","Endoplasmic reticulum membrane",1
+"10","Endoplasmic reticulum-Golgi intermediate compartment",2
+"11","Endosome membrane",1
+"12","Endosome",4
+"13","Golgi apparatus",6
+"14","Golgi apparatus lumen",1
+"15","Golgi stack",1
+"16","Golgi stack membrane",1
+"17","Endomembrane system",0
+"18","Lysosome membrane",1
+"19","Lysosome",9
+"20","Melanosome",2
+"21","Membrane",13
+"22","Mitochondrion inner membrane",2
+"23","Mitochondrion intermembrane space",1
+"24","Mitochondrion matrix",5
+"25","Mitochondrion outer membrane",5
+"26","Mitochondrion",15
+"27","Nucleus inner membrane",0
+"28","Nucleus matrix",2
+"29","Nucleus membrane",3
+"30","Nucleus speckle",3
+"31","Nucleoplasm",1
+"32","Nucleus",42
+"33","Perikaryon",2
+"34","Perinuclear region",2
+"35","Peroxisome membrane",2
+"36","Peroxisome",2
+"37","Rough endoplasmic reticulum",1
+"38","Rough endoplasmic reticulum lumen",1
+"39","Secreted",22
+"40","trans-Golgi network",0
+"41","Cell projection",4
+"42","Postsynaptic density",2
+"43","Cell surface",3
+"44","M line",0
+"45","Endoplasmic reticulum-Golgi intermediate compartment lumen",1
+"46","Endosome lumen",1
+"47","Membrane raft",3
+"48","PML body",1
+"49","Cleavage furrow",1
+"50","Chromosome",5
+"51","Midbody",1
+"52","Vesicle",2
+"53","Zymogen granule",2
+"54","Zymogen granule membrane",2
+"55","Peripheral membrane protein",6
+"56","Single-pass membrane protein",5
+"57","Single-pass type I membrane protein",12
+"58","Multi-pass membrane protein",1
+"59","Cytoplasmic side",2
+"60","Extracellular side",1

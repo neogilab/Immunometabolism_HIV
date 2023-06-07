@@ -1,0 +1,68 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+clinical <- read.csv("processing/clinical_data_clean_with_clusters_and_categories.csv")
+```
+
+```{r}
+data <- read.csv('results/GSMM/transcriptomics_data_tpm_GEM.csv')
+```
+
+
+```{r}
+names <- read.csv("results/GSMM/names_patinets.csv")
+```
+
+```{r}
+names_out <- names[!names$x %in% clinical$User,]
+
+names <- names[names$x %in% clinical$User,]
+```
+
+```{r}
+colnames(data)[-1] == names$x
+```
+
+```{r}
+file <- list.files("results/MATLAB/GEM-personalized")
+```
+
+```{r}
+names2 <- names[!names$x %in% file, ]
+names3 <- names[names$x %in% file, ]
+names_out_2 <- names_out[names_out$x %in% file,]
+names_out_2$x
+```
+
+```{r}
+#write.csv(names2, "results/GSMM/names_patients_left.csv")
+```
+
+
+```{r}
+library(tidyverse)
+
+path <- "results/MATLAB/GEM-personalized/"
+
+work <- tibble(subfolder = dir(path)) %>% 
+    mutate(file_n = map_int(str_glue("{path}{subfolder}"), ~ dir(.) %>% length),
+           is_even = file_n %% 2 == 0
+           )
+
+work <- work[work$file_n < 2,]
+```
+
+

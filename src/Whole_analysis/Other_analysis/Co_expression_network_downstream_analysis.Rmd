@@ -1,0 +1,187 @@
+---
+title: "Downstream analysis COCOMO"
+output: html_notebook
+---
+
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+## add communities
+```{r}
+table_nodes <- read.csv("results/networks/Table_nodes_CPMCo_expression_3_layers.csv")
+```
+
+
+```{r}
+table(table_nodes$type_1, table_nodes$Community)
+```
+```{r}
+driver_genes <- read.csv("processing/bblearn_find_driver_genes.csv")
+driver_genes <- driver_genes[driver_genes$BIC_diff > 0,]
+driver_proteins <- read.csv("processing/bblearn_find_driver_genes_proteomics.csv")
+driver_proteins <- driver_proteins[driver_proteins$BIC_diff > 0,]
+```
+
+```{r}
+table_nodes$Network <- NULL
+table_nodes$driver[table_nodes$feat1 %in% driver_proteins$gene] <- "driver_prot"
+table_nodes$driver[table_nodes$feat1 %in% driver_genes$gene] <- "driver_gene"
+```
+```{r}
+table(table_nodes$driver)
+```
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt")
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv")
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";")
+```
+
+```{r}
+sen <- unique(c(as.vector(sen_1$GeneSymb), as.vector(sen_2$Gene_name), as.vector(sen_3$gene_symbol)))
+```
+
+```{r}
+table_nodes$SASAP <- NA
+table_nodes$SASAP[table_nodes$feat1 %in% c(as.vector(sen_1$GeneSymb), as.vector(sen_2$Gene_name), as.vector(sen_3$gene_symbol))] <- "SASAP"
+table(table_nodes$SASAP, table_nodes$Community)
+```
+```{r}
+table_nodes$SASAP_2 <- paste(table_nodes$type_1, "_", table_nodes$SASAP)
+table_nodes$SASAP_2[grep("NA", table_nodes$SASAP_2)] <- NA
+```
+
+```{r}
+table(table_nodes$SASAP_2)
+```
+```{r}
+z <- table_nodes[table_nodes$Community == 3, ]
+table(z$SASAP)
+```
+
+```{r}
+table_nodes_txn <- table_nodes[table_nodes$type_1 == "txn",]
+table_nodes_prot <- table_nodes[table_nodes$type_1 == "prot",]
+table_nodes_met <- table_nodes[table_nodes$type_1 == "met",]
+```
+
+```{r}
+txn <- read.csv("results/Deseq2/model3_results_DGE_2_1_filt.csv")
+txn <- txn[,c(9, 3, 7)]
+names(txn) <- c("feat1", "LFC_txn", "FDR_txn")
+```
+
+```{r}
+table_nodes_txn <- merge(txn, table_nodes_txn, by = "feat1")
+names(table_nodes_txn)[2:3] <- c("LFC", "FDR")
+```
+
+```{r}
+prot <- read.csv("results/LIMMA/model_3_LIMMA_results_olink_with_HC_filt.csv", sep = " ")
+prot$P.Value <- NULL
+prot$Comp <- NULL
+names(prot) <- c("feat1", "LFC_prot", "FDR_prot")
+```
+
+```{r}
+table_nodes_prot <- merge(prot, table_nodes_prot, by = "feat1")
+names(table_nodes_prot)[2:3] <- c("LFC", "FDR")
+```
+
+```{r}
+met <- read.csv("results/LIMMA/model_3_LIMMA_results_metabolites_with_HC_filt.csv", sep = " ")
+met$Comp <- NULL
+met$P.Value <- NULL
+names(met) <- c("feat1", "LFC_met", "FDR_met")
+```
+
+```{r}
+table_nodes_met <- merge(met, table_nodes_met, by = "feat1")
+names(table_nodes_met)[2:3] <- c("LFC", "FDR")
+```
+
+```{r}
+table_nodes <- rbind(table_nodes_met, table_nodes_prot, table_nodes_txn)
+```
+
+```{r}
+x <- table_nodes$FDR
+x[!is.na(x)] <- "sign"
+table_nodes$SASAP_sign <- paste0(table_nodes$SASAP_2, "_", x)
+```
+```{r}
+table(table_nodes$SASAP_sign)
+```
+
+```{r}
+write.csv(table_nodes, "results/networks/co_expression/table_nodes_co_expression_network.csv")
+```
+
+
+## add first neiborgs to driver genes
+```{r}
+table_nodes <- read.csv("results/networks/co_expression/table_nodes_co_expression_network.csv")
+driver <- as.vector(table_nodes$feat1[!is.na(table_nodes$driver)])
+```
+
+```{r}
+write.table(table_nodes$feat1[table_nodes$Community == 3 & table_nodes$type_1 == "prot"], "processing/proteins_C3_co_expression.txt", quote = FALSE, row.names = FALSE)
+```
+
+```{r}
+write.csv(table_nodes, "results/networks/co_expression/table_nodes_co_expression_network.csv")
+```
+
+## table nodes
+```{r}
+x <- read.csv("results/networks/Table_nodes_CPMCo_expression_3_layers.csv")
+x2 <- x
+x <- x[x$Community == 3,]
+table(x$type_1)
+```
+
+
+## load senescence
+```{r}
+sen_1 <- read.delim("data/senescence/csgene_human.txt")
+sen_2 <- read.delim("data/senescence/SASP_reactome.tsv")
+sen_2$Gene_name <- gsub(".* ", "", sen_2$MoleculeName)
+sen_3 <- read.delim("data/senescence/signatures_senescence.csv", sep = ";")
+```
+
+```{r}
+sen <- unique(c(as.vector(sen_1$GeneSymb), as.vector(sen_2$Gene_name), as.vector(sen_3$gene_symbol)))
+```
+
+```{r}
+dge <- read.csv("results/LIMMA/model_3_LIMMA_results_olink_with_HC.csv")
+dge <- dge[dge$adj.P.Val < 0.1,]
+length(dge$logFC[dge$BIOCHEMICAL %in% sen])
+```
+```{r}
+length(table_nodes$feat1[table_nodes$feat1 %in% dge$BIOCHEMICAL & table_nodes$feat1 %in% sen])
+```
+
+```{r}
+length(x$feat1[x$feat1 %in% sen])
+
+length(x$feat1[x$feat1 %in% sen & x$feat1 %in% dge$BIOCHEMICAL])
+```
+
+```{r}
+length(x$feat1[x$feat1 %in% sen_1$GeneSymb & x$feat1 %in% dge$BIOCHEMICAL])
+length(x$feat1[x$feat1 %in% sen_3$gene_symbol & x$feat1 %in% dge$BIOCHEMICAL])
+```
+```{r}
+length(x2$feat1[x2$feat1 %in% sen_1$GeneSymb & x2$feat1 %in% dge$BIOCHEMICAL])
+
+length(x2$feat1[x2$feat1 %in% sen_3$gene_symbol & x2$feat1 %in% dge$BIOCHEMICAL])
+```

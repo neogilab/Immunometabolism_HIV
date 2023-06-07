@@ -1,0 +1,22 @@
+x
+1-stearoyl-2-arachidonoyl-GPS (18:0/20:4)
+1-stearoyl-2-docosahexaenoyl-GPS (18:0/22:6)*
+3-phosphoglycerate
+AMP
+beta-citrylglutamate
+phosphocholine
+glycerophosphoethanolamine
+hexadecasphingosine (d16:1)*
+maltose
+nicotinamide
+phosphoethanolamine (PE)
+serotonin
+spermidine
+spermine
+sphingadienine
+sphinganine
+sphinganine-1-phosphate
+sphingosine
+sphingosine 1-phosphate
+taurine
+heme

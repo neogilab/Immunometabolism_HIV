@@ -1,0 +1,28 @@
+Node_1	Name	type
+ENSG00000110090	CPT1A	gene
+ENSG00000169169	CPT1C	gene
+ENSG00000178537	SLC25A20	gene
+ENSG00000205560	CPT1B	gene
+ENSG00000005469	CROT	gene
+ENSG00000095321	CRAT	gene
+ENSG00000197119	SLC25A29	gene
+MAM03489c	Sebacoyl Carnitine	met
+MAM03490c	Dodecanedioyl Carnitine	met
+MAM03495c	Succinyl Carnitine	met
+MAM03498c	Hexanoyl Carnitine	met
+MAM03499c	Adipoyl Carnitine	met
+MAM03502c	Suberyl Carnitine	met
+MAM03727c	Alpha-Linolenyl Carnitine	met
+MAM03790c	11-Octadecenoyl Carnitine	met
+MAM03793c	Octadecenoyl Carnitine (Hypothetical, Position Of Double Bond Unknown)	met
+MAM00950x	4,8-dimethylnonanoylcarnitine	met
+MAM02634x	O-acetylcarnitine	met
+MAM02409c	L-octanoylcarnitine	met
+MAM02409m	L-octanoylcarnitine	met
+MAM02635x	O-butanoylcarnitine	met
+MAM03489x	Sebacoyl Carnitine	met
+MAM03490x	Dodecanedioyl Carnitine	met
+MAM03495x	Succinyl Carnitine	met
+MAM03498x	Hexanoyl Carnitine	met
+MAM03499x	Adipoyl Carnitine	met
+MAM03502x	Suberyl Carnitine	met

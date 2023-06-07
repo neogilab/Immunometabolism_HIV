@@ -1,0 +1,356 @@
+---
+title: "Processing data macrophages"
+output: html_notebook
+---
+
+### clean environment
+```{r}
+rm(list=ls())
+```
+
+### set directory
+```{r setup}
+    knitr::opts_knit$set(root.dir = normalizePath("~/Desktop/Code-PHD/COCOMO_txn/")) 
+```
+
+```{r}
+library(xlsx)
+library(mygene)
+library(org.Hs.eg.db)
+library(mygene)
+library(ggplot2)
+library(ggrepel)
+library(limma)
+source("src/usefull_functions.R")
+```
+
+## proteomics
+1) Normalization per batch
+2) Batch correction
+3) Filtering
+
+```{r}
+name_ana <- "Monocytes_prot"
+input <- "/home/flomik/Desktop/Code-PHD/COCOMO_txn/data/proteomics/20230202_HF2_08_Ujjwal_Monocytes_TMT12_proteins.csv"
+```
+
+```{r}
+prot <- read.csv(input)
+rownames(prot) <- prot$Accession
+prot <- prot[colnames(prot) %in% colnames(prot)[grepl("Abundance\\.\\.", colnames(prot))]]
+data <- data.frame(t(prot))
+```
+
+```{r}
+rownames(data)[rownames(data) == "Abundance..F16..132N..Sample..6B."] <- "Abundance..F16..132N..Sample..6A."
+```
+
+```{r}
+table_condition <- data.frame(Names = rownames(data), condition = NA, sample = NA)
+table_condition$sample <- gsub(".*Sample\\.\\.", "", table_condition$Name)
+table_condition$replicate <- gsub(".\\.", "", table_condition$sample)
+table_condition$sample <- gsub("\\.", "", table_condition$sample)
+table_condition$condition <- gsub("^.", "", table_condition$sample)
+```
+
+
+## remove empty lines
+```{r}
+print(ncol(data))
+data <- data[,colSums(is.na(data)) < 10]
+print(ncol(data))
+```
+
+### check for missing values
+```{r}
+counts <- 1:nrow(data) # create vector of appropriate length
+for(i in 1:nrow(data)){
+    # TRUE will be coerced to 1 for the summing
+    counts[i] <- sum(is.na(data[i,]))
+}
+table(counts) # create the summary
+```
+
+### distribution
+```{r}
+data_2 <-as.matrix(data)
+hist(data_2 , prob=T)
+curve(dnorm(x,mean(data_2),sd(data_2)),add=T,col="red")
+```
+
+### PCA before norm
+```{r}
+data$Names <- rownames(data)
+pca_data <- merge(table_condition, data, by = "Names")
+rownames(pca_data) <- pca_data$Name
+```
+
+
+```{r}
+pca_data[is.na(pca_data)] <-  0
+pca <- prcomp(pca_data[,-c(1:4)])
+df_out <- as.data.frame(pca$x)
+df_out$group <- as.factor(pca_data$condition)
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+```
++ scale_color_manual(values = col)+ scale_fill_manual(values = col)
+
+```{r}
+df_out$sample <- as.factor(pca_data$sample)
+```
+```{r}
+col <- c( "#005900", "#878782",	"#761212")
+```
+
+```{r}
+ggplot(df_out, aes( x= PC1, y = PC2, color = group, label = sample))+ theme_classic()+geom_point(size = 5, alpha = 0.9, shape = 19)+ 
+        theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+              legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+              axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+              axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+        xlab(paste0("PC1: ",round(a1,0),"% variance")) +
+        ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+          theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+                axis.title.y = element_text(size=16, face = "bold",color="black"),
+                axis.text = element_text(color="black",size=16, face = "bold"),
+                axis.text.x =element_text(color="black",size=16, face = "bold"),
+                panel.border = element_blank(),
+                axis.ticks.x = element_blank(),
+                strip.text.x = element_text(size = 9,color="black"),
+                panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+                plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+                legend.background=element_rect(fill = alpha("white", 0)))+geom_text(hjust=0.5, vjust=2)+ scale_color_manual(values=col[-1])
+
+ggsave(paste0("results/figures/PCA_before_norm_", name_ana, ".pdf"))
+```
+
+### Quantile normalization
+
+```{r}
+x <- pca_data$Names
+y <- data.frame(t(pca_data[,-c(1:4)]))
+colnames(y) <- x
+path_data <- make_data_matrix(y, name_ana)
+path_design <- make_design_matrix(y, name_ana, pca_data$condition)
+outDir <- "processing/normalization"
+```
+```{r}
+x <- pca_data$Names
+y <- data.frame(t(pca_data[,-c(1:4)]))
+colnames(y) <- x
+path_data <- make_data_matrix(y, "Monocytes_COCOMO_single")
+path_design <- make_design_matrix(y, "Monocytes_COCOMO_single", pca_data$sample)
+outDir <- "processing/normalization"
+```
+
+/home/flomik/Desktop/Code-PHD/COCOMO_txn/processing/normalization/Monocytes_cocomo
+```{r}
+data_norm <- read.delim("processing/normalization/Monocytes_cocomo/Monocytes_cocomo/median-normalized.txt", check.names = FALSE)
+rownames(data_norm) <- colnames(pca_data[,-c(1:4)])
+```
+
+```{r}
+path_results <- paste0("processing/", name_ana, "_norm_file.txt")
+write.table(data_norm, file = path_results, 
+            sep = "\t", row.names = TRUE, col.names = NA)
+```
+
+### PCA after normalization
+```{r}
+pca_data <- data.frame(condition = pca_data$condition, sample = pca_data$sample, replicate = pca_data$replicate, condition = pca_data$condition, t(data_norm))
+```
+
+```{r}
+pca_data[is.na(pca_data)] <-  0
+pca <- prcomp(pca_data[,-c(1:4)])
+df_out <- as.data.frame(pca$x)
+df_out$group <- as.factor(pca_data$condition)
+x <- project.pca.proportionvariances <- ((pca$sdev^2) / (sum(pca$sdev^2)))*100
+a1 <- x[1]
+a2 <- x[2]
+```
+
+```{r}
+df_out$sample <- as.factor(pca_data$sample)
+```
+
++ scale_color_manual(values = col)+ scale_fill_manual(values = col)
+```{r}
+ggplot(df_out, aes( x= PC1, y = PC2, color = group, label = sample))+ theme_classic()+geom_point(size = 5, alpha = 0.9, shape = 19)+ 
+        theme(legend.title=element_text(size=15),legend.text=element_text(size=12),
+              legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+              axis.title.y=element_text(size=15),axis.title.x=element_text(size=15),
+              axis.text.y=element_text(size=18),axis.text.x=element_text(size=18))+
+        xlab(paste0("PC1: ",round(a1,0),"% variance")) +
+        ylab(paste0("PC2: ",round(a2,0),"% variance"))+ 
+          theme(axis.title.x = element_text(size=16, face = "bold",color="black"),
+                axis.title.y = element_text(size=16, face = "bold",color="black"),
+                axis.text = element_text(color="black",size=16, face = "bold"),
+                axis.text.x =element_text(color="black",size=16, face = "bold"),
+                panel.border = element_blank(),
+                axis.ticks.x = element_blank(),
+                strip.text.x = element_text(size = 9,color="black"),
+                panel.background = element_rect(fill = "white", colour = "white", size = 0.5, linetype = "solid"),
+                plot.title = element_text(hjust = 0.5, size = 20, face = "bold", vjust=2),
+                legend.background=element_rect(fill = alpha("white", 0)))+geom_text(hjust=0.5, vjust=2)+ scale_color_manual(values=col[-1])
+
+ggsave(paste0("results/figures/PCA_after_norm_", name_ana, ".pdf"))
+```
+
+### distribution after normalization
+```{r}
+data_2 <-as.matrix(data_norm)
+hist(data_2 , prob=T)
+curve(dnorm(x,mean(data_2),sd(data_2)),add=T,col="red")
+```
+
+```{r}
+write.csv(pca_data, "processing/norm_data_with_conditions.csv")
+```
+
+> lev <- c("wt.0hr","wt.6hr","wt.24hr","mu.0hr","mu.6hr","mu.24hr")
+> f <- factor(targets$Target, levels=lev)
+> design <- model.matrix(~0+f)
+> colnames(design) <- lev
+> fit <- lmFit(eset, design)
+
+```{r}
+pca_data <- pca_data[order(pca_data$replicate),]
+pca_data <- pca_data[order(pca_data$sample),]
+sample <- pca_data$sample
+C <- factor(pca_data$condition, levels = c("A", "B"))
+R <- factor(pca_data$replicate)
+
+design <- model.matrix(~R + C)
+design
+```
+
+```{r}
+fit <- lmFit(t(pca_data[,-c(1:4)]), design)
+```
+
+topTable(eBayesfit, coef="TissueDiseased")
+
+```{r}
+ #cont.matrix <- makeContrasts(
+# at_risk = "CB",
+#   levels=design)
+
+#fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit)
+```
+
+```{r}
+comp <- "CB"
+```
+
+```{r}
+top_table <- data.frame(BIOCHEMICAL = NA, logFC= NA, P.Value= NA, adj.P.Val= NA, Comp= NA)
+
+for (i in 1:length(comp)) {
+  top_table_1 <- topTable(fit.cont, coef=i, adjust="BH", n = Inf, sort.by = "P")
+  top_table_1$Comp <- comp[i]
+  top_table_1$BIOCHEMICAL <- rownames(top_table_1)
+  top_table_1 <- top_table_1[,c(8, 1, 4, 5, 7)]
+  top_table <- rbind(top_table, top_table_1)
+  top_table_1$Gene_name <- mapIds(org.Hs.eg.db, as.vector(top_table_1$BIOCHEMICAL), keytype="UNIPROT", column="SYMBOL")
+  write.csv(top_table_1[, c(6, 2, 3)], paste0("processing/GSEA/proteomics_monocytes_", comp[i],".csv"), quote = FALSE, row.names = F)
+}
+
+top_table <- top_table[complete.cases(top_table),]
+top_table$Gene_name <- mapIds(org.Hs.eg.db, as.vector(top_table$BIOCHEMICAL), keytype="UNIPROT", column="SYMBOL")
+path_table <- paste0("results/LIMMA/LIMMA_monocytes_proteomics.csv")
+
+print(path_table)
+write.csv(top_table, file =path_table)
+
+DF_top_table <-top_table[top_table$adj.P.Val < 0.1, ]
+print(nrow(DF_top_table))
+DF_top_table <- DF_top_table[!is.na(DF_top_table$Gene_name),]
+print(nrow(DF_top_table))
+#DF_top_table <- DF_top_table[!duplicated(DF_top_table$Gene_name),]
+#print(nrow(DF_top_table))
+
+path_results <- paste0("results/LIMMA/LIMMA_monocytes_proteomics_filt.csv")
+
+write.table(DF_top_table, file = path_results)
+
+path_results <- paste0("results/LIMMA/LIMMA_monocytes_proteomics_filt.xlsx")
+
+write.xlsx(DF_top_table, file = path_results)
+
+table(DF_top_table$Comp)
+```
+```{r}
+ggplot(pca_data, aes(y = Q9Y490,  x = condition)) + geom_point()
+```
+
+## volcano plot
+```{r}
+dge <- top_table[,c(6, 2, 3, 4)]
+tt <- dge
+
+tt$X <- NULL
+name_ana <- unique(tt$Comp)
+tt$color <- NA
+
+for (i in 1:nrow(tt)){
+  if(tt[i, 2] > 1.5 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "up_regulated_>1.5"
+  }
+  if(tt[i, 2] > 1 & tt[i, 2] < 1.5 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "up_regulated_1>x>1.5"
+  }
+  if(tt[i, 2] > 0 & tt[i, 2] < 1 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "up_regulated_0>x>1"
+  }
+  if(tt[i, 2] < -1.5 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "down_regulated_>1.5"
+  }
+  if(tt[i, 2] < -1 & tt[i, 2] > -1.5 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "down_regulated_1>x>1.5"
+  }
+  if(tt[i, 2] < 0 & tt[i, 2] > -1 & tt[i, 4] < 0.1){
+    tt[i, ncol(tt)] <- "down_regulated_0>x>1"
+  }
+  if(tt[i, 4] > 0.1){
+    tt[i, ncol(tt)] <- "NS"
+    #tt[i, 1] <- NA
+  }
+}
+
+tt$BIOCHEMICAL <- ifelse(abs(tt$logFC > 26) & tt$adj.P.Val < 0.1 | tt$adj.P.Val < 0.007 , as.vector(tt$Gene_name), NA)
+                         
+length(tt$BIOCHEMICAL[!is.na(tt$BIOCHEMICAL)])
+
+
+tt$color[is.na(tt$color)] <- "significant"
+#tt$Gene_name[tt$color == "significant"] <- NA
+cols <- c("up_regulated_>1.5" = "#cb4818",
+          "up_regulated_1>x>1.5" = "#d27f28", 
+          "up_regulated_0>x>1" = "#f1c232", 
+          "down_regulated" = "#86b7e8", 
+          "NS" = "grey", 
+          "significant" = "#586c6e",
+          "down_regulated_>1.5" = "#35495c",
+          "down_regulated_1>x>1.5" = "#5d80a2", 
+          "down_regulated_0>x>1" = "#86b7e8")
+
+vol <- ggplot(tt, aes(x = logFC, y = -log10(adj.P.Val), colour = color, size = abs(logFC)))+ 
+  geom_point(alpha = 1, na.rm = T)+ 
+  theme(legend.title=element_text(size=2),legend.text=element_text(size=2),
+        legend.key.size=unit(0.7,"line"),plot.title = element_text(hjust = 0.5),
+        axis.title.y=element_text(size=25),axis.title.x=element_text(size=25),
+        axis.text.y=element_text(size=25),axis.text.x=element_text(size=25)) +
+  labs(x="Log2 Fold Change",y="-log10 (adj.P.Val)")+
+  geom_text_repel(aes(label = BIOCHEMICAL),size=2,label.size = 0.1, color = "black", xlim = c(NA, Inf),
+    # Do not repel from top or bottom edges.
+    ylim = c(-Inf, Inf))+ theme_classic()+ 
+  geom_hline(yintercept=-log10(0.1), linetype="dashed", color = "black")+scale_color_manual(values = cols)
+
+print(vol)
+path_fig <- paste0("results/figures/volcano_plot_proteomics_monocytes.pdf")
+ggsave(path_fig, width = 10, height = 6)
+```
